@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+/frontend/node_modules/
+/backend/node_modules/
+
+# Production/Build files
+dist/
+build/
+/frontend/dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Databases (SQLite & JSON local storages)
+*.sqlite
+*.sqlite-journal
+database.json
+/backend/database.sqlite
+/backend/database.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS Metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# System/IDE configs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
