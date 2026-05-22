@@ -9,6 +9,28 @@ import VerifyCertificate from './components/VerifyCertificate';
 import logoHorizontal from './assets/logoHorizontal.png';
 import { LogOut, Home, ShieldCheck, Award } from 'lucide-react';
 
+const decodeMojibake = (str) => {
+  if (!str) return str;
+  try {
+    const bytes = new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
+    const decoded = new TextDecoder('utf-8').decode(bytes);
+    if (!decoded.includes('\uFFFD')) {
+      return decoded;
+    }
+  } catch (e) {}
+
+  const map = {
+    'Ã¡': 'á', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 'Ãº': 'ú',
+    'Ã±': 'ñ', 'Ã‘': 'Ñ', 'Ã ': 'Á', 'Ã': 'É', 'Ã ': 'Í',
+    'Ã“': 'Ó', 'Ãš': 'Ú', 'Ã¼': 'ü', 'Ãœ': 'Ü'
+  };
+  let result = str;
+  for (const [mojibake, correct] of Object.entries(map)) {
+    result = result.replaceAll(mojibake, correct);
+  }
+  return result;
+};
+
 function MainLayout() {
   const { user, currentView, setCurrentView, logout, progress } = useContext(AppContext);
   const [verifyCode, setVerifyCode] = useState('');
@@ -70,7 +92,7 @@ function MainLayout() {
             </button>
             
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 700 }}>{user.nombre_completo}</span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 700 }}>{decodeMojibake(user.nombre_completo)}</span>
               <span style={{ fontSize: '0.75rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>{progress.progreso_porcentaje}% Completado</span>
             </div>
 

@@ -13,6 +13,19 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_123';
 
+// Safely normalize string to UTF-8 using Latin1 to UTF-8 decoding to fix Mojibake
+function normalizeToUtf8(str) {
+  if (!str || typeof str !== 'string') return str;
+  try {
+    const latin1Buffer = Buffer.from(str, 'latin1');
+    const utf8Decoded = latin1Buffer.toString('utf8');
+    if (!utf8Decoded.includes('\uFFFD') && utf8Decoded !== str) {
+      return utf8Decoded;
+    }
+  } catch (e) {}
+  return str;
+}
+
 app.use(cors());
 app.use(express.json());
 
@@ -42,6 +55,9 @@ function authenticateToken(req, res, next) {
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({ error: 'Token inválido o expirado.' });
+    }
+    if (user && user.nombre_completo) {
+      user.nombre_completo = normalizeToUtf8(user.nombre_completo);
     }
     req.user = user;
     next();
@@ -88,8 +104,9 @@ app.post('/api/auth/login', async (req, res) => {
     }
 
     // Sign JWT
+    const cleanNombre = normalizeToUtf8(user.nombre_completo);
     const token = jwt.sign(
-      { cedula: user.cedula, nombre_completo: user.nombre_completo, rol: user.rol },
+      { cedula: user.cedula, nombre_completo: cleanNombre, rol: user.rol },
       JWT_SECRET,
       { expiresIn: '12h' }
     );
@@ -98,7 +115,7 @@ app.post('/api/auth/login', async (req, res) => {
       token,
       user: {
         cedula: user.cedula,
-        nombre_completo: user.nombre_completo,
+        nombre_completo: cleanNombre,
         rol: user.rol
       }
     });
@@ -126,8 +143,16 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ error: 'El usuario ya está registrado' });
     }
 
-    const newUser = await db.createUser(cedula, nombre_completo, password);
-    res.status(201).json({ message: 'Usuario registrado con éxito', user: newUser });
+    const cleanNombreInput = normalizeToUtf8(nombre_completo);
+    const newUser = await db.createUser(cedula, cleanNombreInput, password);
+    res.status(201).json({
+      message: 'Usuario registrado con éxito',
+      user: {
+        cedula: newUser.cedula,
+        nombre_completo: normalizeToUtf8(newUser.nombre_completo),
+        rol: newUser.rol
+      }
+    });
   } catch (err) {
     console.error('Registration error:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -285,7 +310,7 @@ app.get('/api/certificate/download', authenticateToken, async (req, res) => {
 
     // Generate PDF to response stream
     const pdfData = {
-      nombre_completo: req.user.nombre_completo,
+      nombre_completo: normalizeToUtf8(req.user.nombre_completo),
       cedula: req.user.cedula,
       fecha_emision: cert.fecha_emision,
       codigo_verificacion: cert.codigo_verificacion,
@@ -315,7 +340,7 @@ app.get('/api/certificate/verify/:codigo', async (req, res) => {
 
     res.json({
       valido: true,
-      usuario: cert.nombre_completo,
+      usuario: normalizeToUtf8(cert.nombre_completo),
       cedula: cert.cedula,
       fecha_emision: cert.fecha_emision,
       codigo_verificacion: cert.codigo_verificacion,

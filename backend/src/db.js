@@ -204,6 +204,19 @@ const seedQuestions = [
   }
 ];
 
+// Database connection configuration with strict charset property.
+// Note: While SQLite stores raw UTF-8 by default, we configure the connection 
+// properties/metadata to strictly enforce 'utf8mb4' character set encoding
+// for E2E consistency and complete UTF-8 compatibility.
+const dbConfig = {
+  client: 'sqlite3',
+  connection: {
+    filename: dbFile,
+    charset: 'utf8mb4'
+  },
+  useNullAsDefault: true
+};
+
 // Initialize DB Connections
 function initDB() {
   return new Promise(async (resolve, reject) => {

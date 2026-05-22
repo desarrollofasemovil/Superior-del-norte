@@ -3,6 +3,29 @@ import { AppContext } from '../context/AppContext';
 import logoNormal from '../assets/logoNormal.jpeg';
 import { Download, ArrowLeft, Copy, Check, ShieldCheck } from 'lucide-react';
 
+
+const decodeMojibake = (str) => {
+  if (!str) return str;
+  try {
+    const bytes = new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
+    const decoded = new TextDecoder('utf-8').decode(bytes);
+    if (!decoded.includes('\uFFFD')) {
+      return decoded;
+    }
+  } catch (e) {}
+
+  const map = {
+    'Ã¡': 'á', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 'Ãº': 'ú',
+    'Ã±': 'ñ', 'Ã‘': 'Ñ', 'Ã ': 'Á', 'Ã‰': 'É', 'Ã ': 'Í',
+    'Ã“': 'Ó', 'Ãš': 'Ú', 'Ã¼': 'ü', 'Ãœ': 'Ü'
+  };
+  let result = str;
+  for (const [mojibake, correct] of Object.entries(map)) {
+    result = result.replaceAll(mojibake, correct);
+  }
+  return result;
+};
+
 const Certificate = () => {
   const { user, downloadCertificate, setCurrentView, token, API_BASE_URL } = useContext(AppContext);
   const [certData, setCertData] = useState(null);
@@ -121,7 +144,7 @@ const Certificate = () => {
             Se otorga el presente documento de certificación y participación a:
           </p>
           <p style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--accent-emerald)', marginBottom: '8px' }}>
-            {user?.nombre_completo?.toUpperCase()}
+            {decodeMojibake(user?.nombre_completo)?.toUpperCase()}
           </p>
           <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '24px' }}>
             Cédula de Identidad N°: {user?.cedula}

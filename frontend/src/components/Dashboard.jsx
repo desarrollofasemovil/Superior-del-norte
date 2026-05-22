@@ -2,6 +2,28 @@ import React, { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import { BookOpen, CheckCircle, Circle, Award, FileText, Compass, Clock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 
+const decodeMojibake = (str) => {
+  if (!str) return str;
+  try {
+    const bytes = new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
+    const decoded = new TextDecoder('utf-8').decode(bytes);
+    if (!decoded.includes('\uFFFD')) {
+      return decoded;
+    }
+  } catch (e) {}
+
+  const map = {
+    'Ã¡': 'á', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 'Ãº': 'ú',
+    'Ã±': 'ñ', 'Ã‘': 'Ñ', 'Ã': 'Á', 'Ã': 'É', 'Ã': 'Í',
+    'Ã': 'Ó', 'Ã': 'Ú', 'Ã¼': 'ü', 'Ã': 'Ü'
+  };
+  let result = str;
+  for (const [mojibake, correct] of Object.entries(map)) {
+    result = result.replaceAll(mojibake, correct);
+  }
+  return result;
+};
+
 const Dashboard = () => {
   const { user, progress, modules, setCurrentView, setActiveModuleId, examStatus, downloadCertificate } = useContext(AppContext);
 
@@ -37,7 +59,7 @@ const Dashboard = () => {
       {/* Welcome Header */}
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
-          ¡Bienvenido, {user?.nombre_completo}!
+          ¡Bienvenido, {decodeMojibake(user?.nombre_completo)}!
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
           {isFinishedAllModules 

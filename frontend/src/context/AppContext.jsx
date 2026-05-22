@@ -4,6 +4,23 @@ export const AppContext = createContext();
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
+const decodeJWTPayload = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      window.atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.error('Error decoding JWT payload:', e);
+    return null;
+  }
+};
+
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token') || null);
@@ -20,13 +37,17 @@ export const AppProvider = ({ children }) => {
     if (token) {
       // Decode user from JWT (simple payload extract)
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        setUser({
-          cedula: payload.cedula,
-          nombre_completo: payload.nombre_completo,
-          rol: payload.rol
-        });
-        setCurrentView('dashboard');
+        const payload = decodeJWTPayload(token);
+        if (payload) {
+          setUser({
+            cedula: payload.cedula,
+            nombre_completo: payload.nombre_completo,
+            rol: payload.rol
+          });
+          setCurrentView('dashboard');
+        } else {
+          logout();
+        }
       } catch (e) {
         logout();
       }
