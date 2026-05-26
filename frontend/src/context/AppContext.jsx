@@ -32,6 +32,11 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Admin Panel states
+  const [adminMetrics, setAdminMetrics] = useState({ usuarios_activos: 0, cursos_completados: 0, cursos_pendientes: 0 });
+  const [adminUsers, setAdminUsers] = useState([]);
+  const [courses, setCourses] = useState([]);
+
   // Auto-redirect if token exists
   useEffect(() => {
     if (token) {
@@ -44,7 +49,11 @@ export const AppProvider = ({ children }) => {
             nombre_completo: payload.nombre_completo,
             rol: payload.rol
           });
-          setCurrentView('dashboard');
+          if (payload.rol === 'administrador') {
+            setCurrentView('admin_dashboard');
+          } else {
+            setCurrentView('dashboard');
+          }
         } else {
           logout();
         }
@@ -56,7 +65,7 @@ export const AppProvider = ({ children }) => {
 
   // Load modules and progress when authenticated
   useEffect(() => {
-    if (token && user) {
+    if (token && user && user.rol === 'estudiante') {
       fetchCourseContent();
       fetchProgress();
       fetchExamStatus();
@@ -79,7 +88,11 @@ export const AppProvider = ({ children }) => {
       localStorage.setItem('token', data.token);
       setToken(data.token);
       setUser(data.user);
-      setCurrentView('dashboard');
+      if (data.user.rol === 'administrador') {
+        setCurrentView('admin_dashboard');
+      } else {
+        setCurrentView('dashboard');
+      }
     } catch (err) {
       setError(err.message);
       throw err;
@@ -96,6 +109,9 @@ export const AppProvider = ({ children }) => {
     setProgress({ progreso_porcentaje: 0, modulos_completados: [] });
     setActiveModuleId(null);
     setExamStatus(null);
+    setAdminMetrics({ usuarios_activos: 0, cursos_completados: 0, cursos_pendientes: 0 });
+    setAdminUsers([]);
+    setCourses([]);
     setError(null);
     setCurrentView('login');
   };
@@ -227,6 +243,76 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const fetchAdminMetrics = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/metrics`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setAdminMetrics(data);
+      }
+    } catch (err) {
+      console.error('Error fetching admin metrics:', err);
+    }
+  };
+
+  const fetchAdminUsers = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/users`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setAdminUsers(data);
+      }
+    } catch (err) {
+      console.error('Error fetching admin users:', err);
+    }
+  };
+
+  const fetchCourses = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/courses`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCourses(data);
+      }
+    } catch (err) {
+      console.error('Error fetching courses:', err);
+    }
+  };
+
+  const createStudentUser = async (studentData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/users/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(studentData)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al crear estudiante');
+      }
+      // Reload metrics and users list dynamically
+      await fetchAdminMetrics();
+      await fetchAdminUsers();
+      return data;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AppContext.Provider value={{
       user,
@@ -246,6 +332,13 @@ export const AppProvider = ({ children }) => {
       completeModule,
       submitExam,
       downloadCertificate,
+      adminMetrics,
+      adminUsers,
+      courses,
+      fetchAdminMetrics,
+      fetchAdminUsers,
+      fetchCourses,
+      createStudentUser,
       API_BASE_URL
     }}>
       {children}

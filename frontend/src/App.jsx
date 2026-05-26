@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AppProvider, AppContext } from './context/AppContext';
 import Login from './components/Login';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
 import Dashboard from './components/Dashboard';
 import CourseViewer from './components/CourseViewer';
 import Exam from './components/Exam';
@@ -43,6 +45,8 @@ function MainLayout() {
         const code = hash.substring(8);
         setVerifyCode(code);
         setCurrentView('verify');
+      } else if (hash === '#admin') {
+        setCurrentView('admin_login');
       }
     };
     window.addEventListener('hashchange', handleHashChange);
@@ -50,10 +54,29 @@ function MainLayout() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [setCurrentView]);
 
+  // Route Guards & Protection
+  useEffect(() => {
+    if (currentView === 'admin_dashboard') {
+      if (!user) {
+        setCurrentView('admin_login');
+      } else if (user.rol !== 'administrador') {
+        setCurrentView('dashboard');
+      }
+    } else if (currentView === 'dashboard') {
+      if (user && user.rol === 'administrador') {
+        setCurrentView('admin_dashboard');
+      }
+    }
+  }, [currentView, user, setCurrentView]);
+
   const renderView = () => {
     switch (currentView) {
       case 'login':
         return <Login />;
+      case 'admin_login':
+        return <AdminLogin />;
+      case 'admin_dashboard':
+        return <AdminDashboard />;
       case 'dashboard':
         return <Dashboard />;
       case 'course':
@@ -75,7 +98,7 @@ function MainLayout() {
       <nav className="glass-panel navbar" style={{ background: '#FFFFFF', borderBottom: '1px solid var(--border-glass)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
         <div 
           style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} 
-          onClick={() => setCurrentView(user ? 'dashboard' : 'login')}
+          onClick={() => setCurrentView(user ? (user.rol === 'administrador' ? 'admin_dashboard' : 'dashboard') : 'login')}
         >
           <img src={logoHorizontal} alt="AlimSafe" style={{ height: '38px', width: 'auto' }} />
         </div>
@@ -83,7 +106,7 @@ function MainLayout() {
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <button
-              onClick={() => setCurrentView('dashboard')}
+              onClick={() => setCurrentView(user.rol === 'administrador' ? 'admin_dashboard' : 'dashboard')}
               className="btn btn-secondary"
               style={{ padding: '8px 14px', fontSize: '0.85rem', height: '38px' }}
             >
@@ -93,7 +116,11 @@ function MainLayout() {
             
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
               <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 700 }}>{decodeMojibake(user.nombre_completo)}</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>{progress.progreso_porcentaje}% Completado</span>
+              {user.rol === 'administrador' ? (
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Administrador</span>
+              ) : (
+                <span style={{ fontSize: '0.75rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>{progress.progreso_porcentaje}% Completado</span>
+              )}
             </div>
 
             <button

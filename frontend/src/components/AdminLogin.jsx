@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import logoNormal from '../assets/logoNormal.jpeg';
-import { Lock, ShieldAlert } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, ArrowLeft } from 'lucide-react';
 
-const Login = () => {
+const AdminLogin = () => {
   const [cedula, setCedula] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState('');
@@ -24,10 +24,15 @@ const Login = () => {
       return;
     }
 
+    if (password.length < 6) {
+      setLocalError('La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
+
     try {
       await login(cedula, password);
     } catch (err) {
-      // API error handled by context, but we can catch to prevent crashes
+      // API error is handled by AppContext
     }
   };
 
@@ -35,14 +40,14 @@ const Login = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '16px' }}>
       <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', padding: '32px', position: 'relative', overflow: 'hidden' }}>
         
-        {/* Top Decorative Green Accent Bar */}
+        {/* Top Decorative Blue Accent Bar (Deep Blue for Admin panel feel) */}
         <div style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           height: '6px',
-          background: 'var(--accent-emerald)'
+          background: 'var(--text-primary)'
         }} />
 
         <div>
@@ -52,11 +57,11 @@ const Login = () => {
               alt="AlimSafe" 
               style={{ width: '160px', height: 'auto', marginBottom: '16px', borderRadius: '12px' }} 
             />
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', textAlign: 'center', fontWeight: 500 }}>
-              Learning Management System (LMS)
+            <p style={{ color: 'var(--text-primary)', fontSize: '1rem', textAlign: 'center', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Acceso Administrativo
             </p>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '2px' }}>
-              Curso de Manipulación Higiénica de Alimentos
+              Gestión de Estudiantes y Certificados
             </p>
           </div>
 
@@ -80,12 +85,12 @@ const Login = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="input-group">
-              <label className="input-label" htmlFor="cedula">Número de Cédula</label>
+              <label className="input-label" htmlFor="admin-cedula">Cédula del Administrador</label>
               <input
                 className="input-field"
                 type="text"
-                id="cedula"
-                placeholder="Ej. 123456789"
+                id="admin-cedula"
+                placeholder="Ej. 999999999"
                 value={cedula}
                 onChange={(e) => setCedula(e.target.value)}
                 disabled={loading}
@@ -93,11 +98,11 @@ const Login = () => {
             </div>
 
             <div className="input-group" style={{ marginBottom: '28px' }}>
-              <label className="input-label" htmlFor="password">Contraseña</label>
+              <label className="input-label" htmlFor="admin-password">Contraseña</label>
               <input
                 className="input-field"
                 type="password"
-                id="password"
+                id="admin-password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -106,25 +111,46 @@ const Login = () => {
             </div>
 
             <button
-              className="btn btn-primary"
+              className="btn"
               type="submit"
-              style={{ width: '100%', padding: '14px' }}
+              style={{ width: '100%', padding: '14px', background: 'var(--text-primary)', color: '#FFFFFF' }}
               disabled={loading}
             >
               {loading ? (
                 <span>Iniciando sesión...</span>
               ) : (
                 <>
-                  <Lock size={18} />
-                  <span>Ingresar al Curso</span>
+                  <ShieldCheck size={18} />
+                  <span>Ingresar al Panel</span>
                 </>
               )}
             </button>
           </form>
 
-          {/* Test Credentials Seed Banner */}
+          {/* Toggle back link */}
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <button
+              onClick={() => setCurrentView('login')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--text-secondary)',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontWeight: 600
+              }}
+            >
+              <ArrowLeft size={16} />
+              <span>Volver a Estudiantes</span>
+            </button>
+          </div>
+
+          {/* Seed Credentials Admin */}
           <div style={{
-            marginTop: '28px',
+            marginTop: '24px',
             padding: '14px',
             borderRadius: '12px',
             background: '#F8F9FA',
@@ -133,25 +159,9 @@ const Login = () => {
             color: 'var(--text-secondary)',
             textAlign: 'center'
           }}>
-            <p style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>🔑 Credenciales de Acceso Demo</p>
-            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--accent-emerald)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>123456789</code></p>
-            <p>Contraseña: <code style={{ color: 'var(--accent-emerald)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>password123</code></p>
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <button
-              onClick={() => setCurrentView('admin_login')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--text-muted)',
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                textDecoration: 'underline'
-              }}
-            >
-              Entrar como Administrador
-            </button>
+            <p style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>🔑 Credenciales de Administrador</p>
+            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--text-primary)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>999999999</code></p>
+            <p>Contraseña: <code style={{ color: 'var(--text-primary)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>adminpassword</code></p>
           </div>
 
         </div>
@@ -160,4 +170,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminLogin;

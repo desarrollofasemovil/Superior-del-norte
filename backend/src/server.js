@@ -64,6 +64,14 @@ function authenticateToken(req, res, next) {
   });
 }
 
+// Middleware to require admin role
+function requireAdmin(req, res, next) {
+  if (!req.user || req.user.rol !== 'administrador') {
+    return res.status(403).json({ error: 'Acceso denegado. Se requiere rol de Administrador.' });
+  }
+  next();
+}
+
 // Helper to generate verification code in format ALIM-XXXX-XXXX
 function generateVerificationCode() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -156,6 +164,106 @@ app.post('/api/auth/register', async (req, res) => {
   } catch (err) {
     console.error('Registration error:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// --- Admin Endpoints ---
+
+// A1. Get Courses List
+app.get('/api/admin/courses', authenticateToken, async (req, res) => {
+  try {
+    const courses = await db.getCourses();
+    res.json(courses);
+  } catch (err) {
+    console.error('Get courses error:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// A2. Get Admin Metrics
+app.get('/api/admin/metrics', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const metrics = await db.getAdminMetrics();
+    res.json(metrics);
+  } catch (err) {
+    console.error('Get metrics error:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// A3. Get Student Users List
+app.get('/api/admin/users', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const users = await db.getAdminUsers();
+    const normalizedUsers = users.map(u => ({
+      ...u,
+      nombre_completo: normalizeToUtf8(u.nombre_completo)
+    }));
+    res.json(normalizedUsers);
+  } catch (err) {
+    console.error('Get admin users error:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// A4. Create Student User & Enroll
+app.post('/api/admin/users/create', authenticateToken, requireAdmin, async (req, res) => {
+  const { cedula, nombre_completo, password, cursos } = req.body;
+
+  // 1. Validation
+  if (!cedula || !nombre_completo || !password) {
+    return res.status(400).json({ error: 'La cédula, el nombre completo y la contraseña son requeridos.' });
+  }
+
+  // Cédula: numeric only
+  if (!/^\d+$/.test(cedula)) {
+    return res.status(400).json({ error: 'La cédula debe contener únicamente números.' });
+  }
+
+  // Nombre: Letters, accents and spaces only
+  const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
+  if (!nameRegex.test(nombre_completo)) {
+    return res.status(400).json({ error: 'El nombre debe contener únicamente letras y espacios.' });
+  }
+
+  // Password: Min length 6
+  if (password.length < 6) {
+    return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres.' });
+  }
+
+  // Cursos: Check at least one course is selected
+  if (!cursos || !Array.isArray(cursos) || cursos.length === 0) {
+    return res.status(400).json({ error: 'Debe seleccionar al menos un curso para matricular al estudiante.' });
+  }
+
+  try {
+    // 2. Check duplicate
+    const existing = await db.getUser(cedula);
+    if (existing) {
+      return res.status(400).json({ error: 'Un usuario con esta cédula ya se encuentra registrado.' });
+    }
+
+    // 3. Create user
+    const cleanNombre = normalizeToUtf8(nombre_completo);
+    const newUser = await db.createUser(cedula, cleanNombre, password, 'estudiante');
+
+    // 4. Enroll in courses
+    for (const courseId of cursos) {
+      await db.enrollUserInCourse(cedula, parseInt(courseId));
+    }
+
+    res.status(201).json({
+      message: 'Estudiante creado y matriculado con éxito.',
+      user: {
+        cedula: newUser.cedula,
+        nombre_completo: newUser.nombre_completo,
+        rol: newUser.rol,
+        fecha_registro: newUser.fecha_registro
+      }
+    });
+  } catch (err) {
+    console.error('Create student error:', err);
+    res.status(500).json({ error: 'Error interno del servidor al crear el estudiante.' });
   }
 });
 

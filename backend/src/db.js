@@ -253,12 +253,29 @@ function setupSqliteDB() {
       sqliteDB.run(`DROP TABLE IF EXISTS modulos`, (err) => { if (err) return reject(err); });
       sqliteDB.run(`DROP TABLE IF EXISTS progreso`, (err) => { if (err) return reject(err); });
       sqliteDB.run(`DROP TABLE IF EXISTS examenes`, (err) => { if (err) return reject(err); });
+      sqliteDB.run(`DROP TABLE IF EXISTS usuarios`, (err) => { if (err) return reject(err); });
+      sqliteDB.run(`DROP TABLE IF EXISTS matriculas`, (err) => { if (err) return reject(err); });
+      sqliteDB.run(`DROP TABLE IF EXISTS cursos`, (err) => { if (err) return reject(err); });
 
       sqliteDB.run(`CREATE TABLE IF NOT EXISTS usuarios (
           cedula TEXT PRIMARY KEY,
           nombre_completo TEXT,
           password_hash TEXT,
-          rol TEXT DEFAULT 'estudiante'
+          rol TEXT DEFAULT 'estudiante',
+          fecha_registro TEXT
+        )`, (err) => { if (err) return reject(err); });
+
+      sqliteDB.run(`CREATE TABLE IF NOT EXISTS cursos (
+          id INTEGER PRIMARY KEY,
+          titulo TEXT,
+          descripcion TEXT
+        )`, (err) => { if (err) return reject(err); });
+
+      sqliteDB.run(`CREATE TABLE IF NOT EXISTS matriculas (
+          usuario_cedula TEXT,
+          curso_id INTEGER,
+          fecha_matricula TEXT,
+          PRIMARY KEY (usuario_cedula, curso_id)
         )`, (err) => { if (err) return reject(err); });
 
       sqliteDB.run(`CREATE TABLE IF NOT EXISTS modulos (
@@ -302,14 +319,37 @@ function setupSqliteDB() {
       }
       stmt.finalize();
 
+      // Seed Default Course
+      sqliteDB.run(`INSERT OR REPLACE INTO cursos (id, titulo, descripcion) VALUES (?, ?, ?)`,
+        [1, 'Manipulación de Alimentos', 'Curso estándar de 3 horas lectivas para la manipulación higiénica de alimentos.'],
+        (err) => { if (err) return reject(err); }
+      );
+
       // Seed Default Student User (cedula: 123456789)
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync('password123', salt);
-      sqliteDB.run(`INSERT OR IGNORE INTO usuarios (cedula, nombre_completo, password_hash, rol) VALUES (?, ?, ?, ?)`,
-        ['123456789', 'Juan Pérez', hash, 'estudiante'],
+      sqliteDB.run(`INSERT OR IGNORE INTO usuarios (cedula, nombre_completo, password_hash, rol, fecha_registro) VALUES (?, ?, ?, ?, ?)`,
+        ['123456789', 'Juan Pérez', hash, 'estudiante', '2026-05-20'],
         (err) => {
           if (err) return reject(err);
-          resolve();
+
+          // Seed Administrator
+          const adminHash = bcrypt.hashSync('adminpassword', salt);
+          sqliteDB.run(`INSERT OR IGNORE INTO usuarios (cedula, nombre_completo, password_hash, rol, fecha_registro) VALUES (?, ?, ?, ?, ?)`,
+            ['999999999', 'Administrador AlimSafe', adminHash, 'administrador', '2026-05-26'],
+            (errAdmin) => {
+              if (errAdmin) return reject(errAdmin);
+
+              // Enroll default student in course 1
+              sqliteDB.run(`INSERT OR IGNORE INTO matriculas (usuario_cedula, curso_id, fecha_matricula) VALUES (?, ?, ?)`,
+                ['123456789', 1, '2026-05-20'],
+                (errEnroll) => {
+                  if (errEnroll) return reject(errEnroll);
+                  resolve();
+                }
+              );
+            }
+          );
         }
       );
     });
@@ -320,21 +360,52 @@ function setupSqliteDB() {
 async function setupJsonDB() {
   loadJsonDb();
 
-  // Seed modules
+  // Reset collections
   jsonDb.modules = seedModules;
+  jsonDb.courses = [
+    { id: 1, titulo: 'Manipulación de Alimentos', descripcion: 'Curso estándar de 3 horas lectivas para la manipulación higiénica de alimentos.' }
+  ];
+  if (!jsonDb.matriculas) {
+    jsonDb.matriculas = [];
+  }
 
   // Seed default student user
   const studentExists = jsonDb.users.some(u => u.cedula === '123456789');
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync('password123', salt);
   if (!studentExists) {
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync('password123', salt);
     jsonDb.users.push({
       cedula: '123456789',
       nombre_completo: 'Juan Pérez',
       password_hash: hash,
-      rol: 'estudiante'
+      rol: 'estudiante',
+      fecha_registro: '2026-05-20'
     });
   }
+
+  // Seed default admin user
+  const adminExists = jsonDb.users.some(u => u.cedula === '999999999');
+  if (!adminExists) {
+    const adminHash = bcrypt.hashSync('adminpassword', salt);
+    jsonDb.users.push({
+      cedula: '999999999',
+      nombre_completo: 'Administrador AlimSafe',
+      password_hash: adminHash,
+      rol: 'administrador',
+      fecha_registro: '2026-05-26'
+    });
+  }
+
+  // Enroll default student in course 1
+  const matriculaExists = jsonDb.matriculas.some(m => m.usuario_cedula === '123456789' && m.curso_id === 1);
+  if (!matriculaExists) {
+    jsonDb.matriculas.push({
+      usuario_cedula: '123456789',
+      curso_id: 1,
+      fecha_matricula: '2026-05-20'
+    });
+  }
+
   saveJsonDb();
   console.log('JSON database initialized and seeded successfully.');
 }
@@ -406,17 +477,18 @@ function getUser(cedula) {
   });
 }
 
-function createUser(cedula, nombre_completo, password, rol = 'estudiante') {
+function createUser(cedula, nombre_completo, password, rol = 'estudiante', fecha_registro = null) {
   return new Promise((resolve, reject) => {
     const salt = bcrypt.genSaltSync(10);
     const password_hash = bcrypt.hashSync(password, salt);
+    const date = fecha_registro || new Date().toISOString().split('T')[0];
     if (dbType === 'sqlite') {
       sqliteDB.run(
-        `INSERT INTO usuarios (cedula, nombre_completo, password_hash, rol) VALUES (?, ?, ?, ?)`,
-        [cedula, nombre_completo, password_hash, rol],
+        `INSERT INTO usuarios (cedula, nombre_completo, password_hash, rol, fecha_registro) VALUES (?, ?, ?, ?, ?)`,
+        [cedula, nombre_completo, password_hash, rol, date],
         function (err) {
           if (err) reject(err);
-          else resolve(sanitize({ cedula, nombre_completo, rol }));
+          else resolve(sanitize({ cedula, nombre_completo, rol, fecha_registro: date }));
         }
       );
     } else {
@@ -424,11 +496,140 @@ function createUser(cedula, nombre_completo, password, rol = 'estudiante') {
       if (exists) {
         reject(new Error('User already exists'));
       } else {
-        const newUser = { cedula, nombre_completo, password_hash, rol };
+        const newUser = { cedula, nombre_completo, password_hash, rol, fecha_registro: date };
         jsonDb.users.push(newUser);
         saveJsonDb();
-        resolve(sanitize({ cedula, nombre_completo, rol }));
+        resolve(sanitize({ cedula, nombre_completo, rol, fecha_registro: date }));
       }
+    }
+  });
+}
+
+// Admin Panel Helpers
+function getCourses() {
+  return new Promise((resolve, reject) => {
+    if (dbType === 'sqlite') {
+      sqliteDB.all(`SELECT * FROM cursos`, [], (err, rows) => {
+        if (err) reject(err);
+        else resolve(sanitize(rows));
+      });
+    } else {
+      resolve(sanitize(jsonDb.courses || []));
+    }
+  });
+}
+
+function enrollUserInCourse(cedula, courseId) {
+  return new Promise((resolve, reject) => {
+    const fecha = new Date().toISOString().split('T')[0];
+    if (dbType === 'sqlite') {
+      sqliteDB.run(
+        `INSERT OR REPLACE INTO matriculas (usuario_cedula, curso_id, fecha_matricula) VALUES (?, ?, ?)`,
+        [cedula, courseId, fecha],
+        function (err) {
+          if (err) reject(err);
+          else resolve({ usuario_cedula: cedula, curso_id: courseId, fecha_matricula: fecha });
+        }
+      );
+    } else {
+      if (!jsonDb.matriculas) jsonDb.matriculas = [];
+      const idx = jsonDb.matriculas.findIndex(m => m.usuario_cedula === cedula && m.curso_id === courseId);
+      const entry = { usuario_cedula: cedula, curso_id: courseId, fecha_matricula: fecha };
+      if (idx !== -1) {
+        jsonDb.matriculas[idx] = entry;
+      } else {
+        jsonDb.matriculas.push(entry);
+      }
+      saveJsonDb();
+      resolve(entry);
+    }
+  });
+}
+
+function getAdminMetrics() {
+  return new Promise((resolve, reject) => {
+    if (dbType === 'sqlite') {
+      // 1. Total active student users
+      sqliteDB.get(`SELECT COUNT(*) as total FROM usuarios WHERE rol = 'estudiante'`, [], (errUsers, rowUsers) => {
+        if (errUsers) return reject(errUsers);
+        const activeUsers = rowUsers.total || 0;
+
+        // 2. Completed courses: Count users who approved the exam
+        sqliteDB.get(`SELECT COUNT(*) as total FROM examenes WHERE aprobado = 1`, [], (errExams, rowExams) => {
+          if (errExams) return reject(errExams);
+          const completedCursos = rowExams.total || 0;
+
+          // 3. Pending courses: Total students who haven't approved the exam yet
+          const pendingCursos = Math.max(0, activeUsers - completedCursos);
+
+          resolve({
+            usuarios_activos: activeUsers,
+            cursos_completados: completedCursos,
+            cursos_pendientes: pendingCursos
+          });
+        });
+      });
+    } else {
+      const activeUsers = jsonDb.users.filter(u => u.rol === 'estudiante').length;
+      const completedCursos = jsonDb.exams.filter(e => e.aprobado === 1).length;
+      const pendingCursos = Math.max(0, activeUsers - completedCursos);
+
+      resolve({
+        usuarios_activos: activeUsers,
+        cursos_completados: completedCursos,
+        cursos_pendientes: pendingCursos
+      });
+    }
+  });
+}
+
+function getAdminUsers() {
+  return new Promise((resolve, reject) => {
+    if (dbType === 'sqlite') {
+      const query = `
+        SELECT 
+          u.cedula, 
+          u.nombre_completo, 
+          u.rol, 
+          u.fecha_registro,
+          (SELECT COUNT(*) FROM progreso p WHERE p.usuario_cedula = u.cedula AND p.completado = 1) as completed_count
+        FROM usuarios u 
+        WHERE u.rol = 'estudiante'
+      `;
+      sqliteDB.all(query, [], (err, rows) => {
+        if (err) reject(err);
+        else {
+          const totalModules = 8;
+          const results = rows.map(r => {
+            const completed = r.completed_count || 0;
+            const progress_pct = Math.round((completed / totalModules) * 100);
+            return {
+              cedula: r.cedula,
+              nombre_completo: sanitize(r.nombre_completo),
+              rol: r.rol,
+              fecha_registro: r.fecha_registro || '2026-05-26',
+              progreso_porcentaje: progress_pct
+            };
+          });
+          resolve(results);
+        }
+      });
+    } else {
+      const totalModules = jsonDb.modules.length || 8;
+      const results = jsonDb.users
+        .filter(u => u.rol === 'estudiante')
+        .map(u => {
+          const completed = jsonDb.progress.filter(p => p.usuario_cedula === u.cedula && p.completado === 1).length;
+          const progress_pct = Math.round((completed / totalModules) * 100);
+          return {
+            cedula: u.cedula,
+            nombre_completo: sanitize(u.nombre_completo),
+            rol: u.rol,
+            fecha_registro: u.fecha_registro || '2026-05-26',
+            progreso_porcentaje: progress_pct
+          };
+        });
+      resolve(results);
     }
   });
 }
@@ -675,5 +876,9 @@ module.exports = {
   getCertificate,
   getCertificateByCedula,
   getCertificatesCount,
-  seedQuestions // Exported for the exam grading script
+  seedQuestions, // Exported for the exam grading script
+  getCourses,
+  enrollUserInCourse,
+  getAdminMetrics,
+  getAdminUsers
 };
