@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import logoNormal from '../assets/logoNormal.jpeg';
 import { Lock, ShieldAlert } from 'lucide-react';
@@ -7,7 +8,8 @@ const Login = () => {
   const [cedula, setCedula] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState('');
-  const { login, loading, error: apiError, setCurrentView } = useContext(AppContext);
+  const { login, loading, error: apiError } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -140,7 +142,7 @@ const Login = () => {
 
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
             <button
-              onClick={() => setCurrentView('admin_login')}
+              onClick={() => navigate('/admin/login')}
               style={{
                 background: 'none',
                 border: 'none',

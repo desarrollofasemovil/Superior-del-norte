@@ -1,6 +1,7 @@
 const PDFDocument = require('pdfkit');
 const path = require('path');
 const fs = require('fs');
+require('dotenv').config();
 
 /**
  * Generates a professional certificate PDF stream
@@ -36,7 +37,7 @@ function generateCertificatePDF(stream, data) {
   doc.rect(doc.page.width - 44, doc.page.height - 44, 20, 20).lineWidth(1).stroke('#F0A500');
 
   // 3. Official Logo
-  const logoPath = path.join(__dirname, 'logoNormal.jpeg');
+  const logoPath = path.join(__dirname, '..', 'logoNormal.jpeg');
   if (fs.existsSync(logoPath)) {
     doc.image(logoPath, doc.page.width / 2 - 50, 42, { width: 100 });
   }
@@ -58,7 +59,7 @@ function generateCertificatePDF(stream, data) {
   doc.fontSize(12)
      .font('Helvetica-Bold')
      .fillColor('#0F2C59')
-     .text('CURSO DE MANIPULACIÓN HIGIÉNICA DE ALIMENTOS', { align: 'center', characterSpacing: 1.5 });
+     .text((data.curso_titulo || 'CURSO DE MANIPULACIÓN HIGIÉNICA DE ALIMENTOS').toUpperCase(), { align: 'center', characterSpacing: 1.5 });
 
   doc.moveDown(0.8);
   doc.fontSize(13)
@@ -131,11 +132,12 @@ function generateCertificatePDF(stream, data) {
      .text('AlimentosLMS Certificador', rightColX, yStart + 32, { width: 250, align: 'center' });
 
   // 9. Footer Verification Metadata
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
   doc.fontSize(9)
      .font('Courier')
      .fillColor('#64748B')
      .text(`CÓDIGO DE VERIFICACIÓN: ${data.codigo_verificacion}`, 40, doc.page.height - 65, { align: 'center' });
-  doc.text(`Verifique la validez de este certificado en: http://localhost:5173/#verify=${data.codigo_verificacion}`, 40, doc.page.height - 50, { align: 'center' });
+  doc.text(`Verifique la validez de este certificado en: ${frontendUrl}/#verify=${data.codigo_verificacion}`, 40, doc.page.height - 50, { align: 'center' });
 
   doc.end();
 }

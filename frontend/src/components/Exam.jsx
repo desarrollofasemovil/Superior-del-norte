@@ -1,33 +1,37 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { Award, AlertTriangle, RefreshCw, ChevronRight, FileCheck, ArrowLeft } from 'lucide-react';
 
 const Exam = () => {
-  const { token, submitExam, setCurrentView, API_BASE_URL } = useContext(AppContext);
+  const { token, submitExam, API_BASE_URL, activeCourseId, studentCourses } = useContext(AppContext);
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({}); // { 1: 'A', 2: 'C', ... }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null); // { puntaje, aprobado, intentos, message }
 
+  const currentCourse = studentCourses.find(c => c.id === activeCourseId);
+  const courseTitle = currentCourse ? currentCourse.titulo : 'Manipulación de Alimentos';
+
   useEffect(() => {
-    fetchQuestions();
-  }, []);
+    if (activeCourseId) {
+      fetchQuestions();
+    }
+  }, [activeCourseId]);
 
   const fetchQuestions = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/exam/questions`, {
+      const response = await fetch(`${API_BASE_URL}/exam/questions?courseId=${activeCourseId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (!response.ok) {
-        if (response.status === 403) {
-          throw new Error('Debe completar los 8 módulos del curso antes de realizar la evaluación final.');
-        }
-        throw new Error('Error al cargar las preguntas del examen');
-      }
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Debe completar todos los módulos del curso antes de realizar la evaluación final.');
+      }
       setQuestions(data);
     } catch (err) {
       setError(err.message);
@@ -76,7 +80,7 @@ const Exam = () => {
         <AlertTriangle size={48} color="var(--accent-rose)" style={{ marginBottom: '16px' }} />
         <h3 style={{ marginBottom: '12px', fontSize: '1.25rem', color: 'var(--text-primary)' }}>Acceso Bloqueado</h3>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '20px', fontSize: '0.95rem', lineHeight: '1.5' }}>{error}</p>
-        <button className="btn btn-primary" onClick={() => setCurrentView('dashboard')}>Volver al Dashboard</button>
+        <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>Volver al Dashboard</button>
       </div>
     );
   }
@@ -113,11 +117,11 @@ const Exam = () => {
               </p>
               
               <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <button className="btn btn-primary" onClick={() => setCurrentView('certificate')}>
+                <button className="btn btn-primary" onClick={() => navigate(`/certificate/${activeCourseId}`)}>
                   <FileCheck size={18} />
                   <span>Ver Certificado</span>
                 </button>
-                <button className="btn btn-secondary" onClick={() => setCurrentView('dashboard')}>
+                <button className="btn btn-secondary" onClick={() => navigate('/dashboard')}>
                   Ir al Inicio
                 </button>
               </div>
@@ -154,7 +158,7 @@ const Exam = () => {
                   <RefreshCw size={18} />
                   <span>Reintentar Evaluación</span>
                 </button>
-                <button className="btn btn-secondary" onClick={() => setCurrentView('dashboard')}>
+                <button className="btn btn-secondary" onClick={() => navigate('/dashboard')}>
                   Volver al Temario
                 </button>
               </div>
@@ -171,7 +175,7 @@ const Exam = () => {
       
       {/* Back Button */}
       <button
-        onClick={() => setCurrentView('dashboard')}
+        onClick={() => navigate('/dashboard')}
         style={{
           background: 'none',
           border: 'none',
@@ -193,7 +197,7 @@ const Exam = () => {
         
         {/* Title */}
         <div style={{ borderBottom: '1px solid var(--border-glass)', paddingBottom: '20px', marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.75rem', color: 'var(--text-primary)', fontWeight: 800 }}>Evaluación de Manipulación de Alimentos</h2>
+          <h2 style={{ fontSize: '1.75rem', color: 'var(--text-primary)', fontWeight: 800 }}>Evaluación de {courseTitle}</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '8px', lineHeight: '1.5' }}>
             Responde correctamente las siguientes preguntas sobre las buenas prácticas de manufactura. Se requiere al menos un <b>80% de respuestas correctas</b> (7 de 8) para aprobar y obtener tu certificado.
           </p>

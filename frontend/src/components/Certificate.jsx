@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import logoNormal from '../assets/logoNormal.jpeg';
 import { Download, ArrowLeft, Copy, Check, ShieldCheck } from 'lucide-react';
@@ -27,15 +28,19 @@ const decodeMojibake = (str) => {
 };
 
 const Certificate = () => {
-  const { user, downloadCertificate, setCurrentView, token, API_BASE_URL } = useContext(AppContext);
+  const { user, downloadCertificate, token, API_BASE_URL, activeCourseId, studentCourses } = useContext(AppContext);
+  const navigate = useNavigate();
   const [certData, setCertData] = useState(null);
   const [copied, setCopied] = useState(false);
+
+  const currentCourse = studentCourses.find(c => c.id === activeCourseId);
+  const courseTitle = currentCourse ? currentCourse.titulo : 'Curso de Manipulación Higiénica de Alimentos';
 
   // Fetch certificate metadata from `/api/certificate/detail`
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const resCert = await fetch(`${API_BASE_URL}/certificate/detail`, {
+        const resCert = await fetch(`${API_BASE_URL}/certificate/detail?courseId=${activeCourseId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (resCert.ok) {
@@ -46,8 +51,10 @@ const Certificate = () => {
         console.error('Error fetching cert metadata:', err);
       }
     };
-    fetchMetadata();
-  }, [token, API_BASE_URL]);
+    if (activeCourseId) {
+      fetchMetadata();
+    }
+  }, [token, API_BASE_URL, activeCourseId]);
 
   const handleCopyCode = () => {
     if (certData?.codigo_verificacion) {
@@ -62,7 +69,7 @@ const Certificate = () => {
       
       {/* Back Button */}
       <button
-        onClick={() => setCurrentView('dashboard')}
+        onClick={() => navigate('/dashboard')}
         style={{
           background: 'none',
           border: 'none',
@@ -86,7 +93,7 @@ const Certificate = () => {
           <div>
             <h2 style={{ fontSize: '1.75rem', color: 'var(--text-primary)', fontWeight: 800 }}>Tu Certificación Oficial</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
-              Curso de Manipulación Higiénica de Alimentos
+              {courseTitle}
             </p>
           </div>
           <button className="btn btn-primary" onClick={downloadCertificate} style={{ height: '46px' }}>
@@ -131,7 +138,7 @@ const Certificate = () => {
           </h3>
           
           <p style={{ fontSize: '0.75rem', letterSpacing: '0.12em', color: 'var(--accent-gold)', fontWeight: 800, marginBottom: '24px' }}>
-            CURSO DE MANIPULACIÓN HIGIÉNICA DE ALIMENTOS
+            {courseTitle.toUpperCase()}
           </p>
           
           {certData?.numero_certificado && (

@@ -1,0 +1,266 @@
+Curso de manipulación de alimentos
+
+1. Objetivo general 
+Desarrollar competencias en manipulación higiénica de alimentos mediante la aplicación de principios de inocuidad, higiene y Buenas Prácticas de Manufactura (BPM), conforme a los requisitos establecidos en la legislación sanitaria colombiana vigente.
+
+2. Objetivos específicos 
+
+* Identificar los principales riesgos de contaminación física, química y biológica asociados a la manipulación de alimentos, aplicando medidas preventivas que garanticen la inocuidad alimentaria.
+* Aplicar adecuadamente las Buenas Prácticas de Manufactura (BPM), incluyendo hábitos de higiene personal, limpieza, desinfección y manejo seguro de los alimentos, conforme a la normatividad sanitaria vigente en Colombia.
+
+3. Alcance
+El curso aplica para personas que realicen actividades de preparación, almacenamiento, transporte, distribución, comercialización o manipulación de alimentos, abordando temas de higiene, inocuidad y Buenas Prácticas de Manufactura (BPM) en modalidad virtual.
+4. Módulos de aprendizaje
+4.1 Módulo 1: Inocuidad alimentaria y BPM
+4.1.1 Definición de alimento: Todo producto natural o artificial, elaborado o no, que ingerido aporta al organismo humano los nutrientes y la energía necesarios para el desarrollo de los procesos biológicos.
+4.1.2 Definición de calidad: Calidad es el conjunto de propiedades y características inherentes de un producto o servicio que le dan la capacidad de satisfacer gustos, necesidades, preferencias según un parámetro y cumplir con sus requerimientos. También se define calidad como la percepción de un cliente hacia un producto o servicio por sus cualidades, respecto al grado de conformidad y satisfacción que se consigue.
+4.1.3 Definición de inocuidad: Es la garantía de que los alimentos no causarán daño al consumidor cuando se preparen y consuman de acuerdo con el uso al que se destina. Resolución 2674 del 2013
+4.1.4 Diferencia entre calidad e inocuidad: La calidad se relaciona con las características del producto que satisfacen al cliente, como sabor, apariencia y presentación, mientras que la inocuidad garantiza que el alimento sea seguro y no represente un riesgo para la salud. Ambos conceptos son fundamentales, pero la inocuidad es un requisito obligatorio para cualquier alimento.
+4.1.5 Importancia de la inocuidad alimentaria: Los alimentos no inocuos socavan la seguridad alimentaria y la salud. Asegurar la inocuidad de los alimentos es esencial para promover la salud, los medios de vida, el comercio, el crecimiento económico y la prosperidad general.
+Cada año, millones de personas enferman como consecuencia de alimentos no inocuos. Los grupos vulnerables, como los niños, las mujeres embarazadas y las personas de más edad corren mayor riesgo. FAO
+4.1.6 Definición de alimento contaminado: Alimento que presenta o contiene agentes y/o sustancias extrañas de cualquier naturaleza en cantidades superiores a las permitidas en las normas nacionales, o en su defecto en normas reconocidas internacionalmente
+4.1.7 Clasificación de los alimentos según el riesgo para la salud pública: 
+* Alimento de mayor riesgo: Alimento que, en razón a sus características de composición especialmente en sus contenidos de nutrientes, favorece el crecimiento microbiano y, por consiguiente, cualquier deficiencia en su proceso, manipulación, conservación, transporte, distribución y comercialización, puede ocasionar trastornos a la salud del consumidor. Ejemplo: Carne, pollo, lácteos, huevos, entre otros. 
+
+* Alimento de riesgo medio: Los alimentos que pueden contener microorganismos patógenos, pero normalmente no favorecen su crecimiento debido a las características del alimento o alimentos que es poco probable que contengan microorganismos patógenos debido al tipo de alimento o procesamiento del mismo, pero que pueden apoyar a la formación de toxinas o el crecimiento de microorganismos patógenos. Ejemplo: Mantequilla, enlatados, entre otros. 
+* Alimento de menor riesgo: Poseen menor riesgo de contaminación debido a su bajo contenido de Nutrientes, son más secos o más ácidos y por tanto tienen más resistencia y son más estables a T ambiente. Ejemplo: Galletas, cereales, pan, productos ácidos como el vinagre, mermelada, entre otros. 
+4.1.8 Definición de BPM: Principios básicos y generales de higiene en la elaboración, preparación, elaboración, envasado, almacenamiento, transporte y distribución de alimentos para el consumo humano. Resolución 2674 del 2013.
+4.1.9 Definición de seguridad alimentaria: Existe seguridad alimentaria cuando las personas tienen acceso a alimentos suficientes, seguros y nutritivos para su crecimiento, desarrollo y una vida activa y saludable.
+“…El 28 % de la población mundial se enfrentó a una inseguridad alimentaria moderada o grave en 2024. Los niveles de hambre y de inseguridad alimentaria mejoraron en algunas partes de América del Sur y Asia, pero empeoraron en África.” FAO.
+4.2 Módulo 2: Higiene del personal manipulador
+
+4.2.1 Definición de manipulador de alimentos: Es toda persona que está en contacto directo con el alimento durante todo el proceso de transformación del mismo y que puede influir en la inocuidad o calidad sanitaria. 
+“Las personas son el principal transporte gratis para los microorganismos”
+4.2.2 Estado de salud del manipulador de alimentos: 
+
+* El personal debe contar con buen estado de salud, no se permite con enfermedades infecciosas.
+* El personal debe contar con certificación médica para manipular alimentos, realizando exámenes periódicos 1 vez al año. 
+* Realizar acciones correctivas y preventivas dependiendo de los exámenes de salud del personal.
+* La empresa deberá garantizar el seguimiento periódico de los exámenes médicos del personal manipulador. 
+* Cuando se presenten enfermedades, heridas, tatuajes o demás, será responsabilidad del colaborador comunicar al jefe inmediato para tomar las medidas correspondientes. 
+4.2.3 Educación y capacitación del personal manipulador: Según la resolución 2674 del 2013, se debe contar con un plan de capacitación anual de por lo menos 10 horas sobre temas relacionados con la resolución 2674 del 2013. Los capacitadores deben demostrar su idoneidad para capacitar, deben tener formación en el tema y experiencia relacionada con el campo de los alimentos. 
+4.2.4 Prácticas higiénicas y medidas de protección
+Las prácticas higiénicas son fundamentales para garantizar la inocuidad de los alimentos y prevenir riesgos de contaminación. Todo manipulador debe mantener una adecuada higiene personal, realizar un correcto lavado de manos, utilizar la dotación de protección requerida y evitar conductas que puedan afectar la seguridad de los alimentos. Asimismo, es importante aplicar medidas de protección durante la preparación, almacenamiento y manipulación, con el fin de proteger la salud del consumidor y cumplir con las Buenas Prácticas de Manufactura (BPM).
+* No hablar ni estornudar sobre los alimentos
+* Mantener un constante y correcto lavado de manos 
+* Utilizar el uniforme que sea proporcionado por la organización en condiciones óptimas de limpieza: Botas de seguridad, gorro, cubre barbas (cuando sea el caso), tapabocas, bata antifluido, entre otros. 
+* Evitar joyas, accesorios como relojes, cadenas, aretes, manillas, piercings, entre otros. 
+* No fumar ni comer en el lugar de trabajo. 
+* Reportar heridas, cortadas, tatuajes.
+* Evitar olores fuertes tales como perfume.
+* Las uñas deben permanecer limpias, sin esmalte y cortas. 
+* En el caso de las mujeres, no podrán portar maquillaje, cremas para el cuerpo, pestañas postizas, entre otros. 
+
+4.2.5 Lavado de manos
+ El lavado de manos debe realizarse en diversas situaciones: 
+* Antes de comenzar a trabajar
+* Al ingresar a la planta de producción
+* Al cambiar de proceso
+* Al salir del baño
+* Al tocar cualquier elemento contaminado
+* Al tener contacto con utensilios sucios
+* Después de tocar cualquier parte del cuerpo que no esté limpia
+* Después de trabajar con alimentos crudos o alérgenos
+* Después de tocar elementos personales como el celular, loncheras, entre otros. 
+El lavado constante de manos previene de enfermedades en la piel, ojos o demás.
+Proceso correcto del lavado de manos: 
+1. Humedecer las manos con abundante agua
+2. Enjabonar las manos con el grifo cerrado
+3. Comenzar frotando las palmas entre ellas
+4. Intercalar los dedos y frotar la palma y el anverso de la mano 
+5. Continuar con los dedos intercalados y limpiar los espacios entre sí. 
+6. Con las manos de frente, agarrarse los dedos y moverlos de lado a lado.
+7. Tomar el dedo pulgar y limpiar la zona del agarre de la mano. 
+8. Limpiar las yemas de los dedos, frotando contra la palma de la mano. 
+9. Enjuagar las manos con abundante agua (8 seg aproximadamente)
+10. Secar las manos con una toalla desechable. 
+11. Cerrar el grifo con la toalla desechable. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+4.2.6 Prácticas higiénicas de los visitantes
+
+* Todos los visitantes que deseen ingresar a las instalaciones deberán seguir todas las medidas de protección y sanitarias establecidas. No podrán ingresar con accesorios, olores fuertes y/o maquillaje.
+* Deben portar la vestimenta y dotación adecuada suministrada por la empresa (polainas, bata desechable, gorro desechable, cubre barba (si es el caso) y tapabocas).
+
+4.3 Módulo 3: Tipos de contaminación alimentaria
+
+4.3.1 Definición contaminación de los alimentos:  La contaminación de los alimentos es la presencia de agentes físicos, químicos o biológicos que pueden alterar la inocuidad de un alimento y representar un riesgo para la salud del consumidor. Esta contaminación puede ocurrir durante la preparación, almacenamiento, transporte, manipulación o distribución de los alimentos debido a prácticas inadecuadas de higiene y manipulación. La contaminación de los mismos puede producirse en cualquier momento desde su cosecha, pasando por la elaboración a nivel industrial, hasta cuando se prepara la comida en el hogar.
+
+4.3.2 Definición de alérgenos: Los alérgenos son sustancias presentes en ciertos alimentos que pueden provocar reacciones alérgicas en personas sensibles. Estas reacciones pueden variar desde síntomas leves hasta efectos graves que comprometen la salud del consumidor. 
+Los 14 alérgenos declarados son: 
+* Cereales que contienen gluten (trigo, centeno, cebada, avena, espelta, kamut o sus variedades híbridas)
+* Crustáceos y productos a base de crustáceos
+* Huevos y productos a base de huevo
+* Pescado y productos a base de pescado
+* Maní (cacahuate) y productos a base de maní
+* Soja y productos a base de soja
+* Leche y productos lácteos (incluida la lactosa)
+* Frutos de cáscara (almendras, avellanas, nueces, anacardos, pacanas, nuez de Brasil, pistachos y macadamias)
+* Apio y productos a base de apio
+* 10. Mostaza y productos a base de mostaza
+* 11. Granos de sésamo (ajonjolí) y productos a base de sésamo
+* 12. Dióxido de azufre y sulfitos en concentraciones superiores a 10 mg/kg o 10 mg/L
+* 13. Altramuces (lupino) y productos a base de altramuces
+* 14. Moluscos y productos a base de moluscos
+
+4.3.3 Contaminación física
+La contaminación física ocurre cuando cuerpos extraños o partículas ajenas al alimento entran en contacto con este, afectando su inocuidad y representando un riesgo para la salud del consumidor. Entre los contaminantes físicos más comunes se encuentran cabello, vidrio, plástico, metal, tierra, madera, piedras, uñas, joyas o fragmentos de utensilios y empaques.
+Este tipo de contaminación generalmente se produce por malas prácticas de manipulación, deficiencias en limpieza, deterioro de equipos o incumplimiento de las medidas de higiene y protección durante el procesamiento y manejo de los alimentos.
+4.3.4 Contaminación química
+La contaminación química se presenta cuando sustancias químicas peligrosas entran en contacto con los alimentos, afectando su inocuidad y poniendo en riesgo la salud del consumidor. Este tipo de contaminación puede originarse por el uso inadecuado de productos de limpieza y desinfección, residuos de plaguicidas, jabones o desinfectantes mal enjuagados, lubricantes, metales pesados o sustancias tóxicas presentes en envases y superficies.
+La contaminación química suele ocurrir por almacenamiento incorrecto de sustancias químicas, malas prácticas de manipulación o falta de control durante los procesos de limpieza y producción de alimentos.
+4.3.5 Contaminación biológica
+La contaminación biológica ocurre cuando microorganismos como bacterias, virus, hongos o parásitos contaminan los alimentos, pudiendo causar enfermedades transmitidas por alimentos (ETA). Este tipo de contaminación es una de las más comunes y peligrosas, ya que muchos microorganismos no alteran el olor, sabor o apariencia del alimento.
+La contaminación biológica puede producirse por una mala higiene personal, manipulación inadecuada, contaminación cruzada, uso de agua no potable, temperaturas inadecuadas de conservación o deficiencias en limpieza y desinfección.
+4.3.6 Contaminación cruzada
+La contaminación cruzada ocurre cuando microorganismos, sustancias o cuerpos extraños se transfieren de un alimento, superficie, utensilio o persona hacia otro alimento, afectando su inocuidad. Generalmente sucede cuando alimentos crudos entran en contacto con alimentos listos para el consumo, o cuando no se realiza una adecuada limpieza y desinfección de manos, equipos y utensilios.
+Este tipo de contaminación puede prevenirse mediante buenas prácticas de higiene, correcta separación de alimentos y adecuado manejo durante la preparación, almacenamiento y distribución.
+La contaminación física, química, biológica y cruzada son los tipos de contaminación alimentaria que se pueden presentar en todas las industrias alimenticias. Sin embargo, puede ocurrir otro tipo de contaminación en algunas industrias que manejan productos alérgenos. 
+4.3.7 Contaminación por alérgenos
+La contaminación por alérgenos ocurre cuando un alimento entra en contacto con sustancias capaces de generar reacciones alérgicas en personas sensibles. Esta contaminación puede producirse por contacto directo entre alimentos, uso compartido de utensilios, superficies o equipos, o por una inadecuada manipulación durante los procesos de preparación y almacenamiento.
+Entre los alérgenos más comunes se encuentran leche, huevo, soya, maní, frutos secos, trigo, pescado y mariscos. La correcta identificación, separación y manejo de estos ingredientes es fundamental para prevenir riesgos en la salud del consumidor.
+4.4 Módulo 4: Limpieza y desinfección 
+4.4.1 Definición de limpieza: La limpieza es el proceso mediante el cual se eliminan residuos visibles como grasa, suciedad, restos de alimentos, polvo y otras impurezas presentes en superficies, equipos, utensilios y áreas de trabajo.
+Este procedimiento es fundamental para mantener condiciones higiénicas adecuadas y facilitar la posterior desinfección, contribuyendo a la prevención de la contaminación de los alimentos.
+4.4.2 Definición de desinfección: La desinfección es el proceso mediante el cual se eliminan o reducen los microorganismos presentes en superficies, equipos, utensilios y áreas de trabajo, mediante el uso de agentes químicos o métodos físicos autorizados.
+Este procedimiento se realiza después de la limpieza y es fundamental para prevenir la contaminación de los alimentos y garantizar condiciones adecuadas de higiene e inocuidad.
+4.4.3 Diferencia entre limpieza y desinfección: La limpieza y la desinfección son procesos complementarios, pero no significan lo mismo. La limpieza consiste en eliminar suciedad, grasa y residuos visibles de las superficies, mientras que la desinfección tiene como objetivo eliminar o reducir los microorganismos que pueden causar contaminación. Para lograr una adecuada inocuidad, primero debe realizarse la limpieza y posteriormente la desinfección.
+Los pasos básicos de limpieza son: 
+* Retirar residuos, aplicar detergente y enjuagar con agua. 
+* Mantener limpias todas las áreas y superficies del lugar de trabajo, así como los equipos y utensilios que tienen contacto con los alimentos.
+* Mantener los productos de aseo almacenados en un lugar exclusivo bajo llave, los cuales deben mantener identificados con su respectiva dosificación. 
+* No se deben mezclar productos químicos debido a que pueden generar olores tóxicos o nocivos para la salud. 
+* Cada persona debe ser responsable de limpiar y desinfectar correctamente su área de trabajo al terminar la jornada. 
+4.4.4 Tipos de desinfección
+* Desinfección por inmersión: La desinfección por inmersión es un método mediante el cual utensilios, equipos o elementos de manipulación se sumergen completamente en una solución desinfectante durante un tiempo determinado, con el fin de eliminar o reducir los microorganismos presentes en sus superficies.
+Este procedimiento debe realizarse utilizando productos autorizados, concentraciones adecuadas y respetando los tiempos de contacto recomendados para garantizar una correcta desinfección y prevenir la contaminación de los alimentos.
+* Desinfección por aspersión: La desinfección por aspersión es un método que consiste en aplicar una solución desinfectante sobre superficies, equipos o utensilios mediante pulverización o rociado, con el fin de eliminar o reducir los microorganismos presentes.
+
+Para garantizar su efectividad, es importante que las superficies se encuentren previamente limpias y que el desinfectante utilizado permanezca el tiempo de contacto recomendado según las indicaciones del fabricante.
+
+* Desinfección manual: La desinfección manual es un método mediante el cual se aplica una solución desinfectante sobre superficies, equipos o utensilios utilizando elementos como paños, cepillos o esponjas limpias, con el fin de eliminar o reducir los microorganismos presentes.
+
+Este procedimiento debe realizarse después de la limpieza y respetando las concentraciones y tiempos de contacto recomendados para garantizar una adecuada inocuidad de los alimentos.
+4.4.5 Métodos para desinfectar
+* Calor: La desinfección por calor es un método que utiliza altas temperaturas, como agua caliente o vapor, para eliminar o reducir los microorganismos presentes en utensilios, equipos y superficies. Este procedimiento ayuda a garantizar condiciones higiénicas adecuadas y es ampliamente utilizado en procesos de manipulación de alimentos debido a su efectividad para disminuir la carga microbiana.
+* Desinfección por productos químicos: La desinfección por productos químicos es un método que consiste en utilizar sustancias desinfectantes autorizadas para eliminar o reducir los microorganismos presentes en superficies, equipos, utensilios y áreas de trabajo. Estos productos deben aplicarse en las concentraciones y tiempos de contacto recomendados para garantizar su efectividad y evitar riesgos de contaminación en los alimentos.
+
+4.4.6 Tipos de productos químicos: Entre los más utilizados se encuentran: 
+* Hipoclorito de sodio (cloro)
+* Amonios cuaternarios
+* Alcohol
+* Yodo y compuestos yodados
+* Peróxido de hidrógeno
+* Ácido peracético
+La selección del desinfectante dependerá del tipo de superficie, el nivel de contaminación y las necesidades del proceso de manipulación de alimentos.
+4.5 Módulo 5: Agua potable y control de plagas
+El agua potable es aquella que cumple con las condiciones físicas, químicas y microbiológicas aptas para el consumo humano y para su uso seguro en la preparación, limpieza y manipulación de alimentos.
+El agua potable es fundamental en los procesos de manipulación de alimentos, ya que se utiliza para la preparación de productos, lavado de materias primas, limpieza de utensilios, equipos, superficies y aseo personal. El uso de agua contaminada puede convertirse en una fuente de contaminación biológica, química o física, afectando la inocuidad de los alimentos y poniendo en riesgo la salud del consumidor.
+4.5.1 Usos del agua potable en la manipulación de alimentos:
+* Lavado de manos.
+* Lavado y desinfección de frutas y verduras.
+* Limpieza y desinfección de equipos y utensilios.
+* Preparación de alimentos y bebidas.
+* Producción de hielo y vapor.
+* Limpieza de instalaciones y superficies.
+4.5.2 Riesgos de utilizar agua contaminada o no potable
+El uso de agua no potable en la manipulación de alimentos representa un riesgo importante para la inocuidad, ya que puede convertirse en una fuente de contaminación física, química y biológica. El agua contaminada puede contener microorganismos patógenos, sustancias químicas o partículas extrañas capaces de alterar la calidad de los alimentos y causar enfermedades transmitidas por alimentos (ETA).
+Además, el uso de agua no potable durante la limpieza, preparación, lavado de materias primas o higiene del personal puede favorecer la contaminación cruzada y la proliferación de microorganismos, afectando la seguridad de los productos y poniendo en riesgo la salud del consumidor.
+4.5.3 Medidas de control del agua potable: Las industrias de alimentos implementan diferentes controles para garantizar que el agua utilizada durante los procesos sea potable y segura. Entre las principales medidas se encuentran la limpieza y desinfección periódica de tanques de almacenamiento, el mantenimiento preventivo de tuberías y conexiones, y la realización de análisis físicos, químicos y microbiológicos para verificar la calidad del agua.
+Así mismo, se controlan las condiciones de almacenamiento y distribución del agua dentro de las instalaciones, evitando posibles fuentes de contaminación. Estos controles permiten asegurar que el agua utilizada en la preparación, limpieza y manipulación de alimentos cumpla con las condiciones sanitarias necesarias para proteger la inocuidad y la salud del consumidor.
+4.5.4 Control de plagas
+4.5.5 Definición de plagas: Las plagas son organismos como insectos, roedores, aves u otros animales que pueden ingresar a las áreas de manipulación de alimentos y representar un riesgo para la inocuidad, ya que tienen la capacidad de contaminar alimentos, superficies, equipos y utensilios.
+La presencia de plagas puede favorecer la transmisión de enfermedades, generar contaminación física y biológica, y afectar las condiciones higiénico-sanitarias de los establecimientos de alimentos.
+4.5.6 Importancia del control de plagas: El control de plagas es fundamental para prevenir la contaminación de los alimentos y mantener condiciones higiénicas adecuadas dentro de las áreas de almacenamiento, preparación y manipulación.
+Las plagas pueden:
+* Transmitir enfermedades. 
+* Contaminar superficies y alimentos. 
+* Deteriorar materias primas y empaques. 
+* Generar pérdidas económicas. 
+* Afectar la imagen del establecimiento.
+4.5.7 Plagas más comunes en la industria alimentaria
+* Moscas
+* Cucarachas
+* Hormigas
+* Roedores
+* Aves
+* Gorgojos y otros insectos de almacenamiento
+4.5.8 Manejo integrado de plagas 
+Es fundamental mantener un adecuado control sobre las materias primas, empaques y áreas de almacenamiento, verificando continuamente su estado higiénico y evitando condiciones que favorezcan la presencia de plagas. Asimismo, deben cumplirse de manera permanente los programas de limpieza y desinfección establecidos, con el fin de conservar ambientes limpios, seguros y aptos para la manipulación de alimentos.
+4.5.9 Medidas preventivas para el control de plagas
+* Mantener orden y limpieza.
+* Disponer adecuadamente los residuos.
+* Mantener recipientes de basura tapados.
+* Evitar acumulación de agua.
+* Sellar grietas, huecos y entradas.
+* Almacenar alimentos protegidos y separados del piso.
+* Mantener puertas y ventanas protegidas.
+* Realizar inspecciones periódicas.
+Los manipuladores deberán comunicar al área encargada de cualquier avistamiento de plagas, roedores o demás insectos que puedan afectar la inocuidad del proceso o producto.
+4.6 Módulo 6: Enfermedades transmitidas por alimentos (ETA)
+Las Enfermedades Transmitidas por Alimentos (ETA), se definen como el síndrome originado por la ingestión de alimentos y/o agua, que contengan agentes etiológicos, en cantidades suficientes, que afecten la salud del consumidor a nivel individual o colectivo. 
+Por otra parte, las enfermedades relacionadas con el consumo de agua son aquellas producidas por el agua contaminada con desechos humanos, animales o químicos. Se consideran enfermedades transmitidas por el agua el cólera, la fiebre tifoidea, la disentería, la poliomielitis, la meningitis y las hepatitis A y E.
+4.6.1 Infección alimentaria: La infección alimentaria ocurre cuando una persona consume alimentos o agua contaminados con microorganismos patógenos vivos, como bacterias, virus o parásitos, que ingresan al organismo y se multiplican, causando enfermedad. Generalmente, las infecciones alimentarias se producen por malas prácticas de higiene, contaminación cruzada o consumo de alimentos mal cocidos o contaminados.
+4.6.2 Intoxicación alimentaria: La intoxicación alimentaria se presenta cuando una persona consume alimentos que contienen toxinas o sustancias tóxicas producidas por microorganismos, sustancias químicas o contaminantes presentes en el alimento.
+En este caso, la enfermedad no es causada por el microorganismo vivo, sino por las toxinas presentes en el alimento contaminado.
+4.6.3 Factores que contribuyen a la formación de una ETA
+Las Enfermedades Transmitidas por Alimentos (ETA) pueden originarse por diferentes factores relacionados con una inadecuada manipulación y conservación de los alimentos. Entre las principales causas se encuentran la mala higiene personal de los manipuladores, el uso de agua no potable, la contaminación cruzada, la limpieza y desinfección insuficiente de equipos y utensilios, y la presencia de plagas en las áreas de almacenamiento o preparación.
+Asimismo, las temperaturas inadecuadas de conservación, la cocción insuficiente, el almacenamiento incorrecto de materias primas y el consumo de alimentos contaminados favorecen la proliferación de microorganismos capaces de causar enfermedades y afectar la salud del consumidor.
+Para que ocurra una ETA, existen factores adicionales a la presencia del agente etiológico o su(s) toxina(s) como: 
+* El alimento debe estar bajo características físicas (temperatura, humedad, tiempo) que favorezcan el crecimiento del microorganismo o la producción de su toxina. 
+* El agente etiológico debe estar presente en cantidad suficiente, para causar la infección o la intoxicación.
+* Debe ingerirse una cantidad (porción) suficiente del alimento que contenga el microorganismo o agente etiológico, que sobrepase la barrera de protección de la persona.
+4.6.4 Síntomas de una ETA
+Los síntomas dependerán del agente etiológico y del órgano que afecte a la persona.  La manifestación clínica más común de una enfermedad transmitida por los alimentos consiste en la aparición de síntomas gastrointestinales (náuseas, vómitos, calambres estomacales y diarrea), pero estas enfermedades también pueden dar lugar a síntomas neurológicos, ginecológicos, inmunológicos y de otro tipo.
+4.6.5 Enfermedades más comunes trasmitidas por alimentos
+* Salmonelosis: Enfermedad causada por bacterias del género Salmonella, generalmente asociada al consumo de alimentos contaminados como carnes, huevos, pollo, leche o agua no potable. Puede causar diarrea, fiebre, vómito y dolor abdominal.
+* Escherichia coli (E. coli): Enfermedad producida por ciertas cepas de la bacteria Escherichia coli, relacionada con alimentos contaminados, mala higiene o cocción insuficiente. Sus síntomas incluyen diarrea, dolor abdominal y vómito.
+* Listeriosis Infección causada por la bacteria Listeria monocytogenes, presente en alimentos contaminados o mal refrigerados. Puede afectar especialmente a mujeres embarazadas, adultos mayores y personas con defensas bajas.
+* Botulismo Enfermedad grave causada por toxinas producidas por la bacteria Clostridium botulinum, comúnmente asociada a alimentos mal conservados o enlatados de manera inadecuada.
+* Intoxicación por Staphylococcus aureus: Intoxicación causada por toxinas producidas por la bacteria Staphylococcus aureus, la cual puede contaminar alimentos debido a una mala higiene del manipulador. Sus síntomas suelen aparecer rápidamente e incluyen vómito, diarrea y dolor abdominal.
+
+4.6.6 Medidas de prevención para evitar ETA
+La prevención de las Enfermedades Transmitidas por Alimentos (ETA) depende de la aplicación adecuada de prácticas higiénicas durante la preparación, almacenamiento y manipulación de los alimentos. Entre las principales medidas preventivas se encuentran:
+* El correcto lavado de manos
+* El uso de agua potable
+* La limpieza y desinfección de superficies, equipos y utensilios.
+* La adecuada higiene personal de los manipuladores.
+Además, es fundamental evitar la contaminación cruzada, cocinar completamente los alimentos, conservarlos a temperaturas seguras, almacenar adecuadamente las materias primas y mantener un adecuado control de plagas. La correcta aplicación de estas medidas contribuye a garantizar la inocuidad de los alimentos y proteger la salud del consumidor.
+4.7 Módulo 7: Manipulación segura y conservación de alimentos
+4.7.1 Definición de manipulación segura: La adecuada manipulación de los alimentos es fundamental para prevenir Enfermedades Transmitidas por Alimentos (ETA), evitar la proliferación de microorganismos y proteger la salud del consumidor. La aplicación de buenas prácticas durante todos los procesos ayuda a mantener la calidad e inocuidad de los productos.
+4.7.2 Lavado de frutas y verduras: Las frutas y verduras deben lavarse y desinfectarse adecuadamente antes de su preparación o consumo para eliminar suciedad, residuos y posibles microorganismos contaminantes.
+4.7.3 Separación de los alimentos: Los alimentos crudos deben mantenerse separados de los alimentos listos para el consumo para evitar contaminación cruzada.
+4.7.4 Conservación de los alimentos: La conservación de alimentos consiste en aplicar condiciones y procedimientos adecuados para mantener la inocuidad, calidad y vida útil de los productos alimenticios durante su almacenamiento y distribución.
+4.7.5 Importancia de la conservación de los alimentos: Una adecuada conservación permite disminuir el crecimiento de microorganismos, evitar el deterioro de los alimentos y reducir riesgos de contaminación.
+4.7.6 Métodos de conservación
+Refrigeración: La refrigeración consiste en mantener los alimentos a bajas temperaturas para disminuir la proliferación de microorganismos y conservar su calidad.
+Congelación: La congelación permite conservar los alimentos durante períodos más prolongados mediante temperaturas inferiores a cero grados, reduciendo la actividad microbiana.
+4.7.7 Almacenamiento seguro de los alimentos: 
+* Mantener alimentos protegidos y tapados.
+* Separar alimentos crudos de cocidos.
+* Aplicar el método PEPS (Primero en Entrar, Primero en Salir).
+* Almacenar productos sobre estibas o superficies limpias.
+* Verificar fechas de vencimiento y estado de los productos.
+* Mantener áreas limpias, secas y organizadas.
+4.7.8 Cadena de frío
+La cadena de frío es el mantenimiento continuo de temperaturas adecuadas durante el almacenamiento, transporte y distribución de alimentos refrigerados o congelados, con el fin de conservar su inocuidad y calidad.
+La interrupción de la cadena de frío puede favorecer la proliferación de microorganismos y aumentar el riesgo de contaminación.
+4.8 Módulo 8 Normatividad sanitaria: 
+4.8.1 Resolución 2674 del 2013:  Es la norma colombiana que establece los requisitos sanitarios para la fabricación, procesamiento, almacenamiento, transporte y comercialización de alimentos. Su objetivo es proteger la salud pública y garantizar la inocuidad de los productos en toda la cadena alimentaria.
+4.8.2 Resolución 0810 del 2021: Tiene por objeto establecer el reglamento técnico sobre los requisitos de etiquetado nutricional y etiquetado frontal que deben cumplir los alimentos envasados o empacados para consumo humano que se comercialicen en Colombia.
+4.8.3 Decreto 1500 del 2007: Tiene por objeto establecer el reglamento técnico mediante el cual se crea el Sistema Oficial de Inspección, Vigilancia y Control de la carne, productos cárnicos comestibles y derivados cárnicos destinados para el consumo humano, así como los requisitos sanitarios y de inocuidad que deben cumplirse a lo largo de todas las etapas de la cadena alimentaria.
+4.8.4 Ley 9 de 1979: Tiene por objeto establecer medidas sanitarias orientadas a preservar, restaurar y mejorar las condiciones necesarias para proteger la salud humana y las condiciones sanitarias del ambiente.
+4.8.5 Resolución 5109 del 2005: tiene por objeto establecer el reglamento técnico sobre los requisitos de rotulado o etiquetado que deben cumplir los alimentos envasados o empacados y las materias primas para consumo humano, con el fin de brindar al consumidor información clara, comprensible y que no induzca a error o confusión. 
+
+

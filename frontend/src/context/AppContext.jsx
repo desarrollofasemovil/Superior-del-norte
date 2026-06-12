@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 
 export const AppContext = createContext();
 
@@ -22,9 +22,38 @@ const decodeJWTPayload = (token) => {
 };
 
 export const AppProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token') || null);
-  const [currentView, setCurrentView] = useState('login');
+
+  // Lazy init: decode user from stored token once, synchronously.
+  // This avoids the setUser(newObject) effect that causes re-render loops.
+  const [user, setUser] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      const payload = decodeJWTPayload(savedToken);
+      if (payload) {
+        return {
+          cedula: payload.cedula,
+          nombre_completo: payload.nombre_completo,
+          rol: payload.rol
+        };
+      }
+    }
+    return null;
+  });
+
+  // currentView is kept for backward compatibility with components that
+  // still reference it, but navigation is driven by React Router (navigate()).
+  const [currentView, setCurrentView] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      const payload = decodeJWTPayload(savedToken);
+      if (payload) {
+        return payload.rol === 'administrador' ? 'admin_dashboard' : 'dashboard';
+      }
+    }
+    return 'login';
+  });
+
   const [modules, setModules] = useState([]);
   const [progress, setProgress] = useState({ progreso_porcentaje: 0, modulos_completados: [] });
   const [activeModuleId, setActiveModuleId] = useState(null);
@@ -32,45 +61,101 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Dynamic Course and Module states
+  const [activeCourseId, setActiveCourseId] = useState(null);
+  const [studentCourses, setStudentCourses] = useState([]);
+
   // Admin Panel states
   const [adminMetrics, setAdminMetrics] = useState({ usuarios_activos: 0, cursos_completados: 0, cursos_pendientes: 0 });
   const [adminUsers, setAdminUsers] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [coursesList, setCoursesList] = useState([]);
 
-  // Auto-redirect if token exists
-  useEffect(() => {
-    if (token) {
-      // Decode user from JWT (simple payload extract)
-      try {
-        const payload = decodeJWTPayload(token);
-        if (payload) {
-          setUser({
-            cedula: payload.cedula,
-            nombre_completo: payload.nombre_completo,
-            rol: payload.rol
-          });
-          if (payload.rol === 'administrador') {
-            setCurrentView('admin_dashboard');
-          } else {
-            setCurrentView('dashboard');
-          }
-        } else {
-          logout();
-        }
-      } catch (e) {
-        logout();
+  // FIX: useCallback stabilizes fetchStudentCourses reference.
+  // This prevents it from being a new function on every render.
+  const fetchStudentCourses = useCallback(async () => {
+    if (!token) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/student/courses`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setStudentCourses(data);
+        // Only auto-set activeCourseId if it hasn't been set yet
+        setActiveCourseId(prev => (data.length > 0 && !prev) ? data[0].id : prev);
       }
+    } catch (err) {
+      console.error('Error fetching student courses:', err);
+    }
+  }, [token]); // token is a primitive (string | null) — safe as dep
+
+  const fetchCourseContent = useCallback(async (courseId) => {
+    if (!token) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/course/content?courseId=${courseId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setModules(data);
+      }
+    } catch (err) {
+      console.error('Error fetching course content:', err);
     }
   }, [token]);
 
-  // Load modules and progress when authenticated
-  useEffect(() => {
-    if (token && user && user.rol === 'estudiante') {
-      fetchCourseContent();
-      fetchProgress();
-      fetchExamStatus();
+  const fetchProgress = useCallback(async (courseId) => {
+    if (!token) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/course/progress?courseId=${courseId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setProgress(data);
+      }
+    } catch (err) {
+      console.error('Error fetching progress:', err);
     }
-  }, [token, user]);
+  }, [token]);
+
+  const fetchExamStatus = useCallback(async (courseId) => {
+    if (!token) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/certificate/detail?courseId=${courseId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setExamStatus({ aprobado: true, score: data.calificacion_obtenida, intentos: data.intentos || 1 });
+      } else {
+        setExamStatus(null);
+      }
+    } catch (err) {
+      console.error('Error checking exam status:', err);
+    }
+  }, [token]);
+
+  // FIX: Use PRIMITIVE deps (user?.cedula, user?.rol) instead of the full
+  // `user` object. Objects are compared by reference — a new object with the
+  // same data still triggers the effect, causing the infinite loop.
+  // NOTE: The redundant JWT-decode useEffect([token]) has been REMOVED.
+  // user is initialized synchronously via lazy useState above.
+  useEffect(() => {
+    if (token && user?.cedula && user?.rol === 'estudiante') {
+      fetchStudentCourses();
+    }
+  }, [token, user?.cedula, user?.rol, fetchStudentCourses]);
+
+  // FIX: Same primitive-deps fix for course data loading.
+  useEffect(() => {
+    if (token && user?.cedula && user?.rol === 'estudiante' && activeCourseId) {
+      fetchCourseContent(activeCourseId);
+      fetchProgress(activeCourseId);
+      fetchExamStatus(activeCourseId);
+    }
+  }, [token, user?.cedula, user?.rol, activeCourseId, fetchCourseContent, fetchProgress, fetchExamStatus]);
 
   const login = async (cedula, password) => {
     setLoading(true);
@@ -112,57 +197,10 @@ export const AppProvider = ({ children }) => {
     setAdminMetrics({ usuarios_activos: 0, cursos_completados: 0, cursos_pendientes: 0 });
     setAdminUsers([]);
     setCourses([]);
+    setStudentCourses([]);
+    setActiveCourseId(null);
     setError(null);
     setCurrentView('login');
-  };
-
-  const fetchCourseContent = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/course/content`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setModules(data);
-      }
-    } catch (err) {
-      console.error('Error fetching course content:', err);
-    }
-  };
-
-  const fetchProgress = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/course/progress`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setProgress(data);
-      }
-    } catch (err) {
-      console.error('Error fetching progress:', err);
-    }
-  };
-
-  const fetchExamStatus = async () => {
-    // We can deduce exam status from a backend call, but we can also use our API endpoint if needed.
-    // Let's implement an endpoint check or do it during submit.
-    // For KISS, we can submit and get status, or fetch progress which could include exam details,
-    // or let's query a user's cert if they approved.
-    try {
-      // In the backend, we verify if a cert is generated
-      const response = await fetch(`${API_BASE_URL}/certificate/download`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      // If response is 200, the student approved. If 400, they haven't yet or failed.
-      if (response.status === 200) {
-        setExamStatus({ aprobado: true });
-      } else {
-        setExamStatus(null);
-      }
-    } catch (err) {
-      console.error('Error checking exam status:', err);
-    }
   };
 
   const completeModule = async (moduloId) => {
@@ -181,6 +219,8 @@ export const AppProvider = ({ children }) => {
           progreso_porcentaje: data.progreso_porcentaje,
           modulos_completados: data.modulos_completados
         });
+        // Refresh student courses list to reflect updated progress percentage on dashboard
+        await fetchStudentCourses();
       }
     } catch (err) {
       console.error('Error saving progress:', err);
@@ -197,19 +237,21 @@ export const AppProvider = ({ children }) => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ respuestas })
+        body: JSON.stringify({ respuestas, courseId: activeCourseId })
       });
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || 'Error al enviar examen');
       }
-      
+
       // Update local exam status state
       if (data.aprobado) {
         setExamStatus({ aprobado: true, score: data.puntaje, intentos: data.intentos });
       } else {
         setExamStatus({ aprobado: false, score: data.puntaje, intentos: data.intentos });
       }
+      // Reload enrolled courses to update progress/certificates
+      await fetchStudentCourses();
       return data;
     } catch (err) {
       setError(err.message);
@@ -221,19 +263,23 @@ export const AppProvider = ({ children }) => {
 
   const downloadCertificate = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/certificate/download`, {
+      const response = await fetch(`${API_BASE_URL}/certificate/download?courseId=${activeCourseId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.error || 'No se pudo descargar el certificado');
       }
-      
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Certificado_Manipulacion_Alimentos_${user.cedula}.pdf`;
+      const currentCourse = studentCourses.find(c => c.id === activeCourseId);
+      const filename = currentCourse
+        ? `Certificado_${currentCourse.titulo.replace(/\s+/g, '_')}_${user.cedula}.pdf`
+        : `Certificado_${user.cedula}.pdf`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -257,9 +303,12 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const fetchAdminUsers = async () => {
+  const fetchAdminUsers = async (cedula = '') => {
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/users`, {
+      const url = cedula
+        ? `${API_BASE_URL}/admin/users?cedula=${cedula}`
+        : `${API_BASE_URL}/admin/users`;
+      const response = await fetch(url, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -313,6 +362,48 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const fetchCoursesList = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/courses/list`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCoursesList(data);
+        return data;
+      }
+    } catch (err) {
+      console.error('Error fetching courses list:', err);
+    }
+  };
+
+  const updateStudentCourses = async (cedula, courseIds) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/users/${cedula}/courses`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ cursos: courseIds })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al actualizar cursos del estudiante');
+      }
+      await fetchAdminMetrics();
+      await fetchAdminUsers();
+      return data;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AppContext.Provider value={{
       user,
@@ -325,6 +416,11 @@ export const AppProvider = ({ children }) => {
       setActiveModuleId,
       examStatus,
       setExamStatus,
+      activeCourseId,
+      setActiveCourseId,
+      studentCourses,
+      setStudentCourses,
+      fetchStudentCourses,
       loading,
       error,
       login,
@@ -335,10 +431,13 @@ export const AppProvider = ({ children }) => {
       adminMetrics,
       adminUsers,
       courses,
+      coursesList,
       fetchAdminMetrics,
       fetchAdminUsers,
       fetchCourses,
+      fetchCoursesList,
       createStudentUser,
+      updateStudentCourses,
       API_BASE_URL
     }}>
       {children}

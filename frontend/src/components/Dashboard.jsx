@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import { BookOpen, CheckCircle, Circle, Award, FileText, Compass, Clock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { BookOpen, CheckCircle, Circle, Award, FileText, Clock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 
 const decodeMojibake = (str) => {
   if (!str) return str;
@@ -14,8 +15,8 @@ const decodeMojibake = (str) => {
 
   const map = {
     'Ã¡': 'á', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 'Ãº': 'ú',
-    'Ã±': 'ñ', 'Ã‘': 'Ñ', 'Ã': 'Á', 'Ã': 'É', 'Ã': 'Í',
-    'Ã': 'Ó', 'Ã': 'Ú', 'Ã¼': 'ü', 'Ã': 'Ü'
+    'Ã±': 'ñ', 'Ã‘': 'Ñ', 'Ã ': 'Á', 'Ã‰': 'É', 'Ã ': 'Í',
+    'Ã“': 'Ó', 'Ãš': 'Ú', 'Ã¼': 'ü', 'Ãœ': 'Ü'
   };
   let result = str;
   for (const [mojibake, correct] of Object.entries(map)) {
@@ -25,37 +26,189 @@ const decodeMojibake = (str) => {
 };
 
 const Dashboard = () => {
-  const { user, progress, modules, setCurrentView, setActiveModuleId, examStatus, downloadCertificate } = useContext(AppContext);
+  const {
+    user,
+    progress,
+    modules,
+    setActiveModuleId,
+    examStatus,
+    downloadCertificate,
+    studentCourses,
+    activeCourseId,
+    setActiveCourseId
+  } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const totalModules = modules.length;
   const completedCount = progress.modulos_completados.length;
   const isFinishedAllModules = completedCount === totalModules && totalModules > 0;
   const hasApprovedExam = examStatus && examStatus.aprobado;
 
-  const handleCourseAction = () => {
-    if (isFinishedAllModules) {
-      if (hasApprovedExam) {
-        setCurrentView('certificate');
+  // Active course details if any
+  const activeCourse = studentCourses.find(c => c.id === activeCourseId) || studentCourses[0];
+
+  const handleCourseAction = (courseId) => {
+    setActiveCourseId(courseId);
+
+    // If it's the currently active course and we already loaded it
+    if (courseId === activeCourseId) {
+      if (isFinishedAllModules) {
+        if (hasApprovedExam) {
+          navigate(`/certificate/${courseId}`);
+        } else {
+          navigate(`/course/${courseId}/exam`);
+        }
       } else {
-        setCurrentView('exam');
+        const firstUncompleted = modules.find(m => !progress.modulos_completados.includes(m.id));
+        const targetId = firstUncompleted ? firstUncompleted.id : (modules[0]?.id || null);
+        setActiveModuleId(targetId);
+        navigate(`/course/${courseId}`);
       }
     } else {
-      // Find first uncompleted module, or default to first module
-      const firstUncompleted = modules.find(m => !progress.modulos_completados.includes(m.id));
-      const targetId = firstUncompleted ? firstUncompleted.id : (modules[0]?.id || null);
-      setActiveModuleId(targetId);
-      setCurrentView('course');
+      // Just go to course view and let it load
+      navigate(`/course/${courseId}`);
     }
   };
 
   const handleModuleClick = (moduleId) => {
     setActiveModuleId(moduleId);
-    setCurrentView('course');
+    navigate(`/course/${activeCourseId}`);
   };
+
+  // 1. Loading state if no courses loaded yet
+  if (!studentCourses || studentCourses.length === 0) {
+    return (
+      <div style={{ maxWidth: '600px', margin: '80px auto', textAlign: 'center', padding: '32px' }} className="glass-panel">
+        <BookOpen size={48} color="var(--text-muted)" style={{ marginBottom: '16px' }} />
+        <h2 style={{ fontSize: '1.5rem', marginBottom: '8px' }}>Cargando tus cursos...</h2>
+        <p style={{ color: 'var(--text-secondary)' }}>
+          Si es la primera vez que ingresas, espera a que el administrador te matricule en un curso formativo.
+        </p>
+      </div>
+    );
+  }
+
+  // 2. Multiple Courses View
+  if (studentCourses.length > 1 && !activeCourseId) {
+    return (
+      <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 16px' }}>
+        <div style={{ marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+            ¡Bienvenido, {decodeMojibake(user?.nombre_completo)}!
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
+            Selecciona uno de tus cursos matriculados para continuar tu formación.
+          </p>
+        </div>
+
+        {/* Courses Cards Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gap: '24px'
+        }}>
+          {studentCourses.map(course => (
+            <div key={course.id} className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
+              
+              {/* Card Header Image */}
+              <div style={{ position: 'relative', height: '180px', overflow: 'hidden', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)' }}>
+                {course.imagen_url && (
+                  <img
+                    src={course.imagen_url}
+                    alt={course.titulo}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                )}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to top, rgba(15, 44, 89, 0.85) 0%, rgba(15, 44, 89, 0.2) 60%, transparent 100%)'
+                }} />
+                
+                <span style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  background: course.progreso_porcentaje === 100 ? 'var(--accent-emerald)' : 'var(--accent-gold)',
+                  color: '#FFFFFF',
+                  padding: '4px 10px',
+                  borderRadius: '9999px',
+                  fontSize: '0.7rem',
+                  fontWeight: 800,
+                  textTransform: 'uppercase'
+                }}>
+                  {course.progreso_porcentaje === 100 ? 'Finalizado' : `${course.progreso_porcentaje}%`}
+                </span>
+              </div>
+
+              {/* Card Body */}
+              <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px' }}>
+                  {course.titulo}
+                </h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: '1.5', flex: 1, marginBottom: '20px' }}>
+                  {course.descripcion || 'Sin descripción disponible.'}
+                </p>
+
+                {/* Progress bar inside card */}
+                <div style={{ marginBottom: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '6px' }}>
+                    <span>Progreso</span>
+                    <span>{course.progreso_porcentaje}%</span>
+                  </div>
+                  <div className="progress-container" style={{ height: '6px' }}>
+                    <div className="progress-bar" style={{ width: `${course.progreso_porcentaje}%` }} />
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setActiveCourseId(course.id);
+                    navigate(`/course/${course.id}`);
+                  }}
+                  className="btn btn-primary"
+                  style={{ width: '100%', height: '44px', fontSize: '0.9rem' }}
+                >
+                  <span>Ingresar al Curso</span>
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Single Course View (either enrolled in 1, or has active course selected)
+  const displayCourse = activeCourse || studentCourses[0];
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 16px' }}>
       
+      {/* Return button if enrolled in multiple courses */}
+      {studentCourses.length > 1 && (
+        <div style={{ marginBottom: '20px' }}>
+          <button
+            onClick={() => setActiveCourseId(null)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              fontWeight: 700
+            }}
+          >
+            ← Volver a todos mis cursos
+          </button>
+        </div>
+      )}
+
       {/* Welcome Header */}
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
@@ -64,7 +217,7 @@ const Dashboard = () => {
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
           {isFinishedAllModules 
             ? 'Has completado todos los contenidos formativos. Continúa con tu evaluación.'
-            : 'Continúa tu aprendizaje de manipulación higiénica de alimentos donde lo dejaste.'}
+            : 'Continúa tu aprendizaje donde lo dejaste.'}
         </p>
       </div>
 
@@ -80,12 +233,14 @@ const Dashboard = () => {
           
           <div className="glass-panel" style={{ overflow: 'hidden' }}>
             {/* Banner Image */}
-            <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-              <img
-                src="https://images.unsplash.com/photo-1567710593500-19fb333fe351?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMGhlYWx0aHklMjBmb29kJTIwaW5ncmVkaWVudHN8ZW58MXx8fHwxNzc5MzAyOTMwfDA&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Ingredientes frescos de alimentos"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
+            <div style={{ position: 'relative', height: '240px', overflow: 'hidden', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)' }}>
+              {displayCourse.imagen_url && (
+                <img
+                  src={displayCourse.imagen_url}
+                  alt={displayCourse.titulo}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              )}
               {/* Overlay Gradient */}
               <div style={{
                 position: 'absolute',
@@ -109,7 +264,7 @@ const Dashboard = () => {
                   {isFinishedAllModules ? 'Contenido Finalizado' : 'En Progreso'}
                 </span>
                 <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#FFFFFF', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
-                  Curso de Manipulación de Alimentos
+                  {displayCourse.titulo}
                 </h2>
               </div>
             </div>
@@ -133,7 +288,7 @@ const Dashboard = () => {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Clock size={16} color="var(--accent-gold)" />
-                    <span>3 Horas Lectivas</span>
+                    <span>Autogestionado</span>
                   </div>
                 </div>
               </div>
@@ -141,7 +296,7 @@ const Dashboard = () => {
               {/* Action Button */}
               <button 
                 className="btn btn-primary" 
-                onClick={handleCourseAction} 
+                onClick={() => handleCourseAction(displayCourse.id)} 
                 style={{ width: '100%', height: '52px', fontSize: '1rem' }}
               >
                 {isFinishedAllModules ? (
@@ -169,7 +324,7 @@ const Dashboard = () => {
           {/* Modules List */}
           <div className="glass-panel" style={{ padding: '28px' }}>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '20px', color: 'var(--text-primary)' }}>
-              Temario del Curso (8 Módulos obligatorios)
+              Temario del Curso ({totalModules} Módulos obligatorios)
             </h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -266,14 +421,14 @@ const Dashboard = () => {
                 {hasApprovedExam ? (
                   <div>
                     <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
-                      Has aprobado exitosamente el examen final con una calificación del {examStatus.puntaje}%.
+                      Has aprobado exitosamente el examen final con una calificación del {examStatus.score}%.
                     </p>
                     <div style={{ background: '#4E9F3D0C', border: '1px solid #4E9F3D30', padding: '12px', borderRadius: '10px' }}>
                       <p style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-emerald)' }}>
                         Certificado Emitido
                       </p>
                       <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                        Calificación: {examStatus.puntaje}%
+                        Calificación: {examStatus.score}%
                       </p>
                     </div>
                   </div>
@@ -282,9 +437,9 @@ const Dashboard = () => {
                     <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
                       ¡Has completado todos los módulos formativos! Ya puedes realizar el examen final.
                     </p>
-                    <button 
-                      onClick={() => setCurrentView('exam')}
-                      className="btn" 
+                    <button
+                      onClick={() => navigate(`/course/${activeCourseId}/exam`)}
+                      className="btn"
                       style={{
                         background: 'var(--accent-gold)',
                         color: '#FFFFFF',
@@ -300,7 +455,7 @@ const Dashboard = () => {
                 ) : (
                   <div>
                     <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
-                      Debes visualizar y completar los 8 módulos del temario para desbloquear el examen.
+                      Debes visualizar y completar los {totalModules} módulos del temario para desbloquear el examen.
                     </p>
                     <div style={{ background: 'rgba(240, 165, 0, 0.08)', border: '1px solid rgba(240, 165, 0, 0.2)', padding: '12px', borderRadius: '10px', display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <AlertCircle size={18} color="var(--accent-gold)" style={{ flexShrink: 0 }} />
@@ -339,13 +494,13 @@ const Dashboard = () => {
                 Certificación Oficial
               </h3>
               <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', lineHeight: '1.5', marginBottom: '20px' }}>
-                Obtén tu acreditación en Manipulación Higiénica de Alimentos, válida a nivel nacional por autoridades sanitarias vigentes.
+                Obtén tu acreditación en {displayCourse.titulo}, válida a nivel nacional por autoridades sanitarias vigentes.
               </p>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.95)' }}>
                   <CheckCircle size={16} color="#FFFFFF" />
-                  <span>Acreditación de 3 horas lectivas</span>
+                  <span>Acreditación curricular válida</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.95)' }}>
                   <CheckCircle size={16} color="#FFFFFF" />
@@ -355,9 +510,9 @@ const Dashboard = () => {
 
               {hasApprovedExam ? (
                 <div style={{ display: 'flex', gap: '12px' }}>
-                  <button 
-                    onClick={() => setCurrentView('certificate')}
-                    className="btn" 
+                  <button
+                    onClick={() => navigate(`/certificate/${activeCourseId}`)}
+                    className="btn"
                     style={{ background: '#FFFFFF', color: 'var(--text-primary)', flex: 1, padding: '12px' }}
                   >
                     Ver Diploma

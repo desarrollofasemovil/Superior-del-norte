@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { Play, Pause, ChevronLeft, ChevronRight, CheckCircle2, Award, ArrowLeft, Volume2, Film, Image as ImageIcon } from 'lucide-react';
 
@@ -9,9 +10,10 @@ const CourseViewer = () => {
     activeModuleId,
     setActiveModuleId,
     completeModule,
-    setCurrentView,
+    activeCourseId,
     examStatus
   } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [playProgress, setPlayProgress] = useState(0);
@@ -172,7 +174,7 @@ const CourseViewer = () => {
       {/* Sidebar index */}
       <div className="glass-panel" style={{ height: 'fit-content', padding: '24px' }}>
         <button
-          onClick={() => setCurrentView('dashboard')}
+          onClick={() => navigate('/dashboard')}
           style={{
             background: 'none',
             border: 'none',
@@ -307,9 +309,9 @@ const CourseViewer = () => {
                   className="btn"
                   onClick={() => {
                     if (examStatus && examStatus.aprobado) {
-                      setCurrentView('certificate');
+                      navigate(`/certificate/${activeCourseId}`);
                     } else {
-                      setCurrentView('exam');
+                      navigate(`/course/${activeCourseId}/exam`);
                     }
                   }}
                   style={{

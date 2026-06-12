@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { Search, ShieldCheck, ShieldAlert, ArrowLeft, Loader2, Calendar, User, CreditCard, Award, FileText } from 'lucide-react';
 
 const VerifyCertificate = ({ initialCode }) => {
-  const { setCurrentView, API_BASE_URL } = useContext(AppContext);
+  const { API_BASE_URL } = useContext(AppContext);
+  const navigate = useNavigate();
   const [code, setCode] = useState(initialCode || '');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -45,7 +47,7 @@ const VerifyCertificate = ({ initialCode }) => {
       
       {/* Back Button */}
       <button
-        onClick={() => setCurrentView('login')}
+        onClick={() => navigate('/login')}
         style={{
           background: 'none',
           border: 'none',
@@ -149,6 +151,14 @@ const VerifyCertificate = ({ initialCode }) => {
                 <div>
                   <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.02em' }}>Cédula de Identidad</p>
                   <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{result.cedula}</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <BookOpen size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
+                <div>
+                  <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.02em' }}>Curso Formativo</p>
+                  <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{result.curso_titulo || 'Manipulación de Alimentos'}</p>
                 </div>
               </div>
 

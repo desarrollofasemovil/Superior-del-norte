@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import logoNormal from '../assets/logoNormal.jpeg';
 import { ShieldCheck, ShieldAlert, ArrowLeft } from 'lucide-react';
@@ -7,7 +8,8 @@ const AdminLogin = () => {
   const [cedula, setCedula] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState('');
-  const { login, loading, error: apiError, setCurrentView } = useContext(AppContext);
+  const { login, loading, error: apiError } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -130,7 +132,7 @@ const AdminLogin = () => {
           {/* Toggle back link */}
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
             <button
-              onClick={() => setCurrentView('login')}
+              onClick={() => navigate('/login')}
               style={{
                 background: 'none',
                 border: 'none',
