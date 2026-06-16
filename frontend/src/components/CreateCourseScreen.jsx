@@ -186,7 +186,7 @@ const CreateCourseScreen = () => {
       </div>
 
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+        <h1 className="font-serif" style={{ fontSize: '2.25rem', color: 'var(--isn-blue-dark)', fontWeight: 800, marginBottom: '6px' }}>
           Crear Nuevo Curso Formativo
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
@@ -244,7 +244,7 @@ const CreateCourseScreen = () => {
 
           {/* Section 1: General Info */}
           <div className="glass-panel" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '20px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
+            <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue-dark)', marginBottom: '20px', borderBottom: '2px solid var(--isn-gold)', paddingBottom: '10px' }}>
               1. Información General del Curso
             </h3>
 
@@ -297,8 +297,8 @@ const CreateCourseScreen = () => {
 
           {/* Section 2: Modules Manager */}
           <div className="glass-panel" style={{ padding: '28px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px', flexWrap: 'wrap', gap: '10px' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '2px solid var(--isn-gold)', paddingBottom: '10px', flexWrap: 'wrap', gap: '10px' }}>
+              <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue-dark)' }}>
                 2. Gestor de Módulos Independientes
               </h3>
               
@@ -319,8 +319,8 @@ const CreateCourseScreen = () => {
                 <div
                   key={m.id}
                   style={{
-                    border: '1px solid var(--border-glass)',
-                    borderRadius: '12px',
+                    border: '2px solid var(--isn-blue)',
+                    borderRadius: '4px',
                     padding: '20px',
                     background: '#FAFBFD',
                     position: 'relative'
@@ -474,7 +474,7 @@ const CreateCourseScreen = () => {
           </h4>
 
           {/* Cover Card */}
-          <div className="glass-panel" style={{ overflow: 'hidden', borderRadius: '16px' }}>
+          <div className="glass-panel" style={{ overflow: 'hidden', borderRadius: '4px' }}>
             <div style={{ position: 'relative', height: '200px', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               
               {/* Cover Image rendering */}
@@ -505,7 +505,7 @@ const CreateCourseScreen = () => {
                   background: 'var(--accent-gold)',
                   color: '#FFFFFF',
                   padding: '4px 10px',
-                  borderRadius: '9999px',
+                  borderRadius: '2px',
                   fontSize: '0.7rem',
                   fontWeight: 800,
                   display: 'inline-block',
@@ -514,7 +514,7 @@ const CreateCourseScreen = () => {
                 }}>
                   NUEVO CURSO
                 </span>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', textShadow: '0 2px 4px rgba(0,0,0,0.3)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <h3 className="font-serif" style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', textShadow: '0 2px 4px rgba(0,0,0,0.3)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {titulo.trim() || 'Título del Curso'}
                 </h3>
               </div>
@@ -536,7 +536,7 @@ const CreateCourseScreen = () => {
 
           {/* Theme preview mockup of modules list */}
           <div className="glass-panel" style={{ padding: '20px' }}>
-            <h5 style={{ fontSize: '0.75rem', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px', fontWeight: 800 }}>
+            <h5 className="font-serif" style={{ fontSize: '0.75rem', color: 'var(--isn-blue-dark)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px', fontWeight: 800 }}>
               Estructura de Módulos ({modulos.length})
             </h5>
             
@@ -559,9 +559,9 @@ const CreateCourseScreen = () => {
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       padding: '10px',
-                      borderRadius: '8px',
+                      borderRadius: '4px',
                       background: '#F8FAFC',
-                      border: '1px solid #E2E8F0',
+                      border: '2px solid var(--isn-blue)',
                       fontSize: '0.8rem'
                     }}
                   >

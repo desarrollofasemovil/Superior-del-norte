@@ -178,7 +178,7 @@ const CourseViewer = () => {
           style={{
             background: 'none',
             border: 'none',
-            color: 'var(--accent-teal)',
+            color: 'var(--isn-blue)',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
@@ -192,7 +192,7 @@ const CourseViewer = () => {
           <span>Volver al Dashboard</span>
         </button>
 
-        <h3 style={{ fontSize: '0.8rem', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '8px', fontWeight: 800 }}>Módulos del Curso</h3>
+        <h3 className="font-serif" style={{ fontSize: '0.9rem', color: 'var(--isn-blue)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px', borderBottom: '2px solid var(--isn-gold)', paddingBottom: '8px', fontWeight: 800 }}>Módulos del Curso</h3>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {modules.map((m, idx) => {
@@ -206,11 +206,11 @@ const CourseViewer = () => {
                   width: '100%',
                   textAlign: 'left',
                   padding: '14px',
-                  borderRadius: '10px',
-                  background: isModActive ? 'rgba(0, 141, 218, 0.08)' : '#FFFFFF',
-                  border: '1px solid',
-                  borderColor: isModActive ? 'var(--accent-teal)' : '#E2E8F0',
-                  color: isModActive ? 'var(--accent-teal)' : 'var(--text-primary)',
+                  borderRadius: '4px',
+                  background: isModActive ? 'rgba(240, 165, 0, 0.08)' : '#FFFFFF',
+                  border: '2px solid',
+                  borderColor: isModActive ? 'var(--isn-gold)' : '#E2E8F0',
+                  color: isModActive ? 'var(--isn-blue)' : 'var(--isn-charcoal)',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -232,20 +232,20 @@ const CourseViewer = () => {
       <div className="glass-panel" style={{ padding: '32px' }}>
         
         {/* Module Header */}
-        <div style={{ borderBottom: '1px solid var(--border-glass)', paddingBottom: '20px', marginBottom: '28px' }}>
+        <div style={{ borderBottom: '2px solid var(--isn-gold)', paddingBottom: '20px', marginBottom: '28px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
             <span style={{
-              background: 'rgba(0, 141, 218, 0.1)',
-              color: 'var(--accent-teal)',
+              background: 'rgba(15, 44, 89, 0.08)',
+              color: 'var(--isn-blue)',
               fontSize: '0.75rem',
               padding: '4px 10px',
-              borderRadius: '6px',
+              borderRadius: '4px',
               fontWeight: 700
             }}>MÓDULO {currentModule.orden}</span>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>{currentModule.tipo_recurso}</span>
           </div>
-          <h2 style={{ fontSize: '2rem', color: 'var(--text-primary)', fontWeight: 800 }}>{currentModule.titulo}</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '8px', lineHeight: '1.6' }}>{currentModule.descripcion}</p>
+          <h2 className="font-serif" style={{ fontSize: '2rem', color: 'var(--isn-blue)', fontWeight: 900 }}>{currentModule.titulo}</h2>
+          <p style={{ color: 'var(--isn-charcoal)', fontSize: '0.95rem', marginTop: '8px', lineHeight: '1.6' }}>{currentModule.descripcion}</p>
         </div>
 
         {/* Dynamic Simulator */}

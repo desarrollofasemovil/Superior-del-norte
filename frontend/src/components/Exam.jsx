@@ -108,8 +108,8 @@ const Exam = () => {
               }}>
                 <Award size={48} color="var(--accent-emerald)" />
               </div>
-              <h2 style={{ fontSize: '2rem', color: 'var(--accent-emerald)', marginBottom: '8px', fontWeight: 800 }}>¡Examen Aprobado!</h2>
-              <p style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '16px' }}>
+              <h2 className="font-serif" style={{ fontSize: '2rem', color: 'var(--isn-success)', marginBottom: '8px', fontWeight: 900 }}>¡Examen Aprobado!</h2>
+              <p style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue)', marginBottom: '16px' }}>
                 Calificación: {result.puntaje}%
               </p>
               <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '32px', fontSize: '0.95rem' }}>
@@ -142,8 +142,8 @@ const Exam = () => {
               }}>
                 <AlertTriangle size={48} color="var(--accent-rose)" />
               </div>
-              <h2 style={{ fontSize: '2rem', color: 'var(--accent-rose)', marginBottom: '8px', fontWeight: 800 }}>Evaluación No Aprobada</h2>
-              <p style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '16px' }}>
+              <h2 className="font-serif" style={{ fontSize: '2rem', color: 'var(--accent-rose)', marginBottom: '8px', fontWeight: 900 }}>Evaluación No Aprobada</h2>
+              <p style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue)', marginBottom: '16px' }}>
                 Calificación: {result.puntaje}%
               </p>
               <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '32px', fontSize: '0.95rem' }}>
@@ -179,7 +179,7 @@ const Exam = () => {
         style={{
           background: 'none',
           border: 'none',
-          color: 'var(--accent-teal)',
+          color: 'var(--isn-blue)',
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
@@ -196,9 +196,9 @@ const Exam = () => {
       <div className="glass-panel" style={{ padding: '32px' }}>
         
         {/* Title */}
-        <div style={{ borderBottom: '1px solid var(--border-glass)', paddingBottom: '20px', marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.75rem', color: 'var(--text-primary)', fontWeight: 800 }}>Evaluación de {courseTitle}</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '8px', lineHeight: '1.5' }}>
+        <div style={{ borderBottom: '2px solid var(--isn-gold)', paddingBottom: '20px', marginBottom: '28px' }}>
+          <h2 className="font-serif" style={{ fontSize: '1.75rem', color: 'var(--isn-blue)', fontWeight: 900 }}>Evaluación de {courseTitle}</h2>
+          <p style={{ color: 'var(--isn-charcoal)', fontSize: '0.95rem', marginTop: '8px', lineHeight: '1.5' }}>
             Responde correctamente las siguientes preguntas sobre las buenas prácticas de manufactura. Se requiere al menos un <b>80% de respuestas correctas</b> (7 de 8) para aprobar y obtener tu certificado.
           </p>
         </div>
@@ -208,8 +208,8 @@ const Exam = () => {
           {questions.map((q, idx) => {
             const selectedAns = answers[q.id];
             return (
-              <div key={q.id} style={{ marginBottom: '32px', background: '#FAFAFA', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
-                <p style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '18px', lineHeight: '1.4' }}>
+              <div key={q.id} style={{ marginBottom: '32px', background: '#FAFAFA', padding: '24px', borderRadius: '4px', border: '2px solid var(--isn-blue)' }}>
+                <p style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--isn-blue)', marginBottom: '18px', lineHeight: '1.4' }}>
                   {idx + 1}. {q.pregunta}
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -224,11 +224,11 @@ const Exam = () => {
                           width: '100%',
                           textAlign: 'left',
                           padding: '14px 18px',
-                          borderRadius: '12px',
+                          borderRadius: '4px',
                           background: isSelected ? 'rgba(78, 159, 61, 0.06)' : '#FFFFFF',
-                          border: '1px solid',
-                          borderColor: isSelected ? 'var(--accent-emerald)' : '#E2E8F0',
-                          color: 'var(--text-primary)',
+                          border: '2px solid',
+                          borderColor: isSelected ? 'var(--isn-success)' : 'var(--isn-gold)',
+                          color: 'var(--isn-charcoal)',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import { Search, ShieldCheck, ShieldAlert, ArrowLeft, Loader2, Calendar, User, CreditCard, Award, FileText } from 'lucide-react';
+import { Search, ShieldCheck, ShieldAlert, ArrowLeft, Loader2, Calendar, User, CreditCard, Award, FileText, BookOpen } from 'lucide-react';
 
 const VerifyCertificate = ({ initialCode }) => {
   const { API_BASE_URL } = useContext(AppContext);
@@ -10,13 +10,6 @@ const VerifyCertificate = ({ initialCode }) => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-
-  // If a code was provided, auto verify it on load
-  useEffect(() => {
-    if (initialCode) {
-      handleVerify(initialCode);
-    }
-  }, [initialCode]);
 
   const handleVerify = async (codeToVerify) => {
     const targetCode = (codeToVerify || code).trim();
@@ -42,6 +35,13 @@ const VerifyCertificate = ({ initialCode }) => {
     }
   };
 
+  // If a code was provided, auto verify it on load
+  useEffect(() => {
+    if (initialCode) {
+      handleVerify(initialCode);
+    }
+  }, [initialCode]);
+
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', width: '100%', padding: '0 16px' }}>
       
@@ -66,7 +66,7 @@ const VerifyCertificate = ({ initialCode }) => {
       </button>
 
       <div className="glass-panel" style={{ padding: '32px' }}>
-        <h2 style={{ fontSize: '1.75rem', color: 'var(--text-primary)', marginBottom: '8px', textAlign: 'center', fontWeight: 800 }}>
+        <h2 className="font-serif" style={{ fontSize: '1.75rem', color: 'var(--text-primary)', marginBottom: '8px', textAlign: 'center', fontWeight: 800 }}>
           Portal de Verificación
         </h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '28px', textAlign: 'center', lineHeight: '1.5' }}>
@@ -81,7 +81,7 @@ const VerifyCertificate = ({ initialCode }) => {
               placeholder="Ej: ALIM-ABCD-EFGH"
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
-              className="input-field"
+              className="input-field font-sans-mono"
               style={{ paddingLeft: '44px', height: '46px' }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleVerify();
@@ -99,7 +99,7 @@ const VerifyCertificate = ({ initialCode }) => {
         {loading && (
           <div style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
             <Loader2 size={16} className="animate-spin" />
-            <span>Consultando base de datos de AlimSafe...</span>
+            <span>Consultando base de datos del Instituto...</span>
           </div>
         )}
 
@@ -107,14 +107,14 @@ const VerifyCertificate = ({ initialCode }) => {
         {error && !loading && (
           <div style={{
             background: 'rgba(239, 68, 68, 0.06)',
-            border: '1px solid rgba(239, 68, 68, 0.2)',
-            borderRadius: '12px',
+            border: '2px solid var(--accent-rose)',
+            borderRadius: '4px',
             padding: '24px',
             textAlign: 'center',
             color: 'var(--accent-rose)'
           }}>
             <ShieldAlert size={36} style={{ margin: '0 auto 12px auto' }} />
-            <h4 style={{ fontSize: '1.15rem', marginBottom: '6px', fontWeight: 800 }}>Código No Encontrado</h4>
+            <h4 className="font-serif" style={{ fontSize: '1.15rem', marginBottom: '6px', fontWeight: 800 }}>Código No Encontrado</h4>
             <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>{error}</p>
           </div>
         )}
@@ -123,15 +123,15 @@ const VerifyCertificate = ({ initialCode }) => {
         {result && !loading && (
           <div className="glow-panel" style={{
             background: 'rgba(78, 159, 61, 0.04)',
-            border: '1px solid var(--accent-emerald)',
-            borderRadius: '12px',
+            border: '2px solid var(--accent-emerald)',
+            borderRadius: '4px',
             padding: '28px',
           }}>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '24px', borderBottom: '1px solid rgba(78, 159, 61, 0.15)', paddingBottom: '16px' }}>
               <ShieldCheck size={36} color="var(--accent-emerald)" />
               <div>
-                <h4 style={{ fontSize: '1.25rem', color: 'var(--accent-emerald)', fontWeight: 800 }}>CERTIFICADO VÁLIDO</h4>
+                <h4 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--accent-emerald)', fontWeight: 800 }}>CERTIFICADO VÁLIDO</h4>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Validación oficial completada con éxito</p>
               </div>
             </div>
@@ -142,7 +142,7 @@ const VerifyCertificate = ({ initialCode }) => {
                 <User size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.02em' }}>Estudiante Certificado</p>
-                  <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{result.usuario}</p>
+                  <p className="font-serif" style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{result.usuario}</p>
                 </div>
               </div>
 
@@ -150,7 +150,7 @@ const VerifyCertificate = ({ initialCode }) => {
                 <CreditCard size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.02em' }}>Cédula de Identidad</p>
-                  <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{result.cedula}</p>
+                  <p className="font-sans-mono" style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{result.cedula}</p>
                 </div>
               </div>
 
@@ -166,7 +166,7 @@ const VerifyCertificate = ({ initialCode }) => {
                 <FileText size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.02em' }}>Registro Oficial</p>
-                  <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent-teal)' }}>{result.numero_certificado || 'AS-2026-0001'}</p>
+                  <p className="font-sans-mono" style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent-teal)' }}>{result.numero_certificado || 'AS-2026-0001'}</p>
                 </div>
               </div>
 
@@ -174,7 +174,7 @@ const VerifyCertificate = ({ initialCode }) => {
                 <Calendar size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.02em' }}>Fecha de Emisión</p>
-                  <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{result.fecha_emision}</p>
+                  <p className="font-sans-mono" style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{result.fecha_emision}</p>
                 </div>
               </div>
 
@@ -182,22 +182,22 @@ const VerifyCertificate = ({ initialCode }) => {
                 <Award size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.02em' }}>Calificación Evaluada</p>
-                  <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent-emerald)' }}>{result.calificacion_obtenida || 100}%</p>
+                  <p className="font-sans-mono" style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent-emerald)' }}>{result.calificacion_obtenida || 100}%</p>
                 </div>
               </div>
 
             </div>
 
-            <div style={{
+            <div className="font-sans-mono" style={{
               marginTop: '24px',
               padding: '10px 14px',
-              borderRadius: '8px',
+              borderRadius: '4px',
               background: '#E2E8F0',
-              fontSize: '0.8rem',
+              fontSize: '0.85rem',
               color: 'var(--text-primary)',
-              fontFamily: 'monospace',
               fontWeight: 700,
-              textAlign: 'center'
+              textAlign: 'center',
+              border: '1px solid #CBD5E1'
             }}>
               REF: {result.codigo_verificacion}
             </div>

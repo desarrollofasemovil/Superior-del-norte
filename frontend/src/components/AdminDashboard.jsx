@@ -236,7 +236,7 @@ const AdminDashboard = () => {
       {/* Header section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+          <h1 className="font-serif" style={{ fontSize: '2.25rem', color: 'var(--isn-blue-dark)', fontWeight: 800, marginBottom: '6px' }}>
             Panel de Administrador
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
@@ -259,7 +259,7 @@ const AdminDashboard = () => {
           <button 
             className="btn btn-primary"
             onClick={() => navigate('/admin/create-course')}
-            style={{ height: '48px', background: 'var(--accent-emerald)', borderColor: 'var(--accent-emerald)' }}
+            style={{ height: '48px', background: 'var(--isn-success)', borderColor: 'var(--isn-success)' }}
           >
             <Plus size={18} />
             <span>Añadir Nuevo Curso</span>
@@ -268,7 +268,7 @@ const AdminDashboard = () => {
           <button 
             className="btn btn-primary"
             onClick={() => setIsModalOpen(true)}
-            style={{ height: '48px', background: 'var(--text-primary)' }}
+            style={{ height: '48px', background: 'var(--isn-blue-dark)', borderColor: 'var(--isn-blue-dark)' }}
           >
             <UserPlus size={18} />
             <span>Matricular Estudiante</span>
@@ -288,7 +288,7 @@ const AdminDashboard = () => {
           <div style={{
             width: '56px',
             height: '56px',
-            borderRadius: '16px',
+            borderRadius: '4px',
             background: 'rgba(0, 141, 218, 0.08)',
             color: 'var(--accent-teal)',
             display: 'flex',
@@ -310,7 +310,7 @@ const AdminDashboard = () => {
           <div style={{
             width: '56px',
             height: '56px',
-            borderRadius: '16px',
+            borderRadius: '4px',
             background: 'rgba(78, 159, 61, 0.08)',
             color: 'var(--accent-emerald)',
             display: 'flex',
@@ -332,7 +332,7 @@ const AdminDashboard = () => {
           <div style={{
             width: '56px',
             height: '56px',
-            borderRadius: '16px',
+            borderRadius: '4px',
             background: 'rgba(240, 165, 0, 0.08)',
             color: 'var(--accent-gold)',
             display: 'flex',
@@ -353,7 +353,7 @@ const AdminDashboard = () => {
       {/* Students List Table container */}
       <div className="glass-panel" style={{ padding: '28px', overflow: 'hidden' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+          <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue-dark)' }}>
             Listado General de Estudiantes
           </h3>
           <span style={{
@@ -375,38 +375,24 @@ const AdminDashboard = () => {
             placeholder="Buscar por Cédula..."
             value={searchCedula}
             onChange={(e) => setSearchCedula(e.target.value)}
+            className="input-field font-sans-mono"
             style={{
-              width: '100%',
               maxWidth: '360px',
+              height: '42px',
               padding: '10px 16px',
-              borderRadius: '10px',
-              border: '1px solid #E2E8F0',
-              background: '#FFFFFF',
-              color: 'var(--text-primary)',
-              fontSize: '0.95rem',
-              outline: 'none',
-              transition: 'border-color 0.15s, box-shadow 0.15s'
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = 'var(--text-primary)';
-              e.target.style.boxShadow = '0 0 0 3px rgba(15, 44, 89, 0.1)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = '#E2E8F0';
-              e.target.style.boxShadow = 'none';
             }}
           />
         </div>
 
         <div style={{ overflowX: 'auto', width: '100%' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '700px' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '700px', border: '2px solid var(--isn-blue)', borderRadius: '4px' }}>
             <thead>
-              <tr style={{ borderBottom: '2px solid var(--border-glass)' }}>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase' }}>Nombre Completo</th>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase' }}>Número de Cédula</th>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase' }}>Fecha de Registro</th>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', width: '220px' }}>Progreso del Curso</th>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', width: '150px' }}>Acciones</th>
+              <tr style={{ borderBottom: '2px solid var(--isn-gold)', background: 'var(--isn-blue-dark)' }}>
+                <th style={{ padding: '16px 12px', color: '#FFFFFF', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase' }}>Nombre Completo</th>
+                <th style={{ padding: '16px 12px', color: '#FFFFFF', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase' }}>Número de Cédula</th>
+                <th style={{ padding: '16px 12px', color: '#FFFFFF', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase' }}>Fecha de Registro</th>
+                <th style={{ padding: '16px 12px', color: '#FFFFFF', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', width: '220px' }}>Progreso del Curso</th>
+                <th style={{ padding: '16px 12px', color: '#FFFFFF', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', width: '150px' }}>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -420,16 +406,16 @@ const AdminDashboard = () => {
                 adminUsers.map((student) => (
                   <tr 
                     key={student.cedula}
-                    style={{ borderBottom: '1px solid var(--border-glass)', transition: 'background-color 0.15s' }}
+                    style={{ borderBottom: '2px solid var(--border-glass)', transition: 'background-color 0.15s' }}
                     className="table-row-hover"
                   >
                     <td style={{ padding: '16px 12px', fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.95rem' }}>
                       {decodeMojibake(student.nombre_completo)}
                     </td>
-                    <td style={{ padding: '16px 12px', color: 'var(--text-secondary)', fontFamily: 'monospace', fontSize: '0.95rem', fontWeight: 600 }}>
+                    <td className="font-sans-mono" style={{ padding: '16px 12px', color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: 600 }}>
                       {student.cedula}
                     </td>
-                    <td style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                    <td className="font-sans-mono" style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                       {student.fecha_registro}
                     </td>
                     <td style={{ padding: '16px 12px' }}>
@@ -505,10 +491,11 @@ const AdminDashboard = () => {
             width: '100%',
             maxWidth: '500px',
             background: '#FFFFFF',
-            borderRadius: '20px',
+            borderRadius: '4px',
             position: 'relative',
             boxShadow: '0 25px 50px -12px rgba(15, 44, 89, 0.25)',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            border: '2px solid var(--isn-blue)'
           }}>
             {/* Modal Header */}
             <div style={{
@@ -516,12 +503,13 @@ const AdminDashboard = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '24px',
-              borderBottom: '1px solid var(--border-glass)',
-              background: '#FAFAFA'
+              borderBottom: '2px solid var(--isn-gold)',
+              background: 'var(--isn-blue-dark)',
+              color: '#FFFFFF'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Plus size={20} color="var(--accent-emerald)" />
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                <Plus size={20} color="var(--isn-gold)" />
+                <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF' }}>
                   Matricular Nuevo Estudiante
                 </h3>
               </div>
@@ -535,12 +523,12 @@ const AdminDashboard = () => {
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  color: 'var(--text-muted)',
+                  color: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '4px',
-                  borderRadius: '50%',
+                  borderRadius: '4px',
                   transition: 'background-color 0.15s'
                 }}
                 className="btn-secondary-hover"
@@ -638,8 +626,8 @@ const AdminDashboard = () => {
               <div style={{ marginBottom: '28px' }}>
                 <label className="input-label">Cursos a Matricular</label>
                 <div style={{ 
-                  border: '1px solid #E2E8F0', 
-                  borderRadius: '12px', 
+                  border: '2px solid var(--isn-blue)', 
+                  borderRadius: '4px', 
                   padding: '16px', 
                   background: '#F8F9FA',
                   display: 'flex',
@@ -731,10 +719,11 @@ const AdminDashboard = () => {
             width: '100%',
             maxWidth: '500px',
             background: '#FFFFFF',
-            borderRadius: '20px',
+            borderRadius: '4px',
             position: 'relative',
             boxShadow: '0 25px 50px -12px rgba(15, 44, 89, 0.25)',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            border: '2px solid var(--isn-blue)'
           }}>
             {/* Modal Header */}
             <div style={{
@@ -742,12 +731,13 @@ const AdminDashboard = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '24px',
-              borderBottom: '1px solid var(--border-glass)',
-              background: '#FAFAFA'
+              borderBottom: '2px solid var(--isn-gold)',
+              background: 'var(--isn-blue-dark)',
+              color: '#FFFFFF'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Edit size={20} color="var(--accent-teal)" />
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                <Edit size={20} color="var(--isn-gold)" />
+                <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF' }}>
                   Gestionar Matrículas
                 </h3>
               </div>
@@ -762,12 +752,12 @@ const AdminDashboard = () => {
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  color: 'var(--text-muted)',
+                  color: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '4px',
-                  borderRadius: '50%',
+                  borderRadius: '4px',
                   transition: 'background-color 0.15s'
                 }}
                 className="btn-secondary-hover"
@@ -782,16 +772,16 @@ const AdminDashboard = () => {
               {/* Student Info Box */}
               <div style={{
                 background: '#F8FAFC',
-                border: '1px solid #E2E8F0',
-                borderRadius: '12px',
+                border: '2px solid var(--isn-blue)',
+                borderRadius: '4px',
                 padding: '16px',
                 marginBottom: '20px'
               }}>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Estudiante:</p>
-                <h4 style={{ margin: '4px 0 2px 0', fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                <h4 className="font-serif" style={{ margin: '4px 0 2px 0', fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                   {decodeMojibake(selectedStudent.nombre_completo)}
                 </h4>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>
+                <p className="font-sans-mono" style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                   Cédula: {selectedStudent.cedula}
                 </p>
               </div>
@@ -837,8 +827,8 @@ const AdminDashboard = () => {
               <div style={{ marginBottom: '28px' }}>
                 <label className="input-label">Cursos Asignados</label>
                 <div style={{ 
-                  border: '1px solid #E2E8F0', 
-                  borderRadius: '12px', 
+                  border: '2px solid var(--isn-blue)', 
+                  borderRadius: '4px', 
                   padding: '16px', 
                   background: '#F8F9FA',
                   display: 'flex',

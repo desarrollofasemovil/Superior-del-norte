@@ -93,10 +93,10 @@ const Dashboard = () => {
     return (
       <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 16px' }}>
         <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+          <h1 className="font-serif" style={{ fontSize: '2.25rem', color: 'var(--isn-blue)', fontWeight: 900, marginBottom: '6px' }}>
             ¡Bienvenido, {decodeMojibake(user?.nombre_completo)}!
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
+          <p style={{ color: 'var(--isn-charcoal)', fontSize: '1.05rem' }}>
             Selecciona uno de tus cursos matriculados para continuar tu formación.
           </p>
         </div>
@@ -108,7 +108,7 @@ const Dashboard = () => {
           gap: '24px'
         }}>
           {studentCourses.map(course => (
-            <div key={course.id} className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <div key={course.id} className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%', border: '2px solid var(--isn-blue)', borderRadius: '4px', backgroundColor: '#FFFFFF' }}>
               
               {/* Card Header Image */}
               <div style={{ position: 'relative', height: '180px', overflow: 'hidden', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)' }}>
@@ -143,7 +143,7 @@ const Dashboard = () => {
 
               {/* Card Body */}
               <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px' }}>
+                <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue)', marginBottom: '8px' }}>
                   {course.titulo}
                 </h3>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: '1.5', flex: 1, marginBottom: '20px' }}>
@@ -211,10 +211,10 @@ const Dashboard = () => {
 
       {/* Welcome Header */}
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+        <h1 className="font-serif" style={{ fontSize: '2.25rem', color: 'var(--isn-blue)', fontWeight: 900, marginBottom: '6px' }}>
           ¡Bienvenido, {decodeMojibake(user?.nombre_completo)}!
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
+        <p style={{ color: 'var(--isn-charcoal)', fontSize: '1.05rem' }}>
           {isFinishedAllModules 
             ? 'Has completado todos los contenidos formativos. Continúa con tu evaluación.'
             : 'Continúa tu aprendizaje donde lo dejaste.'}
@@ -231,7 +231,7 @@ const Dashboard = () => {
         {/* Left Side: Course Progress & Modules list */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
-          <div className="glass-panel" style={{ overflow: 'hidden' }}>
+          <div className="glass-panel" style={{ overflow: 'hidden', border: '2px solid var(--isn-blue)', borderRadius: '4px', backgroundColor: '#FFFFFF' }}>
             {/* Banner Image */}
             <div style={{ position: 'relative', height: '240px', overflow: 'hidden', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)' }}>
               {displayCourse.imagen_url && (
@@ -322,8 +322,8 @@ const Dashboard = () => {
           </div>
 
           {/* Modules List */}
-          <div className="glass-panel" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '20px', color: 'var(--text-primary)' }}>
+          <div className="glass-panel" style={{ padding: '28px', border: '2px solid var(--isn-blue)', borderRadius: '4px', backgroundColor: '#FFFFFF' }}>
+            <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '20px', color: 'var(--isn-blue)' }}>
               Temario del Curso ({totalModules} Módulos obligatorios)
             </h3>
             
@@ -339,9 +339,9 @@ const Dashboard = () => {
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       padding: '16px',
-                      borderRadius: '12px',
+                      borderRadius: '4px',
                       background: isCompleted ? '#FAFAFA' : '#FFFFFF',
-                      border: isCompleted ? '1px solid #E2E8F0' : '1px solid #CBD5E1',
+                      border: isCompleted ? '2px solid var(--isn-success)' : '2px solid var(--isn-gold)',
                       cursor: 'pointer',
                       boxShadow: '0 2px 4px rgba(0,0,0,0.01)'
                     }}
@@ -394,7 +394,7 @@ const Dashboard = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Status Widget */}
-          <div className="glass-panel" style={{ padding: '24px' }}>
+          <div className="glass-panel" style={{ padding: '24px', border: '2px solid var(--isn-blue)', borderRadius: '4px', backgroundColor: '#FFFFFF' }}>
             <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
               <div style={{
                 width: '44px',
@@ -414,7 +414,7 @@ const Dashboard = () => {
               </div>
               
               <div style={{ flex: 1 }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '6px' }}>
+                <h3 className="font-serif" style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--isn-blue)', marginBottom: '6px' }}>
                   {hasApprovedExam ? 'Formación Finalizada' : 'Próximo Paso Requerido'}
                 </h3>
                 
@@ -471,10 +471,11 @@ const Dashboard = () => {
 
           {/* Certificate Card */}
           <div className="glass-panel" style={{
-            background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)',
+            background: 'linear-gradient(135deg, var(--isn-blue) 0%, var(--isn-blue-dark) 100%)',
             color: '#FFFFFF',
             padding: '28px',
-            border: 'none',
+            border: '2px solid var(--isn-gold)',
+            borderRadius: '4px',
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -490,7 +491,7 @@ const Dashboard = () => {
             </div>
 
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '8px' }}>
+              <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '8px' }}>
                 Certificación Oficial
               </h3>
               <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', lineHeight: '1.5', marginBottom: '20px' }}>

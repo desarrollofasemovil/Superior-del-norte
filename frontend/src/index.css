@@ -1,21 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-primary: #FAFAFA;
+  /* ISN Brand Colors */
+  --isn-bg-light: #F7F9FA;
+  --isn-blue: #0F2C59;
+  --isn-blue-dark: #071E3D;
+  --isn-gold: #F0A500;
+  --isn-charcoal: #2D3748;
+  --isn-success: #4E9F3D;
+
+  --bg-primary: var(--isn-bg-light);
   --bg-secondary: #FFFFFF;
   --bg-glass: rgba(255, 255, 255, 0.95);
   --border-glass: #E2E8F0;
-  --border-active: #008DDA;
+  --border-active: var(--isn-gold);
   
-  --accent-emerald: #4E9F3D;
+  --accent-emerald: var(--isn-success);
   --accent-emerald-hover: #3d8030;
   --accent-teal: #008DDA;
-  --accent-gold: #F0A500;
+  --accent-gold: var(--isn-gold);
   --accent-gold-hover: #d49200;
   --accent-rose: #EF4444;
   
-  --text-primary: #0F2C59;
-  --text-secondary: #475569;
+  --text-primary: var(--isn-blue);
+  --text-secondary: var(--isn-charcoal);
   --text-muted: #64748B;
   
   --shadow-glow: 0 4px 20px rgba(78, 159, 61, 0.12);
@@ -24,6 +32,15 @@
   --font-title: 'Outfit', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
 }
+
+.font-serif {
+  font-family: 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+.font-sans-mono {
+  font-family: 'Courier New', Courier, monospace;
+}
+
 
 * {
   box-sizing: border-box;
@@ -51,13 +68,13 @@ h1, h2, h3, h4, h5, h6 {
 /* Premium Containers */
 .glass-panel {
   background: var(--bg-secondary);
-  border: 1px solid var(--border-glass);
-  border-radius: 16px;
+  border: 2px solid var(--isn-blue);
+  border-radius: 4px;
   box-shadow: var(--shadow-card);
 }
 
 .glass-panel:hover {
-  border-color: #CBD5E1;
+  border-color: var(--isn-gold);
 }
 
 .glow-panel {
@@ -73,7 +90,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 12px 24px;
   font-family: var(--font-title);
   font-weight: 600;
-  border-radius: 12px;
+  border-radius: 4px;
   cursor: pointer;
   border: 1px solid transparent;
   font-size: 0.95rem;
@@ -139,8 +156,8 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   padding: 14px 16px;
   background: #F8F9FA;
-  border: 1px solid #E2E8F0;
-  border-radius: 12px;
+  border: 2px solid var(--isn-gold);
+  border-radius: 4px;
   color: var(--text-primary);
   font-size: 0.95rem;
   font-family: var(--font-body);
@@ -148,9 +165,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .input-field:focus {
-  border-color: var(--accent-teal);
+  border-color: var(--isn-gold);
   background: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(0, 141, 218, 0.12);
+  box-shadow: 0 0 0 3px rgba(240, 165, 0, 0.15);
 }
 
 /* Progress bar */
@@ -233,13 +250,13 @@ h1, h2, h3, h4, h5, h6 {
 .media-simulator {
   width: 100%;
   aspect-ratio: 16/9;
-  background: linear-gradient(135deg, #0F2C59, #008DDA);
-  border-radius: 12px;
+  background: linear-gradient(135deg, var(--isn-blue), var(--isn-blue-dark));
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border-glass);
+  border: 2px solid var(--isn-gold);
   position: relative;
   overflow: hidden;
   margin-bottom: 24px;
