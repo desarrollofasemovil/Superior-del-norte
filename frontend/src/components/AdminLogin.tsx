@@ -1,17 +1,21 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import logoNormal from '../assets/logoNormal.jpeg';
+import logoNormal from '../assets/logoNormal.png';
 import { ShieldCheck, ShieldAlert, ArrowLeft } from 'lucide-react';
 
-const AdminLogin = () => {
-  const [cedula, setCedula] = useState('');
-  const [password, setPassword] = useState('');
-  const [localError, setLocalError] = useState('');
-  const { login, loading, error: apiError } = useContext(AppContext);
+const AdminLogin: React.FC = () => {
+  const [cedula, setCedula] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [localError, setLocalError] = useState<string>('');
+
+  const context = useContext(AppContext);
+  if (!context) return null;
+  const { login, loading, error: apiError } = context;
+
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError('');
 
@@ -34,35 +38,35 @@ const AdminLogin = () => {
     try {
       await login(cedula, password);
     } catch (err) {
-      // API error is handled by AppContext
+      // API error handled by context
     }
   };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '16px' }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', padding: '32px', position: 'relative', overflow: 'hidden' }}>
+      <div className="glass-panel isn-border-blue-2" style={{ width: '100%', maxWidth: '420px', padding: '32px', position: 'relative', overflow: 'hidden', borderRadius: '16px' }}>
         
-        {/* Top Decorative Blue Accent Bar (Deep Blue for Admin panel feel) */}
+        {/* Top Decorative Blue Accent Bar */}
         <div style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           height: '6px',
-          background: 'var(--text-primary)'
+          background: 'var(--isn-blue)'
         }} />
 
         <div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
             <img 
               src={logoNormal} 
-              alt="AlimSafe" 
-              style={{ width: '160px', height: 'auto', marginBottom: '16px', borderRadius: '12px' }} 
+              alt="Instituto Superior del Norte" 
+              style={{ width: '150px', height: 'auto', marginBottom: '16px' }} 
             />
-            <p style={{ color: 'var(--text-primary)', fontSize: '1rem', textAlign: 'center', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <p className="font-serif" style={{ color: 'var(--isn-blue)', fontSize: '1.25rem', textAlign: 'center', margin: 0 }}>
               Acceso Administrativo
             </p>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '2px' }}>
+            <p style={{ color: 'var(--isn-muted)', fontSize: '0.8rem', textAlign: 'center', marginTop: '4px' }}>
               Gestión de Estudiantes y Certificados
             </p>
           </div>
@@ -77,7 +81,7 @@ const AdminLogin = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              color: 'var(--accent-rose)',
+              color: 'var(--isn-danger)',
               fontSize: '0.875rem'
             }}>
               <ShieldAlert size={20} style={{ flexShrink: 0 }} />
@@ -89,7 +93,7 @@ const AdminLogin = () => {
             <div className="input-group">
               <label className="input-label" htmlFor="admin-cedula">Cédula del Administrador</label>
               <input
-                className="input-field"
+                className="input-field isn-input-focus"
                 type="text"
                 id="admin-cedula"
                 placeholder="Ej. 999999999"
@@ -102,7 +106,7 @@ const AdminLogin = () => {
             <div className="input-group" style={{ marginBottom: '28px' }}>
               <label className="input-label" htmlFor="admin-password">Contraseña</label>
               <input
-                className="input-field"
+                className="input-field isn-input-focus"
                 type="password"
                 id="admin-password"
                 placeholder="••••••••"
@@ -113,9 +117,9 @@ const AdminLogin = () => {
             </div>
 
             <button
-              className="btn"
+              className="btn btn-primary"
               type="submit"
-              style={{ width: '100%', padding: '14px', background: 'var(--text-primary)', color: '#FFFFFF' }}
+              style={{ width: '100%', padding: '14px', background: 'var(--isn-blue-dark)', color: '#FFFFFF' }}
               disabled={loading}
             >
               {loading ? (
@@ -136,7 +140,7 @@ const AdminLogin = () => {
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--text-secondary)',
+                color: 'var(--isn-blue)',
                 fontSize: '0.85rem',
                 cursor: 'pointer',
                 display: 'inline-flex',
@@ -158,12 +162,12 @@ const AdminLogin = () => {
             background: '#F8F9FA',
             border: '1px solid #E2E8F0',
             fontSize: '0.75rem',
-            color: 'var(--text-secondary)',
+            color: 'var(--isn-charcoal)',
             textAlign: 'center'
           }}>
-            <p style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>🔑 Credenciales de Administrador</p>
-            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--text-primary)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>999999999</code></p>
-            <p>Contraseña: <code style={{ color: 'var(--text-primary)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>adminpassword</code></p>
+            <p style={{ fontWeight: 700, color: 'var(--isn-blue)', marginBottom: '6px' }}>🔑 Credenciales de Administrador</p>
+            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--isn-blue)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>999999999</code></p>
+            <p>Contraseña: <code style={{ color: 'var(--isn-blue)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>adminpassword</code></p>
           </div>
 
         </div>

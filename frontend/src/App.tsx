@@ -87,7 +87,7 @@ function MainLayout() {
   return (
     <div className="app-container">
       {/* Premium Navbar */}
-      <nav className="glass-panel navbar" style={{ background: '#FFFFFF', borderBottom: '1px solid var(--border-glass)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
+      <nav className="isn-navbar navbar">
         <div
           style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
           onClick={() => {
@@ -98,7 +98,7 @@ function MainLayout() {
             }
           }}
         >
-          <img src={logoHorizontal} alt="AlimSafe" style={{ height: '38px', width: 'auto' }} />
+          <img src={logoHorizontal} alt="Instituto Superior del Norte" style={{ height: '42px', width: 'auto' }} />
         </div>
 
         {user ? (
@@ -106,18 +106,18 @@ function MainLayout() {
             <button
               onClick={() => navigate(user.rol === 'administrador' ? '/admin/dashboard' : '/dashboard')}
               className="btn btn-secondary"
-              style={{ padding: '8px 14px', fontSize: '0.85rem', height: '38px' }}
+              style={{ padding: '8px 14px', fontSize: '0.85rem', height: '38px', color: '#FFFFFF', backgroundColor: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
             >
               <Home size={16} />
               <span className="hide-mobile">Panel</span>
             </button>
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 700 }}>{user.nombre_completo}</span>
+              <span style={{ fontSize: '0.85rem', color: '#FFFFFF', fontWeight: 700 }}>{user.nombre_completo}</span>
               {user.rol === 'administrador' ? (
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Administrador</span>
+                <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>Administrador</span>
               ) : (
-                <span style={{ fontSize: '0.75rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>{progress.progreso_porcentaje}% Completado</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--isn-gold)', fontWeight: 600 }}>{progress.progreso_porcentaje}% Completado</span>
               )}
             </div>
 
@@ -138,7 +138,7 @@ function MainLayout() {
             <button
               onClick={() => navigate('/verify')}
               className="btn btn-secondary"
-              style={{ padding: '8px 16px', fontSize: '0.85rem', height: '38px' }}
+              style={{ padding: '8px 16px', fontSize: '0.85rem', height: '38px', color: '#FFFFFF', backgroundColor: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
             >
               <ShieldCheck size={16} />
               <span>Verificar Certificado</span>
@@ -166,18 +166,17 @@ function MainLayout() {
       </main>
 
       {/* Premium Footer */}
-      <footer style={{
+      <footer className="isn-footer" style={{
         marginTop: 'auto',
         padding: '24px 0',
         borderTop: '1px solid var(--border-glass)',
         textAlign: 'center',
-        color: 'var(--text-muted)',
         fontSize: '0.75rem',
         display: 'flex',
         flexDirection: 'column',
         gap: '6px'
       }}>
-        <p>© 2026 AlimSafe. Todos los derechos reservados.</p>
+        <p>© 2026 Instituto Superior del Norte. Todos los derechos reservados.</p>
         <p style={{ fontWeight: 500 }}>Acreditación y Certificación en Manipulación Higiénica de Alimentos.</p>
       </footer>
     </div>

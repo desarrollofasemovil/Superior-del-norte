@@ -1,28 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-primary: #FAFAFA;
+  /* ISN UI Design System Tokens */
+  --isn-bg-light: #F8FAFC;
+  --isn-blue: #0F2C59;
+  --isn-blue-dark: #071935;
+  --isn-gold: #D4AF37;
+  --isn-gold-hover: #C59F2D;
+  --isn-charcoal: #1E293B;
+  --isn-success: #16A34A;
+  --isn-success-hover: #12823B;
+  --isn-danger: #EF4444;
+  --isn-muted: #64748B;
+
+  /* Mapping legacy tokens for backward compatibility */
+  --bg-primary: var(--isn-bg-light);
   --bg-secondary: #FFFFFF;
   --bg-glass: rgba(255, 255, 255, 0.95);
   --border-glass: #E2E8F0;
-  --border-active: #008DDA;
+  --border-active: var(--isn-blue);
   
-  --accent-emerald: #4E9F3D;
-  --accent-emerald-hover: #3d8030;
-  --accent-teal: #008DDA;
-  --accent-gold: #F0A500;
-  --accent-gold-hover: #d49200;
-  --accent-rose: #EF4444;
+  --accent-emerald: var(--isn-success);
+  --accent-emerald-hover: var(--isn-success-hover);
+  --accent-teal: var(--isn-blue);
+  --accent-gold: var(--isn-gold);
+  --accent-gold-hover: var(--isn-gold-hover);
+  --accent-rose: var(--isn-danger);
   
-  --text-primary: #0F2C59;
+  --text-primary: var(--isn-charcoal);
   --text-secondary: #475569;
-  --text-muted: #64748B;
+  --text-muted: var(--isn-muted);
   
-  --shadow-glow: 0 4px 20px rgba(78, 159, 61, 0.12);
+  --shadow-glow: 0 4px 20px rgba(212, 175, 55, 0.12);
   --shadow-card: 0 10px 25px -5px rgba(15, 44, 89, 0.06), 0 8px 10px -6px rgba(15, 44, 89, 0.04);
   
   --font-title: 'Outfit', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
 }
 
 * {
@@ -311,9 +325,100 @@ h1, h2, h3, h4, h5, h6 {
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(78, 159, 61, 0.1);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
   }
   50% {
-    box-shadow: 0 0 30px rgba(78, 159, 61, 0.25);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.25);
   }
 }
+
+/* ISN Institutional Styling Helpers */
+.font-serif {
+  font-family: var(--font-serif) !important;
+  font-weight: 700;
+}
+
+.font-mono {
+  font-family: monospace !important;
+}
+
+.isn-border-gold-2 {
+  border: 2px solid var(--isn-gold) !important;
+}
+
+.isn-border-gold-4 {
+  border: 4px solid var(--isn-gold) !important;
+}
+
+.isn-border-blue-2 {
+  border: 2px solid var(--isn-blue) !important;
+}
+
+.isn-border-blue-4 {
+  border: 4px solid var(--isn-blue) !important;
+}
+
+.isn-navbar {
+  background-color: var(--isn-blue-dark) !important;
+  border-bottom: 2px solid var(--isn-gold) !important;
+  box-shadow: 0 4px 12px rgba(7, 25, 53, 0.15) !important;
+}
+
+.isn-navbar button {
+  font-family: var(--font-title);
+  font-weight: 600;
+}
+
+.isn-footer {
+  border-top: 1px solid var(--border-glass);
+  background-color: var(--isn-blue-dark) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.isn-footer p {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.isn-title-solemn {
+  font-family: var(--font-serif) !important;
+  color: var(--isn-blue) !important;
+  font-weight: 700 !important;
+}
+
+.isn-badge-gold {
+  background: rgba(212, 175, 55, 0.1) !important;
+  border: 1px solid var(--isn-gold) !important;
+  color: var(--isn-gold) !important;
+}
+
+.isn-badge-blue {
+  background: rgba(15, 44, 89, 0.1) !important;
+  border: 1px solid var(--isn-blue) !important;
+  color: var(--isn-blue) !important;
+}
+
+.isn-badge-success {
+  background: rgba(22, 163, 74, 0.1) !important;
+  border: 1px solid var(--isn-success) !important;
+  color: var(--isn-success) !important;
+}
+
+.isn-card-header {
+  border-bottom: 2px solid var(--isn-gold) !important;
+}
+
+.isn-table th {
+  font-family: var(--font-title);
+  font-weight: 700;
+  color: var(--isn-blue) !important;
+}
+
+.isn-table td {
+  color: var(--isn-charcoal) !important;
+}
+
+.isn-input-focus:focus {
+  border-color: var(--isn-blue) !important;
+  box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.12) !important;
+}
+

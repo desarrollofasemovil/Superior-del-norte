@@ -1,10 +1,10 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
-export const AppContext = createContext();
+export const AppContext = createContext<any>(null);
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
-const decodeJWTPayload = (token) => {
+const decodeJWTPayload = (token: string): any => {
   try {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -21,12 +21,15 @@ const decodeJWTPayload = (token) => {
   }
 };
 
-export const AppProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
+interface AppProviderProps {
+  children: ReactNode;
+}
+
+export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token') || null);
 
   // Lazy init: decode user from stored token once, synchronously.
-  // This avoids the setUser(newObject) effect that causes re-render loops.
-  const [user, setUser] = useState(() => {
+  const [user, setUser] = useState<any>(() => {
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
       const payload = decodeJWTPayload(savedToken);
@@ -41,9 +44,7 @@ export const AppProvider = ({ children }) => {
     return null;
   });
 
-  // currentView is kept for backward compatibility with components that
-  // still reference it, but navigation is driven by React Router (navigate()).
-  const [currentView, setCurrentView] = useState(() => {
+  const [currentView, setCurrentView] = useState<string>(() => {
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
       const payload = decodeJWTPayload(savedToken);
@@ -54,25 +55,23 @@ export const AppProvider = ({ children }) => {
     return 'login';
   });
 
-  const [modules, setModules] = useState([]);
-  const [progress, setProgress] = useState({ progreso_porcentaje: 0, modulos_completados: [] });
-  const [activeModuleId, setActiveModuleId] = useState(null);
-  const [examStatus, setExamStatus] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [modules, setModules] = useState<any[]>([]);
+  const [progress, setProgress] = useState<any>({ progreso_porcentaje: 0, modulos_completados: [] });
+  const [activeModuleId, setActiveModuleId] = useState<number | null>(null);
+  const [examStatus, setExamStatus] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Dynamic Course and Module states
-  const [activeCourseId, setActiveCourseId] = useState(null);
-  const [studentCourses, setStudentCourses] = useState([]);
+  const [activeCourseId, setActiveCourseId] = useState<number | null>(null);
+  const [studentCourses, setStudentCourses] = useState<any[]>([]);
 
   // Admin Panel states
-  const [adminMetrics, setAdminMetrics] = useState({ usuarios_activos: 0, cursos_completados: 0, cursos_pendientes: 0 });
-  const [adminUsers, setAdminUsers] = useState([]);
-  const [courses, setCourses] = useState([]);
-  const [coursesList, setCoursesList] = useState([]);
+  const [adminMetrics, setAdminMetrics] = useState<any>({ usuarios_activos: 0, cursos_completados: 0, cursos_pendientes: 0 });
+  const [adminUsers, setAdminUsers] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [coursesList, setCoursesList] = useState<any[]>([]);
 
-  // FIX: useCallback stabilizes fetchStudentCourses reference.
-  // This prevents it from being a new function on every render.
   const fetchStudentCourses = useCallback(async () => {
     if (!token) return;
     try {
@@ -88,9 +87,9 @@ export const AppProvider = ({ children }) => {
     } catch (err) {
       console.error('Error fetching student courses:', err);
     }
-  }, [token]); // token is a primitive (string | null) — safe as dep
+  }, [token]);
 
-  const fetchCourseContent = useCallback(async (courseId) => {
+  const fetchCourseContent = useCallback(async (courseId: number) => {
     if (!token) return;
     try {
       const response = await fetch(`${API_BASE_URL}/course/content?courseId=${courseId}`, {
@@ -105,7 +104,7 @@ export const AppProvider = ({ children }) => {
     }
   }, [token]);
 
-  const fetchProgress = useCallback(async (courseId) => {
+  const fetchProgress = useCallback(async (courseId: number) => {
     if (!token) return;
     try {
       const response = await fetch(`${API_BASE_URL}/course/progress?courseId=${courseId}`, {
@@ -120,7 +119,7 @@ export const AppProvider = ({ children }) => {
     }
   }, [token]);
 
-  const fetchExamStatus = useCallback(async (courseId) => {
+  const fetchExamStatus = useCallback(async (courseId: number) => {
     if (!token) return;
     try {
       const response = await fetch(`${API_BASE_URL}/certificate/detail?courseId=${courseId}`, {
@@ -137,18 +136,12 @@ export const AppProvider = ({ children }) => {
     }
   }, [token]);
 
-  // FIX: Use PRIMITIVE deps (user?.cedula, user?.rol) instead of the full
-  // `user` object. Objects are compared by reference — a new object with the
-  // same data still triggers the effect, causing the infinite loop.
-  // NOTE: The redundant JWT-decode useEffect([token]) has been REMOVED.
-  // user is initialized synchronously via lazy useState above.
   useEffect(() => {
     if (token && user?.cedula && user?.rol === 'estudiante') {
       fetchStudentCourses();
     }
   }, [token, user?.cedula, user?.rol, fetchStudentCourses]);
 
-  // FIX: Same primitive-deps fix for course data loading.
   useEffect(() => {
     if (token && user?.cedula && user?.rol === 'estudiante' && activeCourseId) {
       fetchCourseContent(activeCourseId);
@@ -157,7 +150,7 @@ export const AppProvider = ({ children }) => {
     }
   }, [token, user?.cedula, user?.rol, activeCourseId, fetchCourseContent, fetchProgress, fetchExamStatus]);
 
-  const login = async (cedula, password) => {
+  const login = async (cedula: string, password: string) => {
     setLoading(true);
     setError(null);
     try {
@@ -178,7 +171,7 @@ export const AppProvider = ({ children }) => {
       } else {
         setCurrentView('dashboard');
       }
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
       throw err;
     } finally {
@@ -203,7 +196,7 @@ export const AppProvider = ({ children }) => {
     setCurrentView('login');
   };
 
-  const completeModule = async (moduloId) => {
+  const completeModule = async (moduloId: number) => {
     try {
       const response = await fetch(`${API_BASE_URL}/course/progress`, {
         method: 'POST',
@@ -219,7 +212,6 @@ export const AppProvider = ({ children }) => {
           progreso_porcentaje: data.progreso_porcentaje,
           modulos_completados: data.modulos_completados
         });
-        // Refresh student courses list to reflect updated progress percentage on dashboard
         await fetchStudentCourses();
       }
     } catch (err) {
@@ -227,7 +219,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const submitExam = async (respuestas) => {
+  const submitExam = async (respuestas: Record<number, string>) => {
     setLoading(true);
     setError(null);
     try {
@@ -244,16 +236,14 @@ export const AppProvider = ({ children }) => {
         throw new Error(data.error || 'Error al enviar examen');
       }
 
-      // Update local exam status state
       if (data.aprobado) {
         setExamStatus({ aprobado: true, score: data.puntaje, intentos: data.intentos });
       } else {
         setExamStatus({ aprobado: false, score: data.puntaje, intentos: data.intentos });
       }
-      // Reload enrolled courses to update progress/certificates
       await fetchStudentCourses();
       return data;
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
       throw err;
     } finally {
@@ -279,12 +269,13 @@ export const AppProvider = ({ children }) => {
       const filename = currentCourse
         ? `Certificado_${currentCourse.titulo.replace(/\s+/g, '_')}_${user.cedula}.pdf`
         : `Certificado_${user.cedula}.pdf`;
+      a.target = '_blank';
       a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message);
     }
   };
@@ -303,7 +294,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const fetchAdminUsers = async (cedula = '') => {
+  const fetchAdminUsers = async (cedula: string = '') => {
     try {
       const url = cedula
         ? `${API_BASE_URL}/admin/users?cedula=${cedula}`
@@ -334,7 +325,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const createStudentUser = async (studentData) => {
+  const createStudentUser = async (studentData: any) => {
     setLoading(true);
     setError(null);
     try {
@@ -350,11 +341,10 @@ export const AppProvider = ({ children }) => {
       if (!response.ok) {
         throw new Error(data.error || 'Error al crear estudiante');
       }
-      // Reload metrics and users list dynamically
       await fetchAdminMetrics();
       await fetchAdminUsers();
       return data;
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
       throw err;
     } finally {
@@ -377,7 +367,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const updateStudentCourses = async (cedula, courseIds) => {
+  const updateStudentCourses = async (cedula: string, courseIds: number[]) => {
     setLoading(true);
     setError(null);
     try {
@@ -396,7 +386,7 @@ export const AppProvider = ({ children }) => {
       await fetchAdminMetrics();
       await fetchAdminUsers();
       return data;
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
       throw err;
     } finally {

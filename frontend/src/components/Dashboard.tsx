@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { BookOpen, CheckCircle, Circle, Award, FileText, Clock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 
-const decodeMojibake = (str) => {
-  if (!str) return str;
+const decodeMojibake = (str: string | undefined): string => {
+  if (!str) return '';
   try {
     const bytes = new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
     const decoded = new TextDecoder('utf-8').decode(bytes);
@@ -13,7 +13,7 @@ const decodeMojibake = (str) => {
     }
   } catch (e) {}
 
-  const map = {
+  const map: Record<string, string> = {
     'Ã¡': 'á', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 'Ãº': 'ú',
     'Ã±': 'ñ', 'Ã‘': 'Ñ', 'Ã ': 'Á', 'Ã‰': 'É', 'Ã ': 'Í',
     'Ã“': 'Ó', 'Ãš': 'Ú', 'Ã¼': 'ü', 'Ãœ': 'Ü'
@@ -25,7 +25,9 @@ const decodeMojibake = (str) => {
   return result;
 };
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
+  const context = useContext(AppContext);
+  if (!context) return null;
   const {
     user,
     progress,
@@ -36,7 +38,8 @@ const Dashboard = () => {
     studentCourses,
     activeCourseId,
     setActiveCourseId
-  } = useContext(AppContext);
+  } = context;
+  
   const navigate = useNavigate();
 
   const totalModules = modules.length;
@@ -45,9 +48,9 @@ const Dashboard = () => {
   const hasApprovedExam = examStatus && examStatus.aprobado;
 
   // Active course details if any
-  const activeCourse = studentCourses.find(c => c.id === activeCourseId) || studentCourses[0];
+  const activeCourse = studentCourses.find((c: any) => c.id === activeCourseId) || studentCourses[0];
 
-  const handleCourseAction = (courseId) => {
+  const handleCourseAction = (courseId: number) => {
     setActiveCourseId(courseId);
 
     // If it's the currently active course and we already loaded it
@@ -59,7 +62,7 @@ const Dashboard = () => {
           navigate(`/course/${courseId}/exam`);
         }
       } else {
-        const firstUncompleted = modules.find(m => !progress.modulos_completados.includes(m.id));
+        const firstUncompleted = modules.find((m: any) => !progress.modulos_completados.includes(m.id));
         const targetId = firstUncompleted ? firstUncompleted.id : (modules[0]?.id || null);
         setActiveModuleId(targetId);
         navigate(`/course/${courseId}`);
@@ -70,7 +73,7 @@ const Dashboard = () => {
     }
   };
 
-  const handleModuleClick = (moduleId) => {
+  const handleModuleClick = (moduleId: number) => {
     setActiveModuleId(moduleId);
     navigate(`/course/${activeCourseId}`);
   };
@@ -78,10 +81,10 @@ const Dashboard = () => {
   // 1. Loading state if no courses loaded yet
   if (!studentCourses || studentCourses.length === 0) {
     return (
-      <div style={{ maxWidth: '600px', margin: '80px auto', textAlign: 'center', padding: '32px' }} className="glass-panel">
-        <BookOpen size={48} color="var(--text-muted)" style={{ marginBottom: '16px' }} />
-        <h2 style={{ fontSize: '1.5rem', marginBottom: '8px' }}>Cargando tus cursos...</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>
+      <div style={{ maxWidth: '600px', margin: '80px auto', textAlign: 'center', padding: '32px' }} className="glass-panel isn-border-gold-2">
+        <BookOpen size={48} color="var(--isn-muted)" style={{ marginBottom: '16px' }} />
+        <h2 className="font-serif" style={{ fontSize: '1.5rem', marginBottom: '8px', color: 'var(--isn-blue)' }}>Cargando tus cursos...</h2>
+        <p style={{ color: 'var(--isn-charcoal)' }}>
           Si es la primera vez que ingresas, espera a que el administrador te matricule en un curso formativo.
         </p>
       </div>
@@ -93,10 +96,10 @@ const Dashboard = () => {
     return (
       <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 16px' }}>
         <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+          <h1 className="font-serif isn-title-solemn" style={{ fontSize: '2.25rem', marginBottom: '6px' }}>
             ¡Bienvenido, {decodeMojibake(user?.nombre_completo)}!
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
+          <p style={{ color: 'var(--isn-charcoal)', fontSize: '1.05rem' }}>
             Selecciona uno de tus cursos matriculados para continuar tu formación.
           </p>
         </div>
@@ -107,11 +110,11 @@ const Dashboard = () => {
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '24px'
         }}>
-          {studentCourses.map(course => (
-            <div key={course.id} className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          {studentCourses.map((course: any) => (
+            <div key={course.id} className="glass-panel isn-border-gold-2" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%', borderRadius: '16px' }}>
               
               {/* Card Header Image */}
-              <div style={{ position: 'relative', height: '180px', overflow: 'hidden', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)' }}>
+              <div style={{ position: 'relative', height: '180px', overflow: 'hidden', background: 'linear-gradient(135deg, var(--isn-blue) 0%, var(--isn-blue-dark) 100%)' }}>
                 {course.imagen_url && (
                   <img
                     src={course.imagen_url}
@@ -122,14 +125,14 @@ const Dashboard = () => {
                 <div style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to top, rgba(15, 44, 89, 0.85) 0%, rgba(15, 44, 89, 0.2) 60%, transparent 100%)'
+                  background: 'linear-gradient(to top, rgba(7, 25, 53, 0.85) 0%, rgba(7, 25, 53, 0.2) 60%, transparent 100%)'
                 }} />
                 
                 <span style={{
                   position: 'absolute',
                   top: '16px',
                   right: '16px',
-                  background: course.progreso_porcentaje === 100 ? 'var(--accent-emerald)' : 'var(--accent-gold)',
+                  background: course.progreso_porcentaje === 100 ? 'var(--isn-success)' : 'var(--isn-gold)',
                   color: '#FFFFFF',
                   padding: '4px 10px',
                   borderRadius: '9999px',
@@ -143,21 +146,21 @@ const Dashboard = () => {
 
               {/* Card Body */}
               <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px' }}>
+                <h3 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--isn-blue)', marginBottom: '8px' }}>
                   {course.titulo}
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: '1.5', flex: 1, marginBottom: '20px' }}>
+                <p style={{ color: 'var(--isn-charcoal)', fontSize: '0.875rem', lineHeight: '1.5', flex: 1, marginBottom: '20px' }}>
                   {course.descripcion || 'Sin descripción disponible.'}
                 </p>
 
                 {/* Progress bar inside card */}
                 <div style={{ marginBottom: '20px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '6px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 700, color: 'var(--isn-muted)', marginBottom: '6px' }}>
                     <span>Progreso</span>
                     <span>{course.progreso_porcentaje}%</span>
                   </div>
                   <div className="progress-container" style={{ height: '6px' }}>
-                    <div className="progress-bar" style={{ width: `${course.progreso_porcentaje}%` }} />
+                    <div className="progress-bar" style={{ width: `${course.progreso_porcentaje}%`, background: 'var(--isn-success)' }} />
                   </div>
                 </div>
 
@@ -167,7 +170,7 @@ const Dashboard = () => {
                     navigate(`/course/${course.id}`);
                   }}
                   className="btn btn-primary"
-                  style={{ width: '100%', height: '44px', fontSize: '0.9rem' }}
+                  style={{ width: '100%', height: '44px', fontSize: '0.9rem', background: 'var(--isn-blue)' }}
                 >
                   <span>Ingresar al Curso</span>
                   <ArrowRight size={16} />
@@ -195,7 +198,7 @@ const Dashboard = () => {
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--text-muted)',
+              color: 'var(--isn-blue)',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
@@ -211,10 +214,10 @@ const Dashboard = () => {
 
       {/* Welcome Header */}
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+        <h1 className="font-serif isn-title-solemn" style={{ fontSize: '2.25rem', marginBottom: '6px' }}>
           ¡Bienvenido, {decodeMojibake(user?.nombre_completo)}!
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
+        <p style={{ color: 'var(--isn-charcoal)', fontSize: '1.05rem' }}>
           {isFinishedAllModules 
             ? 'Has completado todos los contenidos formativos. Continúa con tu evaluación.'
             : 'Continúa tu aprendizaje donde lo dejaste.'}
@@ -222,18 +225,14 @@ const Dashboard = () => {
       </div>
 
       {/* Main Grid Layout */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gap: '32px',
-      }} className="course-grid">
+      <div className="course-grid">
         
         {/* Left Side: Course Progress & Modules list */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
-          <div className="glass-panel" style={{ overflow: 'hidden' }}>
+          <div className="glass-panel isn-border-gold-2" style={{ overflow: 'hidden', borderRadius: '16px' }}>
             {/* Banner Image */}
-            <div style={{ position: 'relative', height: '240px', overflow: 'hidden', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)' }}>
+            <div style={{ position: 'relative', height: '240px', overflow: 'hidden', background: 'linear-gradient(135deg, var(--isn-blue) 0%, var(--isn-blue-dark) 100%)' }}>
               {displayCourse.imagen_url && (
                 <img
                   src={displayCourse.imagen_url}
@@ -245,12 +244,12 @@ const Dashboard = () => {
               <div style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(to top, rgba(15, 44, 89, 0.85) 0%, rgba(15, 44, 89, 0.3) 60%, transparent 100%)'
+                background: 'linear-gradient(to top, rgba(7, 25, 53, 0.85) 0%, rgba(7, 25, 53, 0.3) 60%, transparent 100%)'
               }} />
               
               <div style={{ position: 'absolute', bottom: '24px', left: '24px', right: '24px', color: '#FFFFFF' }}>
                 <span style={{
-                  background: isFinishedAllModules ? 'var(--accent-emerald)' : 'var(--accent-gold)',
+                  background: isFinishedAllModules ? 'var(--isn-success)' : 'var(--isn-gold)',
                   color: '#FFFFFF',
                   padding: '6px 14px',
                   borderRadius: '9999px',
@@ -263,7 +262,7 @@ const Dashboard = () => {
                 }}>
                   {isFinishedAllModules ? 'Contenido Finalizado' : 'En Progreso'}
                 </span>
-                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#FFFFFF', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+                <h2 className="font-serif" style={{ fontSize: '1.75rem', color: '#FFFFFF', textShadow: '0 2px 4px rgba(0,0,0,0.3)', margin: 0 }}>
                   {displayCourse.titulo}
                 </h2>
               </div>
@@ -273,21 +272,21 @@ const Dashboard = () => {
               {/* Progress Bar */}
               <div style={{ marginBottom: '24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>Progreso de la formación</span>
-                  <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent-emerald)' }}>{progress.progreso_porcentaje}%</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--isn-blue)' }}>Progreso de la formación</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--isn-success)' }}>{progress.progreso_porcentaje}%</span>
                 </div>
                 
                 <div className="progress-container">
-                  <div className="progress-bar" style={{ width: `${progress.progreso_porcentaje}%` }} />
+                  <div className="progress-bar" style={{ width: `${progress.progreso_porcentaje}%`, background: 'var(--isn-success)' }} />
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', fontSize: '0.85rem', color: 'var(--isn-muted)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <CheckCircle size={16} color="var(--accent-emerald)" />
+                    <CheckCircle size={16} color="var(--isn-success)" />
                     <span>{completedCount} de {totalModules} módulos completados</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Clock size={16} color="var(--accent-gold)" />
+                    <Clock size={16} color="var(--isn-gold)" />
                     <span>Autogestionado</span>
                   </div>
                 </div>
@@ -297,7 +296,7 @@ const Dashboard = () => {
               <button 
                 className="btn btn-primary" 
                 onClick={() => handleCourseAction(displayCourse.id)} 
-                style={{ width: '100%', height: '52px', fontSize: '1rem' }}
+                style={{ width: '100%', height: '52px', fontSize: '1rem', background: 'var(--isn-blue)' }}
               >
                 {isFinishedAllModules ? (
                   hasApprovedExam ? (
@@ -322,13 +321,13 @@ const Dashboard = () => {
           </div>
 
           {/* Modules List */}
-          <div className="glass-panel" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '20px', color: 'var(--text-primary)' }}>
+          <div className="glass-panel isn-border-blue-2" style={{ padding: '28px', borderRadius: '16px' }}>
+            <h3 className="font-serif" style={{ fontSize: '1.25rem', marginBottom: '20px', color: 'var(--isn-blue)' }}>
               Temario del Curso ({totalModules} Módulos obligatorios)
             </h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {modules.map((m, index) => {
+              {modules.map((m: any, index: number) => {
                 const isCompleted = progress.modulos_completados.includes(m.id);
                 return (
                   <div
@@ -349,16 +348,16 @@ const Dashboard = () => {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0 }}>
                       {isCompleted ? (
-                        <CheckCircle size={20} color="var(--accent-emerald)" style={{ flexShrink: 0 }} />
+                        <CheckCircle size={20} color="var(--isn-success)" style={{ flexShrink: 0 }} />
                       ) : (
-                        <Circle size={20} color="var(--text-muted)" style={{ flexShrink: 0 }} />
+                        <Circle size={20} color="var(--isn-muted)" style={{ flexShrink: 0 }} />
                       )}
                       
                       <div style={{ minWidth: 0 }}>
                         <p style={{
                           fontSize: '0.95rem',
                           fontWeight: 600,
-                          color: isCompleted ? 'var(--text-muted)' : 'var(--text-primary)',
+                          color: isCompleted ? 'var(--isn-muted)' : 'var(--isn-charcoal)',
                           textDecoration: isCompleted ? 'line-through' : 'none',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
@@ -369,14 +368,12 @@ const Dashboard = () => {
                       </div>
                     </div>
                     
-                    <span style={{
+                    <span className="isn-badge-blue" style={{
                       fontSize: '0.75rem',
                       fontWeight: 700,
                       textTransform: 'uppercase',
                       padding: '4px 10px',
                       borderRadius: '6px',
-                      background: isCompleted ? '#E2E8F0' : '#008DDA15',
-                      color: isCompleted ? 'var(--text-muted)' : 'var(--accent-teal)',
                       marginLeft: '12px',
                       flexShrink: 0
                     }}>
@@ -394,54 +391,54 @@ const Dashboard = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Status Widget */}
-          <div className="glass-panel" style={{ padding: '24px' }}>
+          <div className="glass-panel isn-border-gold-2" style={{ padding: '24px', borderRadius: '16px' }}>
             <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
               <div style={{
                 width: '44px',
                 height: '44px',
                 borderRadius: '50%',
-                background: hasApprovedExam ? 'rgba(78, 159, 61, 0.1)' : 'rgba(0, 141, 218, 0.1)',
+                background: hasApprovedExam ? 'rgba(22, 163, 74, 0.1)' : 'rgba(15, 44, 89, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0
               }}>
                 {hasApprovedExam ? (
-                  <ShieldCheck size={22} color="var(--accent-emerald)" />
+                  <ShieldCheck size={22} color="var(--isn-success)" />
                 ) : (
-                  <Clock size={22} color="var(--accent-teal)" />
+                  <Clock size={22} color="var(--isn-blue)" />
                 )}
               </div>
               
               <div style={{ flex: 1 }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '6px' }}>
+                <h3 className="font-serif" style={{ fontSize: '1.1rem', color: 'var(--isn-blue)', marginBottom: '6px' }}>
                   {hasApprovedExam ? 'Formación Finalizada' : 'Próximo Paso Requerido'}
                 </h3>
                 
                 {hasApprovedExam ? (
                   <div>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--isn-charcoal)', marginBottom: '14px' }}>
                       Has aprobado exitosamente el examen final con una calificación del {examStatus.score}%.
                     </p>
-                    <div style={{ background: '#4E9F3D0C', border: '1px solid #4E9F3D30', padding: '12px', borderRadius: '10px' }}>
-                      <p style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-emerald)' }}>
+                    <div style={{ background: 'rgba(22, 163, 74, 0.05)', border: '1px solid rgba(22, 163, 74, 0.2)', padding: '12px', borderRadius: '10px' }}>
+                      <p style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--isn-success)' }}>
                         Certificado Emitido
                       </p>
-                      <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--isn-charcoal)', marginTop: '2px' }}>
                         Calificación: {examStatus.score}%
                       </p>
                     </div>
                   </div>
                 ) : isFinishedAllModules ? (
                   <div>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--isn-charcoal)', marginBottom: '14px' }}>
                       ¡Has completado todos los módulos formativos! Ya puedes realizar el examen final.
                     </p>
                     <button
                       onClick={() => navigate(`/course/${activeCourseId}/exam`)}
                       className="btn"
                       style={{
-                        background: 'var(--accent-gold)',
+                        background: 'var(--isn-gold)',
                         color: '#FFFFFF',
                         width: '100%',
                         padding: '10px 16px',
@@ -454,12 +451,12 @@ const Dashboard = () => {
                   </div>
                 ) : (
                   <div>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--isn-charcoal)', marginBottom: '14px' }}>
                       Debes visualizar y completar los {totalModules} módulos del temario para desbloquear el examen.
                     </p>
-                    <div style={{ background: 'rgba(240, 165, 0, 0.08)', border: '1px solid rgba(240, 165, 0, 0.2)', padding: '12px', borderRadius: '10px', display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <AlertCircle size={18} color="var(--accent-gold)" style={{ flexShrink: 0 }} />
-                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    <div style={{ background: 'rgba(212, 175, 55, 0.08)', border: '1px solid rgba(212, 175, 55, 0.2)', padding: '12px', borderRadius: '10px', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <AlertCircle size={18} color="var(--isn-gold)" style={{ flexShrink: 0 }} />
+                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--isn-blue)' }}>
                         Examen final bloqueado temporalmente
                       </p>
                     </div>
@@ -470,13 +467,13 @@ const Dashboard = () => {
           </div>
 
           {/* Certificate Card */}
-          <div className="glass-panel" style={{
-            background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)',
+          <div className="glass-panel isn-border-gold-2 animate-pulse-glow" style={{
+            background: 'linear-gradient(135deg, var(--isn-blue) 0%, var(--isn-blue-dark) 100%)',
             color: '#FFFFFF',
             padding: '28px',
-            border: 'none',
             position: 'relative',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            borderRadius: '16px'
           }}>
             <div style={{
               position: 'absolute',
@@ -490,7 +487,7 @@ const Dashboard = () => {
             </div>
 
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '8px' }}>
+              <h3 className="font-serif" style={{ fontSize: '1.25rem', color: '#FFFFFF', marginBottom: '8px' }}>
                 Certificación Oficial
               </h3>
               <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', lineHeight: '1.5', marginBottom: '20px' }}>
@@ -499,11 +496,11 @@ const Dashboard = () => {
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.95)' }}>
-                  <CheckCircle size={16} color="#FFFFFF" />
+                  <CheckCircle size={16} color="var(--isn-gold)" />
                   <span>Acreditación curricular válida</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.95)' }}>
-                  <CheckCircle size={16} color="#FFFFFF" />
+                  <CheckCircle size={16} color="var(--isn-gold)" />
                   <span>Código único de verificación en línea</span>
                 </div>
               </div>
@@ -513,14 +510,14 @@ const Dashboard = () => {
                   <button
                     onClick={() => navigate(`/certificate/${activeCourseId}`)}
                     className="btn"
-                    style={{ background: '#FFFFFF', color: 'var(--text-primary)', flex: 1, padding: '12px' }}
+                    style={{ background: '#FFFFFF', color: 'var(--isn-blue)', flex: 1, padding: '12px', fontWeight: 700 }}
                   >
                     Ver Diploma
                   </button>
                   <button 
                     onClick={downloadCertificate}
                     className="btn" 
-                    style={{ background: 'var(--accent-emerald)', color: '#FFFFFF', flex: 1, padding: '12px' }}
+                    style={{ background: 'var(--isn-success)', color: '#FFFFFF', flex: 1, padding: '12px', fontWeight: 700 }}
                   >
                     Descargar PDF
                   </button>
@@ -533,7 +530,8 @@ const Dashboard = () => {
                   fontSize: '0.8rem',
                   textAlign: 'center',
                   fontWeight: 500,
-                  border: '1px solid rgba(255, 255, 255, 0.15)'
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: '#FFFFFF'
                 }}>
                   Completa el curso y aprueba el examen final para descargar.
                 </div>

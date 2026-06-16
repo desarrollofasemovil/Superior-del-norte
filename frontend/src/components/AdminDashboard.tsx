@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import { Users, CheckCircle2, Clock, Plus, UserPlus, RefreshCw, X, ShieldAlert, Award, FileText, Edit } from 'lucide-react';
+import logoNormal from '../assets/logoNormal.png';
+import { Users, CheckCircle2, Clock, Plus, UserPlus, RefreshCw, X, ShieldAlert, Edit } from 'lucide-react';
 
-const decodeMojibake = (str) => {
-  if (!str) return str;
+const decodeMojibake = (str: string | undefined): string => {
+  if (!str) return '';
   try {
     const bytes = new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
     const decoded = new TextDecoder('utf-8').decode(bytes);
@@ -13,7 +14,7 @@ const decodeMojibake = (str) => {
     }
   } catch (e) {}
 
-  const map = {
+  const map: Record<string, string> = {
     'Ã¡': 'á', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 'Ãº': 'ú',
     'Ã±': 'ñ', 'Ã‘': 'Ñ', 'Ã ': 'Á', 'Ã‰': 'É', 'Ã ': 'Í',
     'Ã“': 'Ó', 'Ãš': 'Ú', 'Ã¼': 'ü', 'Ãœ': 'Ü'
@@ -25,7 +26,9 @@ const decodeMojibake = (str) => {
   return result;
 };
 
-const AdminDashboard = () => {
+const AdminDashboard: React.FC = () => {
+  const context = useContext(AppContext);
+  if (!context) return null;
   const {
     adminMetrics,
     adminUsers,
@@ -38,30 +41,31 @@ const AdminDashboard = () => {
     createStudentUser,
     updateStudentCourses,
     loading: contextLoading
-  } = useContext(AppContext);
+  } = context;
+
   const navigate = useNavigate();
 
   // Local States
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [nombre, setNombre] = useState('');
-  const [cedula, setCedula] = useState('');
-  const [password, setPassword] = useState('123456'); // Default password
-  const [selectedCourses, setSelectedCourses] = useState([]);
-  const [localError, setLocalError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [nombre, setNombre] = useState<string>('');
+  const [cedula, setCedula] = useState<string>('');
+  const [password, setPassword] = useState<string>('123456'); // Default password
+  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
+  const [localError, setLocalError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   // Search local state
-  const [searchCedula, setSearchCedula] = useState('');
+  const [searchCedula, setSearchCedula] = useState<string>('');
 
   // Edit courses modal states
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [editSelectedCourses, setEditSelectedCourses] = useState([]);
-  const [editError, setEditError] = useState('');
-  const [editSuccessMessage, setEditSuccessMessage] = useState('');
-  const [editSubmitting, setEditSubmitting] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const [editSelectedCourses, setEditSelectedCourses] = useState<string[]>([]);
+  const [editError, setEditError] = useState<string>('');
+  const [editSuccessMessage, setEditSuccessMessage] = useState<string>('');
+  const [editSubmitting, setEditSubmitting] = useState<boolean>(false);
 
   // Load dashboard data on mount
   useEffect(() => {
@@ -71,7 +75,7 @@ const AdminDashboard = () => {
   // Sync selected courses once courses list loads
   useEffect(() => {
     if (courses && courses.length > 0 && selectedCourses.length === 0) {
-      // Default to checking the first course (Manipulación de Alimentos)
+      // Default to checking the first course
       setSelectedCourses([courses[0].id.toString()]);
     }
   }, [courses]);
@@ -101,7 +105,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleOpenEditModal = async (student) => {
+  const handleOpenEditModal = async (student: any) => {
     setSelectedStudent(student);
     setEditSelectedCourses((student.enrolled_courses || []).map(String));
     setEditError('');
@@ -115,7 +119,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleEditCheckboxChange = (courseId) => {
+  const handleEditCheckboxChange = (courseId: number) => {
     const cidStr = courseId.toString();
     if (editSelectedCourses.includes(cidStr)) {
       setEditSelectedCourses(editSelectedCourses.filter(id => id !== cidStr));
@@ -124,7 +128,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleEditSubmit = async (e) => {
+  const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setEditError('');
     setEditSuccessMessage('');
@@ -139,14 +143,14 @@ const AdminDashboard = () => {
         setSelectedStudent(null);
         setEditSuccessMessage('');
       }, 1500);
-    } catch (err) {
+    } catch (err: any) {
       setEditError(err.message || 'Error al actualizar las matrículas.');
     } finally {
       setEditSubmitting(false);
     }
   };
 
-  const handleCheckboxChange = (courseId) => {
+  const handleCheckboxChange = (courseId: number) => {
     const cidStr = courseId.toString();
     if (selectedCourses.includes(cidStr)) {
       setSelectedCourses(selectedCourses.filter(id => id !== cidStr));
@@ -155,7 +159,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError('');
     setSuccessMessage('');
@@ -223,7 +227,7 @@ const AdminDashboard = () => {
         setSuccessMessage('');
       }, 1800);
 
-    } catch (err) {
+    } catch (err: any) {
       setLocalError(err.message || 'Error al registrar al estudiante.');
     } finally {
       setSubmitting(false);
@@ -236,10 +240,10 @@ const AdminDashboard = () => {
       {/* Header section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+          <h1 className="font-serif isn-title-solemn" style={{ fontSize: '2.25rem', marginBottom: '6px' }}>
             Panel de Administrador
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
+          <p style={{ color: 'var(--isn-charcoal)', fontSize: '1.05rem' }}>
             Supervisa el progreso de los estudiantes, gestiona matrículas y revisa métricas globales.
           </p>
         </div>
@@ -252,14 +256,14 @@ const AdminDashboard = () => {
             style={{ height: '48px', padding: '0 16px' }}
             title="Recargar información"
           >
-            <RefreshCw size={18} className={refreshing ? 'animate-spin' : ''} style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
+            <RefreshCw size={18} className={refreshing ? 'animate-spin' : ''} />
             <span className="hide-mobile">Actualizar</span>
           </button>
           
           <button 
             className="btn btn-primary"
             onClick={() => navigate('/admin/create-course')}
-            style={{ height: '48px', background: 'var(--accent-emerald)', borderColor: 'var(--accent-emerald)' }}
+            style={{ height: '48px', background: 'var(--isn-success)', borderColor: 'var(--isn-success)', color: '#FFFFFF' }}
           >
             <Plus size={18} />
             <span>Añadir Nuevo Curso</span>
@@ -268,7 +272,7 @@ const AdminDashboard = () => {
           <button 
             className="btn btn-primary"
             onClick={() => setIsModalOpen(true)}
-            style={{ height: '48px', background: 'var(--text-primary)' }}
+            style={{ height: '48px', background: 'var(--isn-blue)', color: '#FFFFFF' }}
           >
             <UserPlus size={18} />
             <span>Matricular Estudiante</span>
@@ -284,13 +288,13 @@ const AdminDashboard = () => {
         marginBottom: '36px'
       }}>
         {/* Card 1: Active Users */}
-        <div className="glass-panel" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div className="glass-panel isn-border-blue-2" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '20px', borderRadius: '16px' }}>
           <div style={{
             width: '56px',
             height: '56px',
             borderRadius: '16px',
-            background: 'rgba(0, 141, 218, 0.08)',
-            color: 'var(--accent-teal)',
+            background: 'rgba(15, 44, 89, 0.08)',
+            color: 'var(--isn-blue)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -298,21 +302,21 @@ const AdminDashboard = () => {
             <Users size={28} />
           </div>
           <div>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Estudiantes Activos</p>
-            <h3 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--isn-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>Estudiantes Activos</p>
+            <h3 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--isn-blue)', marginTop: '2px', margin: 0 }}>
               {adminMetrics.usuarios_activos}
             </h3>
           </div>
         </div>
 
         {/* Card 2: Completed Courses */}
-        <div className="glass-panel" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div className="glass-panel isn-border-blue-2" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '20px', borderRadius: '16px' }}>
           <div style={{
             width: '56px',
             height: '56px',
             borderRadius: '16px',
-            background: 'rgba(78, 159, 61, 0.08)',
-            color: 'var(--accent-emerald)',
+            background: 'rgba(22, 163, 74, 0.08)',
+            color: 'var(--isn-success)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -320,21 +324,21 @@ const AdminDashboard = () => {
             <CheckCircle2 size={28} />
           </div>
           <div>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Cursos Completados</p>
-            <h3 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--isn-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>Cursos Completados</p>
+            <h3 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--isn-success)', marginTop: '2px', margin: 0 }}>
               {adminMetrics.cursos_completados}
             </h3>
           </div>
         </div>
 
         {/* Card 3: Pending Courses */}
-        <div className="glass-panel" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div className="glass-panel isn-border-blue-2" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '20px', borderRadius: '16px' }}>
           <div style={{
             width: '56px',
             height: '56px',
             borderRadius: '16px',
-            background: 'rgba(240, 165, 0, 0.08)',
-            color: 'var(--accent-gold)',
+            background: 'rgba(212, 175, 55, 0.08)',
+            color: 'var(--isn-gold)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -342,8 +346,8 @@ const AdminDashboard = () => {
             <Clock size={28} />
           </div>
           <div>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Cursos en Curso</p>
-            <h3 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--isn-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>Cursos en Curso</p>
+            <h3 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--isn-gold)', marginTop: '2px', margin: 0 }}>
               {adminMetrics.cursos_pendientes}
             </h3>
           </div>
@@ -351,14 +355,12 @@ const AdminDashboard = () => {
       </div>
 
       {/* Students List Table container */}
-      <div className="glass-panel" style={{ padding: '28px', overflow: 'hidden' }}>
+      <div className="glass-panel isn-border-blue-2" style={{ padding: '28px', overflow: 'hidden', borderRadius: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+          <h3 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--isn-blue)', margin: 0 }}>
             Listado General de Estudiantes
           </h3>
-          <span style={{
-            background: '#F1F5F9',
-            color: 'var(--text-secondary)',
+          <span className="isn-badge-blue" style={{
             fontSize: '0.8rem',
             padding: '6px 12px',
             borderRadius: '8px',
@@ -375,6 +377,7 @@ const AdminDashboard = () => {
             placeholder="Buscar por Cédula..."
             value={searchCedula}
             onChange={(e) => setSearchCedula(e.target.value)}
+            className="isn-input-focus"
             style={{
               width: '100%',
               maxWidth: '360px',
@@ -382,54 +385,46 @@ const AdminDashboard = () => {
               borderRadius: '10px',
               border: '1px solid #E2E8F0',
               background: '#FFFFFF',
-              color: 'var(--text-primary)',
+              color: 'var(--isn-charcoal)',
               fontSize: '0.95rem',
               outline: 'none',
               transition: 'border-color 0.15s, box-shadow 0.15s'
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = 'var(--text-primary)';
-              e.target.style.boxShadow = '0 0 0 3px rgba(15, 44, 89, 0.1)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = '#E2E8F0';
-              e.target.style.boxShadow = 'none';
             }}
           />
         </div>
 
         <div style={{ overflowX: 'auto', width: '100%' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '700px' }}>
+          <table className="isn-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '700px' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid var(--border-glass)' }}>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase' }}>Nombre Completo</th>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase' }}>Número de Cédula</th>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase' }}>Fecha de Registro</th>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', width: '220px' }}>Progreso del Curso</th>
-                <th style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', width: '150px' }}>Acciones</th>
+                <th style={{ padding: '16px 12px', fontSize: '0.85rem' }}>Nombre Completo</th>
+                <th style={{ padding: '16px 12px', fontSize: '0.85rem' }}>Número de Cédula</th>
+                <th style={{ padding: '16px 12px', fontSize: '0.85rem' }}>Fecha de Registro</th>
+                <th style={{ padding: '16px 12px', fontSize: '0.85rem', width: '220px' }}>Progreso del Curso</th>
+                <th style={{ padding: '16px 12px', fontSize: '0.85rem', width: '150px' }}>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {adminUsers.length === 0 ? (
                 <tr>
-                  <td colSpan="5" style={{ padding: '32px 12px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                  <td colSpan={5} style={{ padding: '32px 12px', textAlign: 'center', color: 'var(--isn-muted)', fontSize: '0.95rem' }}>
                     No hay estudiantes registrados.
                   </td>
                 </tr>
               ) : (
-                adminUsers.map((student) => (
+                adminUsers.map((student: any) => (
                   <tr 
                     key={student.cedula}
                     style={{ borderBottom: '1px solid var(--border-glass)', transition: 'background-color 0.15s' }}
                     className="table-row-hover"
                   >
-                    <td style={{ padding: '16px 12px', fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.95rem' }}>
+                    <td style={{ padding: '16px 12px', fontWeight: 600, fontSize: '0.95rem' }}>
                       {decodeMojibake(student.nombre_completo)}
                     </td>
-                    <td style={{ padding: '16px 12px', color: 'var(--text-secondary)', fontFamily: 'monospace', fontSize: '0.95rem', fontWeight: 600 }}>
+                    <td style={{ padding: '16px 12px', fontFamily: 'monospace', fontSize: '0.95rem', fontWeight: 600 }}>
                       {student.cedula}
                     </td>
-                    <td style={{ padding: '16px 12px', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                    <td style={{ padding: '16px 12px', fontSize: '0.875rem' }}>
                       {student.fecha_registro}
                     </td>
                     <td style={{ padding: '16px 12px' }}>
@@ -439,14 +434,14 @@ const AdminDashboard = () => {
                             className="progress-bar" 
                             style={{ 
                               width: `${student.progreso_porcentaje}%`,
-                              background: student.progreso_porcentaje === 100 ? 'var(--accent-emerald)' : 'var(--accent-teal)'
+                              background: student.progreso_porcentaje === 100 ? 'var(--isn-success)' : 'var(--isn-blue)'
                             }} 
                           />
                         </div>
                         <span style={{ 
                           fontSize: '0.85rem', 
                           fontWeight: 700, 
-                          color: student.progreso_porcentaje === 100 ? 'var(--accent-emerald)' : 'var(--text-primary)',
+                          color: student.progreso_porcentaje === 100 ? 'var(--isn-success)' : 'var(--isn-charcoal)',
                           minWidth: '38px',
                           textAlign: 'right'
                         }}>
@@ -460,7 +455,7 @@ const AdminDashboard = () => {
                         style={{
                           background: 'none',
                           border: 'none',
-                          color: 'var(--accent-teal)',
+                          color: 'var(--isn-blue)',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
@@ -493,7 +488,7 @@ const AdminDashboard = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(15, 44, 89, 0.4)',
+          background: 'rgba(7, 25, 53, 0.4)',
           backdropFilter: 'blur(4px)',
           display: 'flex',
           justifyContent: 'center',
@@ -501,13 +496,13 @@ const AdminDashboard = () => {
           zIndex: 1000,
           padding: '16px'
         }}>
-          <div className="glass-panel animate-scale-up" style={{
+          <div className="glass-panel isn-border-gold-2 animate-scale-up" style={{
             width: '100%',
             maxWidth: '500px',
             background: '#FFFFFF',
             borderRadius: '20px',
             position: 'relative',
-            boxShadow: '0 25px 50px -12px rgba(15, 44, 89, 0.25)',
+            boxShadow: '0 25px 50px -12px rgba(7, 25, 53, 0.25)',
             overflow: 'hidden'
           }}>
             {/* Modal Header */}
@@ -519,9 +514,9 @@ const AdminDashboard = () => {
               borderBottom: '1px solid var(--border-glass)',
               background: '#FAFAFA'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Plus size={20} color="var(--accent-emerald)" />
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img src={logoNormal} alt="ISN" style={{ width: '40px', height: 'auto' }} />
+                <h3 className="font-serif" style={{ fontSize: '1.2rem', color: 'var(--isn-blue)', margin: 0 }}>
                   Matricular Nuevo Estudiante
                 </h3>
               </div>
@@ -535,13 +530,12 @@ const AdminDashboard = () => {
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  color: 'var(--text-muted)',
+                  color: 'var(--isn-muted)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '4px',
-                  borderRadius: '50%',
-                  transition: 'background-color 0.15s'
+                  borderRadius: '50%'
                 }}
                 className="btn-secondary-hover"
               >
@@ -563,7 +557,7 @@ const AdminDashboard = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
-                  color: 'var(--accent-rose)',
+                  color: 'var(--isn-danger)',
                   fontSize: '0.875rem'
                 }}>
                   <ShieldAlert size={20} style={{ flexShrink: 0 }} />
@@ -573,15 +567,15 @@ const AdminDashboard = () => {
 
               {successMessage && (
                 <div style={{
-                  background: 'rgba(78, 159, 61, 0.06)',
-                  border: '1px solid rgba(78, 159, 61, 0.2)',
+                  background: 'rgba(22, 163, 74, 0.06)',
+                  border: '1px solid rgba(22, 163, 74, 0.2)',
                   borderRadius: '8px',
                   padding: '12px',
                   marginBottom: '20px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
-                  color: 'var(--accent-emerald)',
+                  color: 'var(--isn-success)',
                   fontSize: '0.875rem'
                 }}>
                   <CheckCircle2 size={20} style={{ flexShrink: 0 }} />
@@ -593,7 +587,7 @@ const AdminDashboard = () => {
               <div className="input-group">
                 <label className="input-label" htmlFor="student-nombre">Nombre Completo</label>
                 <input
-                  className="input-field"
+                  className="input-field isn-input-focus"
                   type="text"
                   id="student-nombre"
                   placeholder="Ej. Andrés Nariño"
@@ -608,7 +602,7 @@ const AdminDashboard = () => {
               <div className="input-group">
                 <label className="input-label" htmlFor="student-cedula">Cédula (Usuario)</label>
                 <input
-                  className="input-field"
+                  className="input-field isn-input-focus"
                   type="text"
                   id="student-cedula"
                   placeholder="Ej. 102938475"
@@ -623,7 +617,7 @@ const AdminDashboard = () => {
               <div className="input-group">
                 <label className="input-label" htmlFor="student-password">Contraseña Temporal</label>
                 <input
-                  className="input-field"
+                  className="input-field isn-input-focus"
                   type="password"
                   id="student-password"
                   placeholder="Mínimo 6 caracteres"
@@ -647,9 +641,9 @@ const AdminDashboard = () => {
                   gap: '12px'
                 }}>
                   {courses.length === 0 ? (
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Cargando cursos...</p>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--isn-muted)' }}>Cargando cursos...</p>
                   ) : (
-                    courses.map(course => (
+                    courses.map((course: any) => (
                       <label 
                         key={course.id}
                         style={{ 
@@ -657,21 +651,21 @@ const AdminDashboard = () => {
                           alignItems: 'flex-start', 
                           gap: '10px', 
                           fontSize: '0.9rem', 
-                          color: 'var(--text-primary)',
+                          color: 'var(--isn-charcoal)',
                           cursor: 'pointer',
                           fontWeight: 600
                         }}
                       >
                         <input
                           type="checkbox"
-                          style={{ marginTop: '4px', cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--text-primary)' }}
+                          style={{ marginTop: '4px', cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--isn-blue)' }}
                           checked={selectedCourses.includes(course.id.toString())}
                           onChange={() => handleCheckboxChange(course.id)}
                           disabled={submitting}
                         />
                         <div>
-                          <span>{course.titulo}</span>
-                          <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 400, marginTop: '2px' }}>
+                          <span style={{ color: 'var(--isn-blue)' }}>{course.titulo}</span>
+                          <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--isn-muted)', fontWeight: 400, marginTop: '2px' }}>
                             {course.descripcion}
                           </span>
                         </div>
@@ -699,7 +693,7 @@ const AdminDashboard = () => {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  style={{ flex: 1, background: 'var(--text-primary)' }}
+                  style={{ flex: 1, background: 'var(--isn-blue)', color: '#FFFFFF' }}
                   disabled={submitting}
                 >
                   {submitting ? 'Guardando...' : 'Matricular'}
@@ -719,7 +713,7 @@ const AdminDashboard = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(15, 44, 89, 0.4)',
+          background: 'rgba(7, 25, 53, 0.4)',
           backdropFilter: 'blur(4px)',
           display: 'flex',
           justifyContent: 'center',
@@ -727,13 +721,13 @@ const AdminDashboard = () => {
           zIndex: 1000,
           padding: '16px'
         }}>
-          <div className="glass-panel animate-scale-up" style={{
+          <div className="glass-panel isn-border-gold-2 animate-scale-up" style={{
             width: '100%',
             maxWidth: '500px',
             background: '#FFFFFF',
             borderRadius: '20px',
             position: 'relative',
-            boxShadow: '0 25px 50px -12px rgba(15, 44, 89, 0.25)',
+            boxShadow: '0 25px 50px -12px rgba(7, 25, 53, 0.25)',
             overflow: 'hidden'
           }}>
             {/* Modal Header */}
@@ -745,9 +739,9 @@ const AdminDashboard = () => {
               borderBottom: '1px solid var(--border-glass)',
               background: '#FAFAFA'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Edit size={20} color="var(--accent-teal)" />
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img src={logoNormal} alt="ISN" style={{ width: '40px', height: 'auto' }} />
+                <h3 className="font-serif" style={{ fontSize: '1.2rem', color: 'var(--isn-blue)', margin: 0 }}>
                   Gestionar Matrículas
                 </h3>
               </div>
@@ -762,13 +756,12 @@ const AdminDashboard = () => {
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  color: 'var(--text-muted)',
+                  color: 'var(--isn-muted)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '4px',
-                  borderRadius: '50%',
-                  transition: 'background-color 0.15s'
+                  borderRadius: '50%'
                 }}
                 className="btn-secondary-hover"
               >
@@ -787,11 +780,11 @@ const AdminDashboard = () => {
                 padding: '16px',
                 marginBottom: '20px'
               }}>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Estudiante:</p>
-                <h4 style={{ margin: '4px 0 2px 0', fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--isn-muted)', fontWeight: 600 }}>Estudiante:</p>
+                <h4 className="font-serif" style={{ margin: '4px 0 2px 0', fontSize: '1.1rem', color: 'var(--isn-blue)' }}>
                   {decodeMojibake(selectedStudent.nombre_completo)}
                 </h4>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--isn-charcoal)', fontFamily: 'monospace' }}>
                   Cédula: {selectedStudent.cedula}
                 </p>
               </div>
@@ -807,7 +800,7 @@ const AdminDashboard = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
-                  color: 'var(--accent-rose)',
+                  color: 'var(--isn-danger)',
                   fontSize: '0.875rem'
                 }}>
                   <ShieldAlert size={20} style={{ flexShrink: 0 }} />
@@ -817,15 +810,15 @@ const AdminDashboard = () => {
 
               {editSuccessMessage && (
                 <div style={{
-                  background: 'rgba(78, 159, 61, 0.06)',
-                  border: '1px solid rgba(78, 159, 61, 0.2)',
+                  background: 'rgba(22, 163, 74, 0.06)',
+                  border: '1px solid rgba(22, 163, 74, 0.2)',
                   borderRadius: '8px',
                   padding: '12px',
                   marginBottom: '20px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
-                  color: 'var(--accent-emerald)',
+                  color: 'var(--isn-success)',
                   fontSize: '0.875rem'
                 }}>
                   <CheckCircle2 size={20} style={{ flexShrink: 0 }} />
@@ -848,9 +841,9 @@ const AdminDashboard = () => {
                   overflowY: 'auto'
                 }}>
                   {(!coursesList || coursesList.length === 0) ? (
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Cargando cursos disponibles...</p>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--isn-muted)' }}>Cargando cursos disponibles...</p>
                   ) : (
-                    coursesList.map(course => (
+                    coursesList.map((course: any) => (
                       <label 
                         key={course.id}
                         style={{ 
@@ -858,20 +851,20 @@ const AdminDashboard = () => {
                           alignItems: 'flex-start', 
                           gap: '10px', 
                           fontSize: '0.9rem', 
-                          color: 'var(--text-primary)',
+                          color: 'var(--isn-charcoal)',
                           cursor: 'pointer',
                           fontWeight: 600
                         }}
                       >
                         <input
                           type="checkbox"
-                          style={{ marginTop: '4px', cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--text-primary)' }}
+                          style={{ marginTop: '4px', cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--isn-blue)' }}
                           checked={editSelectedCourses.includes(course.id.toString())}
                           onChange={() => handleEditCheckboxChange(course.id)}
                           disabled={editSubmitting}
                         />
                         <div>
-                          <span>{course.titulo}</span>
+                          <span style={{ color: 'var(--isn-blue)' }}>{course.titulo}</span>
                         </div>
                       </label>
                     ))
@@ -898,7 +891,7 @@ const AdminDashboard = () => {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  style={{ flex: 1, background: 'var(--text-primary)' }}
+                  style={{ flex: 1, background: 'var(--isn-blue)', color: '#FFFFFF' }}
                   disabled={editSubmitting}
                 >
                   {editSubmitting ? 'Guardando...' : 'Guardar Cambios'}
@@ -923,8 +916,8 @@ const AdminDashboard = () => {
           background-color: #F1F5F9;
         }
         .btn-edit-courses-hover:hover {
-          background-color: rgba(0, 141, 218, 0.08) !important;
-          color: var(--accent-teal) !important;
+          background-color: rgba(15, 44, 89, 0.08) !important;
+          color: var(--isn-blue) !important;
         }
         .animate-scale-up {
           animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
