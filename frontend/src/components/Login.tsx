@@ -1,21 +1,17 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import logoNormal from '../assets/logoNormal.png';
+import logoNormal from '../assets/logo instituto superior del norte.webp';
 import { Lock, ShieldAlert } from 'lucide-react';
 
-const Login: React.FC = () => {
-  const [cedula, setCedula] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [localError, setLocalError] = useState<string>('');
-  
-  const context = useContext(AppContext);
-  if (!context) return null;
-  const { login, loading, error: apiError } = context;
-  
+const Login = () => {
+  const [cedula, setCedula] = useState('');
+  const [password, setPassword] = useState('');
+  const [localError, setLocalError] = useState('');
+  const { login, loading, error: apiError } = useContext(AppContext);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLocalError('');
 
@@ -33,13 +29,22 @@ const Login: React.FC = () => {
     try {
       await login(cedula, password);
     } catch (err) {
-      // API error handled by context
+      console.error('Login error:', err);
     }
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '16px' }}>
-      <div className="glass-panel isn-border-gold-2" style={{ width: '100%', maxWidth: '420px', padding: '32px', position: 'relative', overflow: 'hidden', borderRadius: '16px' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '16px', backgroundColor: 'var(--isn-bg-light)' }}>
+      <div className="glass-panel" style={{
+        width: '100%',
+        maxWidth: '420px',
+        padding: '32px',
+        position: 'relative',
+        overflow: 'hidden',
+        border: '2px solid var(--isn-blue)',
+        borderRadius: '4px',
+        backgroundColor: '#FFFFFF'
+      }}>
         
         {/* Top Decorative Gold Accent Bar */}
         <div style={{
@@ -56,13 +61,13 @@ const Login: React.FC = () => {
             <img 
               src={logoNormal} 
               alt="Instituto Superior del Norte" 
-              style={{ width: '150px', height: 'auto', marginBottom: '16px' }} 
+              style={{ width: '180px', height: 'auto', marginBottom: '16px' }} 
             />
-            <p className="font-serif" style={{ color: 'var(--isn-blue)', fontSize: '1.25rem', textAlign: 'center', margin: 0 }}>
-              Portal del Estudiante
+            <p className="font-serif" style={{ color: 'var(--isn-blue)', fontSize: '1.1rem', textAlign: 'center', fontWeight: 800 }}>
+              INSTITUTO SUPERIOR DEL NORTE
             </p>
-            <p style={{ color: 'var(--isn-muted)', fontSize: '0.8rem', textAlign: 'center', marginTop: '4px' }}>
-              Curso de Manipulación Higiénica de Alimentos
+            <p style={{ color: 'var(--isn-charcoal)', fontSize: '0.75rem', textAlign: 'center', marginTop: '4px', fontWeight: 600 }}>
+              Campus Virtual LMS
             </p>
           </div>
 
@@ -70,13 +75,13 @@ const Login: React.FC = () => {
             <div style={{
               background: 'rgba(239, 68, 68, 0.06)',
               border: '1px solid rgba(239, 68, 68, 0.2)',
-              borderRadius: '8px',
+              borderRadius: '4px',
               padding: '12px',
               marginBottom: '20px',
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              color: 'var(--isn-danger)',
+              color: 'var(--accent-rose)',
               fontSize: '0.875rem'
             }}>
               <ShieldAlert size={20} style={{ flexShrink: 0 }} />
@@ -86,44 +91,55 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="input-group">
-              <label className="input-label" htmlFor="cedula">Número de Cédula</label>
+              <label className="input-label" htmlFor="cedula" style={{ color: 'var(--isn-blue)', fontWeight: 700 }}>Número de Cédula</label>
               <input
-                className="input-field isn-input-focus"
+                className="input-field"
                 type="text"
                 id="cedula"
                 placeholder="Ej. 123456789"
                 value={cedula}
                 onChange={(e) => setCedula(e.target.value)}
                 disabled={loading}
+                style={{ border: '2px solid var(--isn-gold)', borderRadius: '4px' }}
               />
             </div>
 
             <div className="input-group" style={{ marginBottom: '28px' }}>
-              <label className="input-label" htmlFor="password">Contraseña</label>
+              <label className="input-label" htmlFor="password" style={{ color: 'var(--isn-blue)', fontWeight: 700 }}>Contraseña</label>
               <input
-                className="input-field isn-input-focus"
+                className="input-field"
                 type="password"
                 id="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
+                style={{ border: '2px solid var(--isn-gold)', borderRadius: '4px' }}
               />
             </div>
 
             <button
-              className="btn btn-primary"
+              className="btn"
               type="submit"
-              style={{ width: '100%', padding: '14px', background: 'var(--isn-blue)', color: '#FFFFFF' }}
+              style={{
+                width: '100%',
+                padding: '14px',
+                background: 'var(--isn-blue)',
+                color: '#FFFFFF',
+                borderRadius: '4px',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer'
+              }}
               disabled={loading}
             >
               {loading ? (
                 <span>Iniciando sesión...</span>
               ) : (
-                <>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                   <Lock size={18} />
-                  <span>Ingresar al Curso</span>
-                </>
+                  <span>Ingresar al Campus</span>
+                </div>
               )}
             </button>
           </form>
@@ -132,31 +148,46 @@ const Login: React.FC = () => {
           <div style={{
             marginTop: '28px',
             padding: '14px',
-            borderRadius: '12px',
-            background: '#F8F9FA',
-            border: '1px solid #E2E8F0',
+            borderRadius: '4px',
+            background: 'var(--isn-bg-light)',
+            border: '2px solid var(--isn-blue)',
             fontSize: '0.75rem',
             color: 'var(--isn-charcoal)',
             textAlign: 'center'
           }}>
             <p style={{ fontWeight: 700, color: 'var(--isn-blue)', marginBottom: '6px' }}>🔑 Credenciales de Acceso Demo</p>
-            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--isn-blue)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>123456789</code></p>
-            <p>Contraseña: <code style={{ color: 'var(--isn-blue)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>password123</code></p>
+            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--isn-blue-dark)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>123456789</code></p>
+            <p>Contraseña: <code style={{ color: 'var(--isn-blue-dark)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>password123</code></p>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+            <button
+              onClick={() => navigate('/')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--isn-blue)',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                fontWeight: 700
+              }}
+            >
+              Volver al Inicio
+            </button>
             <button
               onClick={() => navigate('/admin/login')}
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--isn-muted)',
+                color: 'var(--isn-gold)',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
-                textDecoration: 'underline'
+                textDecoration: 'underline',
+                fontWeight: 700
               }}
             >
-              Entrar como Administrador
+              Acceso Admin
             </button>
           </div>
 

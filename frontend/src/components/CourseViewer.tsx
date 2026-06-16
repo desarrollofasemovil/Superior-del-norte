@@ -1,11 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import { Play, Pause, ChevronLeft, ChevronRight, CheckCircle2, Circle, Award, ArrowLeft, Volume2, Film, Image as ImageIcon } from 'lucide-react';
+import { Play, Pause, ChevronLeft, ChevronRight, CheckCircle2, Award, ArrowLeft, Volume2, Film, Image as ImageIcon } from 'lucide-react';
 
-const CourseViewer: React.FC = () => {
-  const context = useContext(AppContext);
-  if (!context) return null;
+const CourseViewer = () => {
   const {
     modules,
     progress,
@@ -14,14 +12,13 @@ const CourseViewer: React.FC = () => {
     completeModule,
     activeCourseId,
     examStatus
-  } = context;
-  
+  } = useContext(AppContext);
   const navigate = useNavigate();
 
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [playProgress, setPlayProgress] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playProgress, setPlayProgress] = useState(0);
 
-  const currentModule = modules.find((m: any) => m.id === activeModuleId) || modules[0];
+  const currentModule = modules.find(m => m.id === activeModuleId) || modules[0];
   const isCompleted = progress.modulos_completados.includes(currentModule?.id);
 
   // Reset play simulator when switching modules
@@ -32,7 +29,7 @@ const CourseViewer: React.FC = () => {
 
   // Audio/Video simulator progression timer
   useEffect(() => {
-    let interval: any = null;
+    let interval = null;
     if (isPlaying) {
       interval = setInterval(() => {
         setPlayProgress((prev) => {
@@ -54,10 +51,10 @@ const CourseViewer: React.FC = () => {
   }, [isPlaying, isCompleted, currentModule]);
 
   if (!currentModule) {
-    return <div style={{ color: 'var(--isn-charcoal)', textAlign: 'center', padding: '40px', fontWeight: 600 }}>Cargando contenido...</div>;
+    return <div style={{ color: 'var(--text-primary)', textAlign: 'center', padding: '40px' }}>Cargando contenido...</div>;
   }
 
-  const currentIndex = modules.findIndex((m: any) => m.id === currentModule.id);
+  const currentIndex = modules.findIndex(m => m.id === currentModule.id);
   const prevModule = currentIndex > 0 ? modules[currentIndex - 1] : null;
   const nextModule = currentIndex < modules.length - 1 ? modules[currentIndex + 1] : null;
 
@@ -78,16 +75,16 @@ const CourseViewer: React.FC = () => {
   };
 
   const renderMediaSimulator = () => {
-    const type = currentModule.tipo_recurso?.toLowerCase();
+    const type = currentModule.tipo_recurso;
     if (type === 'texto') return null;
 
     if (type === 'video') {
       return (
-        <div className="media-simulator isn-border-blue-4">
+        <div className="media-simulator">
           <Film size={48} color="#FFFFFF" style={{ opacity: isPlaying ? 0.35 : 0.8, transition: 'all 0.5s' }} />
           {isPlaying && (
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(15, 44, 89, 0.1)', pointerEvents: 'none' }}>
-              <div style={{ animation: 'ping 1.2s cubic-bezier(0, 0, 0.2, 1) infinite', height: '22px', width: '22px', backgroundColor: 'var(--isn-success)', borderRadius: '50%' }}></div>
+              <div style={{ animation: 'ping 1.2s cubic-bezier(0, 0, 0.2, 1) infinite', height: '22px', width: '22px', backgroundColor: 'var(--accent-emerald)', borderRadius: '50%' }}></div>
             </div>
           )}
           
@@ -103,7 +100,7 @@ const CourseViewer: React.FC = () => {
               const clickX = e.clientX - rect.left;
               setPlayProgress(Math.round((clickX / rect.width) * 100));
             }}>
-              <div className="media-slider-fill" style={{ width: `${playProgress}%`, background: 'var(--isn-success)' }} />
+              <div className="media-slider-fill" style={{ width: `${playProgress}%` }} />
             </div>
             <span style={{ fontSize: '0.75rem', color: '#FFFFFF', minWidth: '35px', textAlign: 'right', fontWeight: 600 }}>
               {Math.floor((playProgress * 1.8) / 60)}:{(Math.floor(playProgress * 1.8) % 60).toString().padStart(2, '0')}
@@ -115,14 +112,14 @@ const CourseViewer: React.FC = () => {
 
     if (type === 'audio') {
       return (
-        <div className="media-simulator isn-border-blue-4" style={{ height: '180px' }}>
+        <div className="media-simulator" style={{ height: '180px' }}>
           {isPlaying ? (
             <div className="media-glowing-wave">
-              <div className="media-wave-bar" style={{ background: 'var(--isn-gold)' }}></div>
-              <div className="media-wave-bar" style={{ background: 'var(--isn-gold)' }}></div>
-              <div className="media-wave-bar" style={{ background: 'var(--isn-gold)' }}></div>
-              <div className="media-wave-bar" style={{ background: 'var(--isn-gold)' }}></div>
-              <div className="media-wave-bar" style={{ background: 'var(--isn-gold)' }}></div>
+              <div className="media-wave-bar"></div>
+              <div className="media-wave-bar"></div>
+              <div className="media-wave-bar"></div>
+              <div className="media-wave-bar"></div>
+              <div className="media-wave-bar"></div>
             </div>
           ) : (
             <Volume2 size={48} color="#FFFFFF" style={{ marginBottom: '16px', opacity: 0.8 }} />
@@ -140,7 +137,7 @@ const CourseViewer: React.FC = () => {
               const clickX = e.clientX - rect.left;
               setPlayProgress(Math.round((clickX / rect.width) * 100));
             }}>
-              <div className="media-slider-fill" style={{ width: `${playProgress}%`, background: 'var(--isn-success)' }} />
+              <div className="media-slider-fill" style={{ width: `${playProgress}%` }} />
             </div>
             <span style={{ fontSize: '0.75rem', color: '#FFFFFF', minWidth: '35px', textAlign: 'right', fontWeight: 600 }}>
               {Math.floor((playProgress * 2.4) / 60)}:{(Math.floor(playProgress * 2.4) % 60).toString().padStart(2, '0')}
@@ -152,14 +149,14 @@ const CourseViewer: React.FC = () => {
 
     if (type === 'imagen') {
       return (
-        <div className="isn-border-blue-2" style={{ position: 'relative', width: '100%', borderRadius: '12px', overflow: 'hidden', marginBottom: '28px', boxShadow: 'var(--shadow-card)' }}>
+        <div style={{ position: 'relative', width: '100%', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-glass)', marginBottom: '28px', boxShadow: 'var(--shadow-card)' }}>
           <img
             src={currentModule.url_recurso}
             alt={currentModule.titulo}
             style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '380px', objectFit: 'cover' }}
           />
-          <div style={{ position: 'absolute', bottom: 0, insetInline: 0, padding: '16px', background: 'linear-gradient(to top, rgba(7, 25, 53, 0.95) 0%, rgba(7, 25, 53, 0.4) 60%, transparent 100%)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <ImageIcon size={20} color="var(--isn-gold)" />
+          <div style={{ position: 'absolute', bottom: 0, insetInline: 0, padding: '16px', background: 'linear-gradient(to top, rgba(15, 44, 89, 0.9) 0%, rgba(15, 44, 89, 0.4) 60%, transparent 100%)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <ImageIcon size={20} color="var(--accent-gold)" />
             <span style={{ fontSize: '0.85rem', color: '#FFFFFF', fontWeight: 600 }}>Ilustración del Módulo formativo</span>
           </div>
         </div>
@@ -175,7 +172,7 @@ const CourseViewer: React.FC = () => {
     <div className="course-grid">
       
       {/* Sidebar index */}
-      <div className="glass-panel isn-border-gold-2" style={{ height: 'fit-content', padding: '24px', borderRadius: '16px' }}>
+      <div className="glass-panel" style={{ height: 'fit-content', padding: '24px' }}>
         <button
           onClick={() => navigate('/dashboard')}
           style={{
@@ -195,10 +192,10 @@ const CourseViewer: React.FC = () => {
           <span>Volver al Dashboard</span>
         </button>
 
-        <h3 style={{ fontSize: '0.8rem', color: 'var(--isn-blue)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '8px', fontWeight: 800 }}>Módulos del Curso</h3>
+        <h3 className="font-serif" style={{ fontSize: '0.9rem', color: 'var(--isn-blue)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px', borderBottom: '2px solid var(--isn-gold)', paddingBottom: '8px', fontWeight: 800 }}>Módulos del Curso</h3>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {modules.map((m: any, idx: number) => {
+          {modules.map((m, idx) => {
             const isModActive = m.id === currentModule.id;
             const isModCompleted = progress.modulos_completados.includes(m.id);
             return (
@@ -209,10 +206,10 @@ const CourseViewer: React.FC = () => {
                   width: '100%',
                   textAlign: 'left',
                   padding: '14px',
-                  borderRadius: '10px',
-                  background: isModActive ? 'rgba(15, 44, 89, 0.06)' : '#FFFFFF',
-                  border: '1px solid',
-                  borderColor: isModActive ? 'var(--isn-blue)' : '#E2E8F0',
+                  borderRadius: '4px',
+                  background: isModActive ? 'rgba(240, 165, 0, 0.08)' : '#FFFFFF',
+                  border: '2px solid',
+                  borderColor: isModActive ? 'var(--isn-gold)' : '#E2E8F0',
                   color: isModActive ? 'var(--isn-blue)' : 'var(--isn-charcoal)',
                   cursor: 'pointer',
                   display: 'flex',
@@ -224,7 +221,7 @@ const CourseViewer: React.FC = () => {
                 <span style={{ fontSize: '0.85rem', fontWeight: isModActive ? 700 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '180px' }}>
                   {idx + 1}. {m.titulo}
                 </span>
-                {isModCompleted && <CheckCircle2 size={16} color="var(--isn-success)" style={{ flexShrink: 0 }} />}
+                {isModCompleted && <CheckCircle2 size={16} color="var(--accent-emerald)" style={{ flexShrink: 0 }} />}
               </button>
             );
           })}
@@ -232,20 +229,22 @@ const CourseViewer: React.FC = () => {
       </div>
 
       {/* Main viewer content */}
-      <div className="glass-panel isn-border-blue-2" style={{ padding: '32px', borderRadius: '16px' }}>
+      <div className="glass-panel" style={{ padding: '32px' }}>
         
         {/* Module Header */}
-        <div style={{ borderBottom: '1px solid var(--border-glass)', paddingBottom: '20px', marginBottom: '28px' }}>
+        <div style={{ borderBottom: '2px solid var(--isn-gold)', paddingBottom: '20px', marginBottom: '28px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span className="isn-badge-blue" style={{
+            <span style={{
+              background: 'rgba(15, 44, 89, 0.08)',
+              color: 'var(--isn-blue)',
               fontSize: '0.75rem',
               padding: '4px 10px',
-              borderRadius: '6px',
+              borderRadius: '4px',
               fontWeight: 700
             }}>MÓDULO {currentModule.orden}</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--isn-muted)', textTransform: 'uppercase', fontWeight: 600 }}>{currentModule.tipo_recurso}</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>{currentModule.tipo_recurso}</span>
           </div>
-          <h2 className="font-serif isn-title-solemn" style={{ fontSize: '2rem', margin: 0 }}>{currentModule.titulo}</h2>
+          <h2 className="font-serif" style={{ fontSize: '2rem', color: 'var(--isn-blue)', fontWeight: 900 }}>{currentModule.titulo}</h2>
           <p style={{ color: 'var(--isn-charcoal)', fontSize: '0.95rem', marginTop: '8px', lineHeight: '1.6' }}>{currentModule.descripcion}</p>
         </div>
 
@@ -255,7 +254,7 @@ const CourseViewer: React.FC = () => {
         {/* Text Content */}
         <div
           className="course-content-markdown"
-          style={{ lineHeight: '1.8', fontSize: '1rem', color: 'var(--isn-charcoal)', marginBottom: '32px' }}
+          style={{ lineHeight: '1.8', fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '32px' }}
           dangerouslySetInnerHTML={{ __html: currentModule.contenido }}
         />
 
@@ -272,12 +271,12 @@ const CourseViewer: React.FC = () => {
         }}>
           <div>
             {isCompleted ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--isn-success)', fontWeight: 700 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-emerald)', fontWeight: 700 }}>
                 <CheckCircle2 size={22} />
                 <span>Módulo Completado ✓</span>
               </div>
             ) : (
-              <button className="btn btn-primary" onClick={handleMarkAsCompleted} style={{ background: 'var(--isn-success)', color: '#FFFFFF' }}>
+              <button className="btn btn-primary" onClick={handleMarkAsCompleted}>
                 <CheckCircle2 size={18} />
                 <span>Marcar como Completado</span>
               </button>
@@ -316,10 +315,9 @@ const CourseViewer: React.FC = () => {
                     }
                   }}
                   style={{
-                    background: 'var(--isn-gold)',
+                    background: 'var(--accent-gold)',
                     color: '#FFFFFF',
-                    padding: '12px 20px',
-                    fontWeight: 700
+                    padding: '12px 20px'
                   }}
                 >
                   <Award size={18} />

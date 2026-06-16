@@ -9,7 +9,8 @@ import CourseViewer from './components/CourseViewer';
 import Exam from './components/Exam';
 import Certificate from './components/Certificate';
 import VerifyCertificate from './components/VerifyCertificate';
-import logoHorizontal from './assets/logoHorizontal.png';
+import HomePage from './components/HomePage';
+import logoHorizontal from './assets/logo instituto superior del norte.webp';
 import { LogOut, Home, ShieldCheck, Award } from 'lucide-react';
 
 import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
@@ -66,8 +67,8 @@ function MainLayout() {
   // Also removed the currentView<->URL bidirectional sync effects entirely.
   // React Router (navigate()) is now the single source of truth for navigation.
   useEffect(() => {
-    const publicPaths = ['/verify'];
-    const isPublicPath = publicPaths.some(path => location.pathname.startsWith(path));
+    const publicPaths = ['/verify', '/'];
+    const isPublicPath = location.pathname === '/' || publicPaths.some(path => path !== '/' && location.pathname.startsWith(path));
 
     if (!token && !isPublicPath && location.pathname !== '/admin/login' && location.pathname !== '/login') {
       navigate('/login', { replace: true });
@@ -84,73 +85,77 @@ function MainLayout() {
     }
   }, [token, user?.cedula, user?.rol, location.pathname, navigate]);
 
+  const isLandingPage = location.pathname === '/';
+
   return (
-    <div className="app-container">
+    <div className="app-container" style={{ backgroundColor: 'var(--isn-bg-light)' }}>
       {/* Premium Navbar */}
-      <nav className="isn-navbar navbar">
-        <div
-          style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-          onClick={() => {
-            if (user) {
-              navigate(user.rol === 'administrador' ? '/admin/dashboard' : '/dashboard');
-            } else {
-              navigate('/login');
-            }
-          }}
-        >
-          <img src={logoHorizontal} alt="Instituto Superior del Norte" style={{ height: '42px', width: 'auto' }} />
-        </div>
-
-        {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <button
-              onClick={() => navigate(user.rol === 'administrador' ? '/admin/dashboard' : '/dashboard')}
-              className="btn btn-secondary"
-              style={{ padding: '8px 14px', fontSize: '0.85rem', height: '38px', color: '#FFFFFF', backgroundColor: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
-            >
-              <Home size={16} />
-              <span className="hide-mobile">Panel</span>
-            </button>
-
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
-              <span style={{ fontSize: '0.85rem', color: '#FFFFFF', fontWeight: 700 }}>{user.nombre_completo}</span>
-              {user.rol === 'administrador' ? (
-                <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>Administrador</span>
-              ) : (
-                <span style={{ fontSize: '0.75rem', color: 'var(--isn-gold)', fontWeight: 600 }}>{progress.progreso_porcentaje}% Completado</span>
-              )}
-            </div>
-
-            <button
-              onClick={() => {
-                logout();
-                navigate('/login');
-              }}
-              className="btn btn-danger"
-              style={{ padding: '8px 14px', fontSize: '0.85rem', height: '38px' }}
-            >
-              <LogOut size={16} />
-              <span className="hide-mobile">Salir</span>
-            </button>
+      {!isLandingPage && (
+        <nav className="glass-panel navbar" style={{ background: '#FFFFFF', borderBottom: '2px solid var(--isn-gold)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
+          <div
+            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+            onClick={() => {
+              if (user) {
+                navigate(user.rol === 'administrador' ? '/admin/dashboard' : '/dashboard');
+              } else {
+                navigate('/');
+              }
+            }}
+          >
+            <img src={logoHorizontal} alt="Instituto Superior del Norte" style={{ height: '38px', width: 'auto' }} />
           </div>
-        ) : (
-          !location.pathname.startsWith('/verify') && (
-            <button
-              onClick={() => navigate('/verify')}
-              className="btn btn-secondary"
-              style={{ padding: '8px 16px', fontSize: '0.85rem', height: '38px', color: '#FFFFFF', backgroundColor: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
-            >
-              <ShieldCheck size={16} />
-              <span>Verificar Certificado</span>
-            </button>
-          )
-        )}
-      </nav>
+
+          {user ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <button
+                onClick={() => navigate(user.rol === 'administrador' ? '/admin/dashboard' : '/dashboard')}
+                className="btn btn-secondary"
+                style={{ padding: '8px 14px', fontSize: '0.85rem', height: '38px' }}
+              >
+                <Home size={16} />
+                <span className="hide-mobile">Panel</span>
+              </button>
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 700 }}>{user.nombre_completo}</span>
+                {user.rol === 'administrador' ? (
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Administrador</span>
+                ) : (
+                  <span style={{ fontSize: '0.75rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>{progress.progreso_porcentaje}% Completado</span>
+                )}
+              </div>
+
+              <button
+                onClick={() => {
+                  logout();
+                  navigate('/');
+                }}
+                className="btn btn-danger"
+                style={{ padding: '8px 14px', fontSize: '0.85rem', height: '38px' }}
+              >
+                <LogOut size={16} />
+                <span className="hide-mobile">Salir</span>
+              </button>
+            </div>
+          ) : (
+            !location.pathname.startsWith('/verify') && (
+              <button
+                onClick={() => navigate('/verify')}
+                className="btn btn-secondary"
+                style={{ padding: '8px 16px', fontSize: '0.85rem', height: '38px' }}
+              >
+                <ShieldCheck size={16} />
+                <span>Verificar Certificado</span>
+              </button>
+            )
+          )}
+        </nav>
+      )}
 
       {/* Main Content Area */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingBottom: '40px' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingBottom: isLandingPage ? '0px' : '40px' }}>
         <Routes>
-          <Route path="/" element={<Navigate to={user ? (user.rol === 'administrador' ? '/admin/dashboard' : '/dashboard') : '/login'} replace />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -166,19 +171,22 @@ function MainLayout() {
       </main>
 
       {/* Premium Footer */}
-      <footer className="isn-footer" style={{
-        marginTop: 'auto',
-        padding: '24px 0',
-        borderTop: '1px solid var(--border-glass)',
-        textAlign: 'center',
-        fontSize: '0.75rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '6px'
-      }}>
-        <p>© 2026 Instituto Superior del Norte. Todos los derechos reservados.</p>
-        <p style={{ fontWeight: 500 }}>Acreditación y Certificación en Manipulación Higiénica de Alimentos.</p>
-      </footer>
+      {!isLandingPage && (
+        <footer style={{
+          marginTop: 'auto',
+          padding: '24px 0',
+          borderTop: '1px solid var(--border-glass)',
+          textAlign: 'center',
+          color: 'var(--text-muted)',
+          fontSize: '0.75rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px'
+        }}>
+          <p>© 2026 Instituto Superior del Norte. Todos los derechos reservados.</p>
+          <p style={{ fontWeight: 500 }}>Acreditación y Certificación del Instituto Superior del Norte.</p>
+        </footer>
+      )}
     </div>
   );
 }
