@@ -26,7 +26,7 @@ export function LoginScreen() {
         <CardHeader className="space-y-6 pb-8 pt-10">
           <div className="flex justify-center">
             <div className="text-center">
-              <h1 className="text-4xl font-bold text-[#0F2C59] mb-1">AlimSafe</h1>
+              <h1 className="text-4xl font-bold text-[#0F2C59] mb-1">Instituto Superior del Norte</h1>
               <div className="h-1 w-16 bg-[#4E9F3D] mx-auto rounded-full"></div>
             </div>
           </div>

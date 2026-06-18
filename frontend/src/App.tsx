@@ -5,12 +5,13 @@ import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import CreateCourseScreen from './components/CreateCourseScreen';
 import Dashboard from './components/Dashboard';
+import CourseDetail from './components/CourseDetail';
 import CourseViewer from './components/CourseViewer';
 import Exam from './components/Exam';
 import Certificate from './components/Certificate';
 import VerifyCertificate from './components/VerifyCertificate';
 import HomePage from './components/HomePage';
-import logoHorizontal from './assets/logo instituto superior del norte.webp';
+import logoNorte from './assets/logo_instituto_norte.png';
 import { LogOut, Home, ShieldCheck, Award } from 'lucide-react';
 
 import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
@@ -73,7 +74,7 @@ function MainLayout() {
     if (!token && !isPublicPath && location.pathname !== '/admin/login' && location.pathname !== '/login') {
       navigate('/login', { replace: true });
     } else if (token && user?.cedula) {
-      if (user.rol === 'administrador') {
+      if (user.rol === 'administrador' || user.rol === 'ingeniero_software') {
         if (location.pathname === '/login' || location.pathname === '/admin/login' || location.pathname === '/') {
           navigate('/admin/dashboard', { replace: true });
         }
@@ -91,24 +92,24 @@ function MainLayout() {
     <div className="app-container" style={{ backgroundColor: 'var(--isn-bg-light)' }}>
       {/* Premium Navbar */}
       {!isLandingPage && (
-        <nav className="glass-panel navbar" style={{ background: '#FFFFFF', borderBottom: '2px solid var(--isn-gold)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
+        <nav className="glass-panel navbar" style={{ background: '#FFFFFF', borderBottom: '1px solid var(--border-glass)', borderRadius: '0 0 16px 16px', boxShadow: '0 4px 20px rgba(15, 44, 89, 0.02)' }}>
           <div
             style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
             onClick={() => {
               if (user) {
-                navigate(user.rol === 'administrador' ? '/admin/dashboard' : '/dashboard');
+                navigate((user.rol === 'administrador' || user.rol === 'ingeniero_software') ? '/admin/dashboard' : '/dashboard');
               } else {
                 navigate('/');
               }
             }}
           >
-            <img src={logoHorizontal} alt="Instituto Superior del Norte" style={{ height: '38px', width: 'auto' }} />
+            <img src={logoNorte} alt="Instituto Superior del Norte" style={{ height: '38px', width: 'auto' }} />
           </div>
 
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <button
-                onClick={() => navigate(user.rol === 'administrador' ? '/admin/dashboard' : '/dashboard')}
+                onClick={() => navigate((user.rol === 'administrador' || user.rol === 'ingeniero_software') ? '/admin/dashboard' : '/dashboard')}
                 className="btn btn-secondary"
                 style={{ padding: '8px 14px', fontSize: '0.85rem', height: '38px' }}
               >
@@ -118,8 +119,10 @@ function MainLayout() {
 
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 700 }}>{user.nombre_completo}</span>
-                {user.rol === 'administrador' ? (
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Administrador</span>
+                {user.rol === 'administrador' || user.rol === 'ingeniero_software' ? (
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                    {user.rol === 'ingeniero_software' ? 'Ingeniero de Software' : 'Administrador'}
+                  </span>
                 ) : (
                   <span style={{ fontSize: '0.75rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>{progress.progreso_porcentaje}% Completado</span>
                 )}
@@ -161,6 +164,7 @@ function MainLayout() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/create-course" element={<CreateCourseScreen />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/course/:courseId/detail" element={<CourseRouteWrapper><CourseDetail /></CourseRouteWrapper>} />
           <Route path="/course/:courseId" element={<CourseRouteWrapper><CourseViewer /></CourseRouteWrapper>} />
           <Route path="/course/:courseId/exam" element={<CourseRouteWrapper><Exam /></CourseRouteWrapper>} />
           <Route path="/certificate/:courseId" element={<CourseRouteWrapper><Certificate /></CourseRouteWrapper>} />

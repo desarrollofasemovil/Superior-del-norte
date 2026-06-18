@@ -6,7 +6,7 @@ import { Award, AlertTriangle, RefreshCw, ChevronRight, FileCheck, ArrowLeft } f
 const Exam = () => {
   const { token, submitExam, API_BASE_URL, activeCourseId, studentCourses } = useContext(AppContext);
   const navigate = useNavigate();
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState<any[]>([]);
   const [answers, setAnswers] = useState({}); // { 1: 'A', 2: 'C', ... }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -95,8 +95,7 @@ const Exam = () => {
           {isPass ? (
             <>
               <div style={{
-                background: 'rgba(78, 159, 61, 0.1)',
-                border: '1px solid rgba(78, 159, 61, 0.2)',
+                background: 'rgba(15, 44, 89, 0.05)',
                 borderRadius: '50%',
                 padding: '20px',
                 width: '80px',
@@ -106,9 +105,9 @@ const Exam = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Award size={48} color="var(--accent-emerald)" />
+                <Award size={48} color="var(--isn-gold)" />
               </div>
-              <h2 className="font-serif" style={{ fontSize: '2rem', color: 'var(--isn-success)', marginBottom: '8px', fontWeight: 900 }}>¡Examen Aprobado!</h2>
+              <h2 className="font-serif" style={{ fontSize: '2rem', color: 'var(--isn-blue)', marginBottom: '8px', fontWeight: 900 }}>¡Examen Aprobado!</h2>
               <p style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue)', marginBottom: '16px' }}>
                 Calificación: {result.puntaje}%
               </p>
@@ -196,7 +195,7 @@ const Exam = () => {
       <div className="glass-panel" style={{ padding: '32px' }}>
         
         {/* Title */}
-        <div style={{ borderBottom: '2px solid var(--isn-gold)', paddingBottom: '20px', marginBottom: '28px' }}>
+        <div style={{ borderBottom: '1px solid var(--border-glass)', paddingBottom: '20px', marginBottom: '28px' }}>
           <h2 className="font-serif" style={{ fontSize: '1.75rem', color: 'var(--isn-blue)', fontWeight: 900 }}>Evaluación de {courseTitle}</h2>
           <p style={{ color: 'var(--isn-charcoal)', fontSize: '0.95rem', marginTop: '8px', lineHeight: '1.5' }}>
             Responde correctamente las siguientes preguntas sobre las buenas prácticas de manufactura. Se requiere al menos un <b>80% de respuestas correctas</b> (7 de 8) para aprobar y obtener tu certificado.
@@ -208,12 +207,12 @@ const Exam = () => {
           {questions.map((q, idx) => {
             const selectedAns = answers[q.id];
             return (
-              <div key={q.id} style={{ marginBottom: '32px', background: '#FAFAFA', padding: '24px', borderRadius: '4px', border: '2px solid var(--isn-blue)' }}>
+              <div key={q.id} style={{ marginBottom: '32px', background: '#FAFAFA', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-glass)', boxShadow: '0 4px 15px rgba(15, 44, 89, 0.02)' }}>
                 <p style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--isn-blue)', marginBottom: '18px', lineHeight: '1.4' }}>
                   {idx + 1}. {q.pregunta}
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {Object.entries(q.opciones).map(([key, text]) => {
+                  {Object.entries(q.opciones as any).map(([key, text]) => {
                     const isSelected = selectedAns === key;
                     return (
                       <button
@@ -224,16 +223,15 @@ const Exam = () => {
                           width: '100%',
                           textAlign: 'left',
                           padding: '14px 18px',
-                          borderRadius: '4px',
-                          background: isSelected ? 'rgba(78, 159, 61, 0.06)' : '#FFFFFF',
-                          border: '2px solid',
-                          borderColor: isSelected ? 'var(--isn-success)' : 'var(--isn-gold)',
+                          borderRadius: '12px',
+                          background: isSelected ? 'rgba(15, 44, 89, 0.05)' : '#FFFFFF',
+                          border: isSelected ? '1px solid var(--accent-emerald)' : '1px solid var(--border-glass)',
                           color: 'var(--isn-charcoal)',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           gap: '14px',
-                          boxShadow: '0 1px 2px rgba(0,0,0,0.01)'
+                          boxShadow: isSelected ? '0 4px 12px rgba(15, 44, 89, 0.06)' : 'none'
                         }}
                       >
                         <span style={{
@@ -251,7 +249,7 @@ const Exam = () => {
                         }}>
                           {key}
                         </span>
-                        <span style={{ fontSize: '0.95rem', lineHeight: '1.4', fontWeight: isSelected ? 600 : 500 }}>{text}</span>
+                        <span style={{ fontSize: '0.95rem', lineHeight: '1.4', fontWeight: isSelected ? 600 : 500 }}>{text as any}</span>
                       </button>
                     );
                   })}

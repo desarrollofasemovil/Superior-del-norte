@@ -37,7 +37,7 @@ function generateCertificatePDF(stream, data) {
   doc.rect(doc.page.width - 44, doc.page.height - 44, 20, 20).lineWidth(1).stroke('#D4AF37');
 
   // 3. Official Logo
-  const logoPath = path.join(__dirname, '..', 'logoNormal.png');
+  const logoPath = path.join(__dirname, '..', 'assets', 'logo instituto superior del norte.png');
   if (fs.existsSync(logoPath)) {
     doc.image(logoPath, doc.page.width / 2 - 50, 42, { width: 100 });
   }

@@ -71,6 +71,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [adminUsers, setAdminUsers] = useState<any[]>([]);
   const [courses, setCourses] = useState<any[]>([]);
   const [coursesList, setCoursesList] = useState<any[]>([]);
+  const [financialMetrics, setFinancialMetrics] = useState<any>(null);
 
   const fetchStudentCourses = useCallback(async () => {
     if (!token) return;
@@ -81,8 +82,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         setStudentCourses(data);
-        // Only auto-set activeCourseId if it hasn't been set yet
-        setActiveCourseId(prev => (data.length > 0 && !prev) ? data[0].id : prev);
       }
     } catch (err) {
       console.error('Error fetching student courses:', err);
@@ -192,6 +191,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setCourses([]);
     setStudentCourses([]);
     setActiveCourseId(null);
+    setFinancialMetrics(null);
     setError(null);
     setCurrentView('login');
   };
@@ -294,6 +294,23 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   };
 
+  const fetchFinancialMetrics = useCallback(async () => {
+    if (!token) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/financial-metrics`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setFinancialMetrics(data.data);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching financial metrics:', err);
+    }
+  }, [token, API_BASE_URL]);
+
   const fetchAdminUsers = async (cedula: string = '') => {
     try {
       const url = cedula
@@ -394,6 +411,85 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   };
 
+  const updateCourse = useCallback(async (id: number, courseData: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/courses/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(courseData)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al actualizar el curso');
+      }
+      await fetchCourses();
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  const updateCourseModule = useCallback(async (courseId: number, moduleId: number, moduleData: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/courses/${courseId}/modules/${moduleId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(moduleData)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al actualizar el módulo');
+      }
+      await fetchCourses();
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  const updateStudentProfile = useCallback(async (cedula: string, profileData: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/users/${cedula}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(profileData)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al actualizar el perfil del estudiante');
+      }
+      await fetchAdminMetrics();
+      await fetchAdminUsers();
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
   return (
     <AppContext.Provider value={{
       user,
@@ -428,6 +524,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       fetchCoursesList,
       createStudentUser,
       updateStudentCourses,
+      updateCourse,
+      updateCourseModule,
+      updateStudentProfile,
+      financialMetrics,
+      fetchFinancialMetrics,
       API_BASE_URL
     }}>
       {children}

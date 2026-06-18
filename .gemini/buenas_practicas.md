@@ -1,4 +1,4 @@
-# Buenas Prácticas y Reglas de Desarrollo - AlimSafe LMS
+# Buenas Prácticas y Reglas de Desarrollo - Instituto Superior del Norte LMS
 
 Este documento establece las reglas de desarrollo que **todos los agentes y desarrolladores deben cumplir rigurosamente**. Leerlo antes de realizar cualquier cambio.
 
@@ -117,6 +117,14 @@ await sendWelcomeEmail(studentData);
 - Estilos globales en `index.css` con tokens CSS (`:root`). Evitar estilos en línea salvo propiedades dinámicas (ancho de barra de progreso, etc.).
 - Si un bloque JSX se repite más de 2 veces, extraerlo a un componente en `/components/ui/`.
 - Toda llamada de red va en `AppContext.jsx` o en un servicio dedicado, nunca con `fetch` crudo en el cuerpo de un componente de vista.
+- **Sistema de Identidad Visual (Modernización UI/UX)**:
+  * **Paleta de Colores**:
+    - *Azul Predominante*: Usar Azul Corporativo (`--isn-blue`, `#0F2C59`) como color principal. El naranja queda prohibido.
+    - *Dorado Sutil*: Dorado Premium (`--isn-gold`, `#D4AF37`) para microinteracciones, bordes activos muy delgados, e iconos destacados.
+    - *Verde de Acento Exclusivo*: Verde Esmeralda (`#10B981`) **exclusiva y únicamente** para el botón de "Ver programas académicos" en la Landing Page.
+    - *Base Neutral*: Fondos blancos y neutros claros (`#F7F9FA`) para priorizar el espacio en blanco y la legibilidad.
+  * **Botones Grounded Pill**: Todos los botones de acción deben tener forma de píldora completamente redondeada (`border-radius: 9999px`) sin bordes ni trazos de contorno rígidos. La jerarquía se determina únicamente con el relleno.
+  * **Estructura Orgánica (Adiós a la Card Fatigue)**: Reemplazar bordes duros y líneas divisorias por espacios en blanco, variaciones de color de fondo y sombras suaves y difuminadas (`box-shadow: var(--shadow-card)`). Las esquinas de los paneles principales deben usar radios fluidos (`border-radius: 20px` o `24px`).
 
 ---
 
@@ -144,7 +152,7 @@ await sendWelcomeEmail(studentData);
 > **Brechas Conocidas:**
 > 1. **Mojibake como Parche:** `decodeMojibake` en el frontend y `normalizeToUtf8` en el backend son correcciones sintomáticas. La causa raíz es la codificación de la conexión SQLite. Requiere configurar `pragma encoding = 'UTF-8'` y retirar los helpers progresivamente.
 > 2. **Validación de Payloads Débil:** No se valida el esquema de los cuerpos de petición (crear usuario, enviar examen). Integrar `zod` en el backend para sanear los inputs antes de operar en BD.
-> 3. **Email del Estudiante Derivado:** `emailService.js` usa `${cedula}@alimsafe-student.co` como destinatario. Para producción real, agregar columna `email` a la tabla `usuarios`.
+> 3. **Email del Estudiante Derivado:** `emailService.js` usa `${cedula}@institutosuperiordelnorte-student.co` como destinatario. Para producción real, agregar columna `email` a la tabla `usuarios`.
 > 4. **Inline Styles Masivos:** Los componentes usan extensamente `style={{}}` en línea. Migrar progresivamente a clases CSS en `index.css`.
 
 > [!TIP]

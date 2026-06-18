@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { Search, ShieldCheck, ShieldAlert, ArrowLeft, Loader2, Calendar, User, CreditCard, Award, FileText, BookOpen } from 'lucide-react';
 
-const VerifyCertificate = ({ initialCode }) => {
+const VerifyCertificate = ({ initialCode }: { initialCode?: string }) => {
   const { API_BASE_URL } = useContext(AppContext);
   const navigate = useNavigate();
   const [code, setCode] = useState(initialCode || '');
@@ -11,7 +11,7 @@ const VerifyCertificate = ({ initialCode }) => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
 
-  const handleVerify = async (codeToVerify) => {
+  const handleVerify = async (codeToVerify?: string) => {
     const targetCode = (codeToVerify || code).trim();
     if (!targetCode) return;
 
@@ -106,9 +106,8 @@ const VerifyCertificate = ({ initialCode }) => {
         {/* Error State */}
         {error && !loading && (
           <div style={{
-            background: 'rgba(239, 68, 68, 0.06)',
-            border: '2px solid var(--accent-rose)',
-            borderRadius: '4px',
+            background: 'rgba(239, 68, 68, 0.05)',
+            borderRadius: '12px',
             padding: '24px',
             textAlign: 'center',
             color: 'var(--accent-rose)'
@@ -122,13 +121,12 @@ const VerifyCertificate = ({ initialCode }) => {
         {/* Success / Result State */}
         {result && !loading && (
           <div className="glow-panel" style={{
-            background: 'rgba(78, 159, 61, 0.04)',
-            border: '2px solid var(--accent-emerald)',
-            borderRadius: '4px',
+            background: 'rgba(15, 44, 89, 0.03)',
+            borderRadius: '12px',
             padding: '28px',
           }}>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '24px', borderBottom: '1px solid rgba(78, 159, 61, 0.15)', paddingBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '24px', borderBottom: '1px solid rgba(15, 44, 89, 0.08)', paddingBottom: '16px' }}>
               <ShieldCheck size={36} color="var(--accent-emerald)" />
               <div>
                 <h4 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--accent-emerald)', fontWeight: 800 }}>CERTIFICADO VÁLIDO</h4>
@@ -190,14 +188,14 @@ const VerifyCertificate = ({ initialCode }) => {
 
             <div className="font-sans-mono" style={{
               marginTop: '24px',
-              padding: '10px 14px',
-              borderRadius: '4px',
-              background: '#E2E8F0',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              background: 'rgba(15, 44, 89, 0.05)',
               fontSize: '0.85rem',
               color: 'var(--text-primary)',
               fontWeight: 700,
               textAlign: 'center',
-              border: '1px solid #CBD5E1'
+              border: 'none'
             }}>
               REF: {result.codigo_verificacion}
             </div>

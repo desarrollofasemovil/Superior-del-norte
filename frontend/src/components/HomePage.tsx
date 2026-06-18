@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import logoLogo from '../assets/logo instituto superior del norte.webp';
+import logoLogo from '../assets/logo_instituto_norte.png';
 import { Award, BookOpen, Clock, ShieldCheck, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
 
 const coursesData = [
@@ -10,7 +10,7 @@ const coursesData = [
     titulo: "Manipulación Higiénica de Alimentos",
     descripcion: "Certificación oficial obligatoria para personal del sector de alimentos. Normativas sanitarias de higiene, control de puntos críticos y prevención de contaminación.",
     horas: 3,
-    nivel: "Básico - Obligatorio",
+    nivel: "",
     imagenText: "Manipulación e Higiene de Alimentos"
   },
   {
@@ -18,7 +18,7 @@ const coursesData = [
     titulo: "Sistemas de Aseguramiento de Calidad (HACCP)",
     descripcion: "Análisis de peligros y control de puntos críticos. Diseñado para supervisores y jefes de calidad en la industria alimentaria.",
     horas: 8,
-    nivel: "Avanzado",
+    nivel: "",
     imagenText: "Control de Calidad HACCP"
   },
   {
@@ -26,8 +26,56 @@ const coursesData = [
     titulo: "Buenas Prácticas de Manufactura (BPM)",
     descripcion: "Principios básicos y requisitos de higiene bajo regulaciones nacionales vigentes para establecimientos alimentarios.",
     horas: 6,
-    nivel: "Intermedio",
+    nivel: "",
     imagenText: "Principios de Manufactura BPM"
+  },
+  {
+    id: 4,
+    titulo: "Curso de Mecánica Básica",
+    descripcion: "Capacitación práctica en diagnóstico preventivo, sistemas del vehículo, cambio de neumáticos y mantenimiento esencial para conductores.",
+    horas: 24,
+    nivel: "",
+    imagenText: "Mecánica Básica"
+  },
+  {
+    id: 5,
+    titulo: "Curso de Primeros Auxilios",
+    descripcion: "Formación vital en atención prehospitalaria, reanimación cardiopulmonar (RCP), manejo de heridas y respuesta inmediata ante emergencias médicas.",
+    horas: 18,
+    nivel: "",
+    imagenText: "Primeros Auxilios"
+  },
+  {
+    id: 6,
+    titulo: "Curso de Manejo Defensivo",
+    descripcion: "Técnicas avanzadas de conducción segura, anticipación de riesgos en la vía, psicología del conductor y prevención de accidentes de tránsito.",
+    horas: 20,
+    nivel: "",
+    imagenText: "Manejo Defensivo"
+  },
+  {
+    id: 7,
+    titulo: "Curso de Manejo 4x4",
+    descripcion: "Dominio técnico de vehículos de tracción integral, control en terrenos difíciles (barro, arena, pendientes pronunciadas) y uso correcto de implementos de rescate.",
+    horas: 32,
+    nivel: "",
+    imagenText: "Manejo 4x4"
+  },
+  {
+    id: 8,
+    titulo: "Curso de Atención al Cliente",
+    descripcion: "Desarrollo de habilidades blandas, comunicación asertiva, resolución de conflictos y excelencia en el servicio para la fidelización de usuarios.",
+    horas: 18,
+    nivel: "",
+    imagenText: "Atención al Cliente"
+  },
+  {
+    id: 9,
+    titulo: "Paquete de Cursos Médicos en Salud",
+    descripcion: "Compendio especializado orientado al personal asistencial, cubriendo protocolos de bioseguridad, normatividad en salud y actualización en procedimientos clínicos básicos.",
+    horas: 30,
+    nivel: "",
+    imagenText: "Paquete Médico"
   }
 ];
 
@@ -79,8 +127,8 @@ export default function HomePage() {
         top: 0,
         zIndex: 1000,
         backgroundColor: '#FFFFFF',
-        borderBottom: '2px solid var(--isn-gold)',
-        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.05)',
+        borderBottom: '1px solid var(--border-glass)',
+        boxShadow: '0 10px 30px -10px rgba(15, 44, 89, 0.04)',
         height: '70px',
         display: 'flex',
         alignItems: 'center',
@@ -91,7 +139,7 @@ export default function HomePage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => scrollToSection('home')}>
             <img src={logoLogo} alt="Instituto Superior del Norte" style={{ height: '45px', width: 'auto' }} />
             <h1 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue)', margin: 0 }}>
-              INSTITUTO SUPERIOR DEL NORTE
+              Instituto Superior del Norte
             </h1>
           </div>
 
@@ -101,18 +149,15 @@ export default function HomePage() {
             <button onClick={() => scrollToSection('courses')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Programas</button>
             <button onClick={() => scrollToSection('verification')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Verificación</button>
             <button onClick={() => scrollToSection('about')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Nosotros</button>
-            
+
             <button
               onClick={() => navigate('/login')}
-              className="btn"
+              className="btn btn-primary"
               style={{
-                background: 'var(--isn-blue)',
-                color: '#FFFFFF',
-                borderRadius: '6px',
-                padding: '8px 16px',
+                borderRadius: '9999px',
+                padding: '10px 20px',
                 fontWeight: 700,
-                border: 'none',
-                boxShadow: '0 4px 6px rgba(15, 44, 89, 0.15)',
+                boxShadow: '0 4px 12px rgba(15, 44, 89, 0.12)',
                 cursor: 'pointer'
               }}
             >
@@ -123,7 +168,7 @@ export default function HomePage() {
       </nav>
 
       <div id="home" style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
-        
+
         {/* 2. Sección Hero Principal */}
         <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'center', marginBottom: '64px' }}>
           <div>
@@ -138,15 +183,14 @@ export default function HomePage() {
                 onClick={() => scrollToSection('courses')}
                 className="btn"
                 style={{
-                  background: 'var(--isn-success)',
+                  background: 'var(--accent-green-btn)',
                   color: '#FFFFFF',
                   padding: '14px 28px',
-                  borderRadius: '6px',
+                  borderRadius: '9999px',
                   fontWeight: 700,
                   fontSize: '1rem',
-                  border: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 10px rgba(78, 159, 61, 0.2)'
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)'
                 }}
               >
                 Ver Programas Académicos
@@ -155,11 +199,10 @@ export default function HomePage() {
                 onClick={() => scrollToSection('verification')}
                 className="btn"
                 style={{
-                  background: '#FFFFFF',
-                  border: '2px solid var(--isn-gold)',
+                  background: '#F1F5F9',
                   color: 'var(--isn-blue)',
-                  padding: '12px 26px',
-                  borderRadius: '6px',
+                  padding: '14px 28px',
+                  borderRadius: '9999px',
                   fontWeight: 700,
                   fontSize: '1rem',
                   cursor: 'pointer'
@@ -171,10 +214,8 @@ export default function HomePage() {
           </div>
 
           {/* 3. Reserva de Espacios para Contenido Gráfico (Hero Side) */}
-          <div style={{
+          <div className="glass-panel" style={{
             height: '400px',
-            border: '3px dashed var(--isn-gold)',
-            borderRadius: '12px',
             backgroundColor: '#FFFFFF',
             display: 'flex',
             flexDirection: 'column',
@@ -182,19 +223,19 @@ export default function HomePage() {
             alignItems: 'center',
             padding: '32px',
             textAlign: 'center',
-            boxShadow: 'var(--shadow-card)',
+            borderRadius: '24px',
             position: 'relative'
           }}>
             <div style={{
               position: 'absolute',
               top: '16px',
               right: '16px',
-              backgroundColor: 'var(--isn-gold)',
-              color: 'var(--isn-blue-dark)',
+              backgroundColor: 'rgba(212, 175, 55, 0.15)',
+              color: 'var(--isn-blue)',
               fontSize: '0.75rem',
               fontWeight: 800,
               padding: '4px 10px',
-              borderRadius: '4px',
+              borderRadius: '9999px',
               textTransform: 'uppercase'
             }}>
               Espacio de Reserva
@@ -220,20 +261,21 @@ export default function HomePage() {
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <span style={{ color: 'var(--isn-gold)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.85rem' }}>Especialidades Académicas</span>
             <h3 className="font-serif" style={{ fontSize: '2.25rem', color: 'var(--isn-blue)', fontWeight: 800, marginTop: '4px' }}>Programas Disponibles</h3>
-            <div style={{ width: '60px', height: '3px', backgroundColor: 'var(--isn-success)', margin: '12px auto 0 auto', borderRadius: '2px' }} />
+            <div style={{ width: '60px', height: '3px', backgroundColor: 'var(--isn-blue)', margin: '12px auto 0 auto', borderRadius: '2px' }} />
+            <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginTop: '24px', color: 'var(--isn-charcoal)', fontSize: '0.95rem', textDecoration: 'none', border: '1px solid rgba(15, 44, 89, 0.1)', padding: '10px 20px', borderRadius: '9999px', transition: 'all 0.3s', backgroundColor: 'rgba(15, 44, 89, 0.02)' }}>
+              ¿Necesitas una certificación en específico? <span style={{ color: 'var(--isn-blue)', fontWeight: 700 }}>Contáctanos y te ayudamos</span>
+            </a>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
             {coursesData.map((course) => (
               <div key={course.id} className="glass-panel" style={{
                 backgroundColor: '#FFFFFF',
-                borderRadius: '8px',
-                border: '2px solid var(--isn-blue)',
+                borderRadius: '20px',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                boxShadow: 'var(--shadow-card)',
-                transition: 'transform 0.2s, border-color 0.2s'
+                transition: 'transform 0.3s, box-shadow 0.3s'
               }}>
                 {/* Visual Placeholder for Course Image */}
                 <div style={{
@@ -244,7 +286,6 @@ export default function HomePage() {
                   justifyContent: 'center',
                   alignItems: 'center',
                   padding: '20px',
-                  borderBottom: '2px solid var(--isn-gold)',
                   color: '#FFFFFF',
                   position: 'relative'
                 }}>
@@ -254,12 +295,12 @@ export default function HomePage() {
                     position: 'absolute',
                     top: '12px',
                     left: '12px',
-                    backgroundColor: 'var(--isn-success)',
+                    backgroundColor: 'rgba(15, 44, 89, 0.65)',
                     color: '#FFFFFF',
                     fontSize: '0.7rem',
                     fontWeight: 700,
                     padding: '2px 8px',
-                    borderRadius: '4px'
+                    borderRadius: '9999px'
                   }}>
                     {course.nivel}
                   </div>
@@ -272,55 +313,46 @@ export default function HomePage() {
                   <p style={{ fontSize: '0.9rem', color: 'var(--isn-charcoal)', lineHeight: '1.5', flex: 1, marginBottom: '20px' }}>
                     {course.descripcion}
                   </p>
-                  
+
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #E2E8F0', paddingTop: '16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--isn-charcoal)', fontSize: '0.85rem', fontWeight: 600 }}>
                       <Clock size={16} color="var(--isn-gold)" />
                       <span>{course.horas} horas lectivas</span>
                     </div>
-                    
-                    <button
-                      onClick={() => navigate('/login')}
+
+                    <a
+                      href="https://wa.me/"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: 'var(--isn-gold)',
+                        color: 'var(--isn-blue)',
                         fontWeight: 700,
                         cursor: 'pointer',
                         fontSize: '0.9rem',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '4px'
+                        gap: '4px',
+                        textDecoration: 'none'
                       }}
                     >
                       Matricularse →
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </section>
-
         {/* 5. Sección de Verificación en Línea */}
-        <section id="verification" style={{
+        <section id="verification" className="glass-panel" style={{
           backgroundColor: '#FFFFFF',
-          border: '2px solid var(--isn-blue)',
-          borderRadius: '12px',
+          borderRadius: '24px',
           padding: '48px 32px',
-          boxShadow: 'var(--shadow-card)',
           marginBottom: '80px',
           position: 'relative'
         }}>
-          {/* Inner Accent Gold Box Border */}
-          <div style={{
-            position: 'absolute',
-            top: '8px', left: '8px', right: '8px', bottom: '8px',
-            border: '1px solid var(--isn-gold)',
-            borderRadius: '8px',
-            pointerEvents: 'none'
-          }} />
-
           <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '48px', position: 'relative', zIndex: 1 }}>
             <div>
               <span style={{ color: 'var(--isn-gold)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.15em', fontSize: '0.85rem' }}>Registro Académico Nacional</span>
@@ -331,7 +363,7 @@ export default function HomePage() {
                 Todos los certificados emitidos por el Instituto Superior del Norte poseen un código único de verificación. Los empleadores y autoridades sanitarias pueden comprobar de manera inmediata la autenticidad de cualquier credencial académica en nuestro servidor central.
               </p>
 
-              {/* Formular input estilizado con bordes dorados de 2px */}
+              {/* Formular input estilizado */}
               <form onSubmit={handleVerify} style={{ display: 'flex', gap: '12px' }}>
                 <div style={{ flex: 1, position: 'relative' }}>
                   <input
@@ -342,8 +374,8 @@ export default function HomePage() {
                     style={{
                       width: '100%',
                       padding: '14px 16px',
-                      borderRadius: '6px',
-                      border: '2px solid var(--isn-gold)',
+                      borderRadius: '12px',
+                      border: '1px solid var(--border-glass)',
                       fontSize: '1rem',
                       outline: 'none',
                       backgroundColor: 'var(--isn-bg-light)',
@@ -355,14 +387,11 @@ export default function HomePage() {
                 <button
                   type="submit"
                   disabled={loading || !verificationCode.trim()}
-                  className="btn"
+                  className="btn btn-primary"
                   style={{
-                    background: 'var(--isn-blue)',
-                    color: '#FFFFFF',
                     fontWeight: 700,
                     padding: '0 24px',
-                    borderRadius: '6px',
-                    border: 'none',
+                    borderRadius: '9999px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -380,7 +409,7 @@ export default function HomePage() {
                   marginTop: '20px',
                   backgroundColor: 'rgba(239, 68, 68, 0.05)',
                   border: '1px solid rgba(239, 68, 68, 0.2)',
-                  borderRadius: '6px',
+                  borderRadius: '12px',
                   padding: '16px',
                   display: 'flex',
                   alignItems: 'center',
@@ -396,29 +425,28 @@ export default function HomePage() {
               {verifyResult && (
                 <div style={{
                   marginTop: '20px',
-                  backgroundColor: 'rgba(78, 159, 61, 0.05)',
-                  border: '2px solid var(--isn-success)',
-                  borderRadius: '6px',
+                  backgroundColor: 'rgba(15, 44, 89, 0.03)',
+                  borderRadius: '12px',
                   padding: '20px',
                   color: 'var(--isn-blue-dark)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '8px'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--isn-success)', fontWeight: 800, fontSize: '0.95rem', marginBottom: '4px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--isn-blue)', fontWeight: 800, fontSize: '0.95rem', marginBottom: '4px' }}>
                     <CheckCircle size={18} />
                     <span>CERTIFICADO OFICIAL VÁLIDO</span>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '4px 16px', fontSize: '0.9rem' }}>
                     <span style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Estudiante:</span>
                     <span className="font-serif" style={{ fontWeight: 800 }}>{verifyResult.nombre_completo}</span>
-                    
+
                     <span style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Identificación:</span>
                     <span className="font-sans-mono">{verifyResult.cedula}</span>
-                    
+
                     <span style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Programa:</span>
                     <span style={{ fontWeight: 600 }}>{verifyResult.curso_titulo}</span>
-                    
+
                     <span style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Registro N°:</span>
                     <span className="font-sans-mono" style={{ color: 'var(--isn-gold)', fontWeight: 700 }}>{verifyResult.numero_certificado}</span>
 
@@ -433,9 +461,7 @@ export default function HomePage() {
             </div>
 
             {/* 3. Reserva de Espacios para Contenido Gráfico (Verification Side) */}
-            <div style={{
-              border: '2px solid var(--isn-gold)',
-              borderRadius: '8px',
+            <div className="glass-panel" style={{
               backgroundColor: 'var(--isn-bg-light)',
               display: 'flex',
               flexDirection: 'column',
@@ -443,6 +469,7 @@ export default function HomePage() {
               alignItems: 'center',
               padding: '24px',
               textAlign: 'center',
+              borderRadius: '16px',
               position: 'relative'
             }}>
               <Award size={48} color="var(--isn-gold)" style={{ marginBottom: '12px' }} />
@@ -455,7 +482,8 @@ export default function HomePage() {
               <div style={{
                 width: '100px',
                 height: '100px',
-                border: '2px dashed var(--isn-gold)',
+                border: '1px dashed var(--border-glass)',
+                borderRadius: '12px',
                 marginTop: '16px',
                 display: 'flex',
                 alignItems: 'center',
@@ -473,16 +501,15 @@ export default function HomePage() {
         {/* About Section */}
         <section id="about" style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '48px', alignItems: 'center', paddingBottom: '24px' }}>
           {/* Graphic Placeholder (About Side) */}
-          <div style={{
+          <div className="glass-panel" style={{
             height: '350px',
-            border: '2px solid var(--isn-gold)',
-            borderRadius: '12px',
             backgroundColor: '#FFFFFF',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             padding: '24px',
+            borderRadius: '16px',
             textAlign: 'center'
           }}>
             <Loader2 className="animate-spin" size={32} color="var(--isn-gold)" style={{ marginBottom: '12px' }} />
@@ -503,7 +530,7 @@ export default function HomePage() {
               El Instituto Superior del Norte (ISN) es un centro de formación técnica superior enfocado en proveer cursos, diplomados y capacitaciones profesionales con certificación oficial para la inserción en el mercado productivo.
             </p>
             <p style={{ fontSize: '0.95rem', color: 'var(--isn-charcoal)', lineHeight: '1.6' }}>
-              Nuestra plataforma LMS digital (Campus Virtual) cuenta con ambientes dinámicos de aprendizaje, simuladores multimedia avanzados y sistemas automatizados de calificación y emisión de registros para garantizar un proceso educativo transparente, ágil y de excelencia.
+              NuestroCampus Virtual cuenta con ambientes dinámicos de aprendizaje, simuladores multimedia avanzados y sistemas automatizados de calificación y emisión de registros para garantizar un proceso educativo transparente, ágil y de excelencia.
             </p>
           </div>
         </section>
@@ -513,14 +540,14 @@ export default function HomePage() {
       {/* Footer */}
       <footer style={{
         backgroundColor: 'var(--isn-blue-dark)',
-        borderTop: '3px solid var(--isn-gold)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
         color: '#FFFFFF',
         padding: '36px 24px',
         textAlign: 'center'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <p className="font-serif" style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--isn-gold)', margin: 0 }}>
-            INSTITUTO SUPERIOR DEL NORTE
+            Instituto Superior del Norte
           </p>
           <p style={{ fontSize: '0.8rem', color: '#D2D6DC', margin: 0 }}>
             © 2026 Instituto Superior del Norte. Todos los derechos reservados.

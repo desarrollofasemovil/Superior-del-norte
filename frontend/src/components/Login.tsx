@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import logoNormal from '../assets/logo instituto superior del norte.webp';
+import logoNorte from '../assets/logo_instituto_norte.png';
 import { Lock, ShieldAlert } from 'lucide-react';
 
 const Login = () => {
@@ -41,33 +41,32 @@ const Login = () => {
         padding: '32px',
         position: 'relative',
         overflow: 'hidden',
-        border: '2px solid var(--isn-blue)',
-        borderRadius: '4px',
+        borderRadius: '24px',
         backgroundColor: '#FFFFFF'
       }}>
-        
+
         {/* Top Decorative Gold Accent Bar */}
         <div style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          height: '6px',
+          height: '3px',
           background: 'var(--isn-gold)'
         }} />
 
         <div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
-            <img 
-              src={logoNormal} 
-              alt="Instituto Superior del Norte" 
-              style={{ width: '180px', height: 'auto', marginBottom: '16px' }} 
+            <img
+              src={logoNorte}
+              alt="Instituto Superior del Norte"
+              style={{ width: '180px', height: 'auto', marginBottom: '16px' }}
             />
             <p className="font-serif" style={{ color: 'var(--isn-blue)', fontSize: '1.1rem', textAlign: 'center', fontWeight: 800 }}>
-              INSTITUTO SUPERIOR DEL NORTE
+              Instituto Superior del Norte
             </p>
             <p style={{ color: 'var(--isn-charcoal)', fontSize: '0.75rem', textAlign: 'center', marginTop: '4px', fontWeight: 600 }}>
-              Campus Virtual LMS
+
             </p>
           </div>
 
@@ -75,7 +74,7 @@ const Login = () => {
             <div style={{
               background: 'rgba(239, 68, 68, 0.06)',
               border: '1px solid rgba(239, 68, 68, 0.2)',
-              borderRadius: '4px',
+              borderRadius: '12px',
               padding: '12px',
               marginBottom: '20px',
               display: 'flex',
@@ -100,7 +99,6 @@ const Login = () => {
                 value={cedula}
                 onChange={(e) => setCedula(e.target.value)}
                 disabled={loading}
-                style={{ border: '2px solid var(--isn-gold)', borderRadius: '4px' }}
               />
             </div>
 
@@ -114,21 +112,16 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
-                style={{ border: '2px solid var(--isn-gold)', borderRadius: '4px' }}
               />
             </div>
 
             <button
-              className="btn"
+              className="btn btn-primary"
               type="submit"
               style={{
                 width: '100%',
                 padding: '14px',
-                background: 'var(--isn-blue)',
-                color: '#FFFFFF',
-                borderRadius: '4px',
                 fontWeight: 700,
-                border: 'none',
                 cursor: 'pointer'
               }}
               disabled={loading}
@@ -148,9 +141,8 @@ const Login = () => {
           <div style={{
             marginTop: '28px',
             padding: '14px',
-            borderRadius: '4px',
+            borderRadius: '16px',
             background: 'var(--isn-bg-light)',
-            border: '2px solid var(--isn-blue)',
             fontSize: '0.75rem',
             color: 'var(--isn-charcoal)',
             textAlign: 'center'

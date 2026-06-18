@@ -17,7 +17,7 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-[#0F2C59]">AlimSafe</h1>
+            <h1 className="text-2xl font-bold text-[#0F2C59]">Instituto Superior del Norte</h1>
             <div className="h-6 w-1 bg-[#4E9F3D] rounded-full"></div>
           </div>
 
