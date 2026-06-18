@@ -37,9 +37,9 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// Middleware to require admin role
+// Middleware to require admin or software engineer role
 function requireAdmin(req, res, next) {
-  if (!req.user || req.user.rol !== 'administrador') {
+  if (!req.user || (req.user.rol !== 'administrador' && req.user.rol !== 'ingeniero_software')) {
     return res.status(403).json({ error: 'Acceso denegado. Se requiere rol de Administrador.' });
   }
   next();

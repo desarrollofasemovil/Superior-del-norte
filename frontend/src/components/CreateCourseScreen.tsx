@@ -12,6 +12,8 @@ const CreateCourseScreen = () => {
   const [descripcion, setDescripcion] = useState('');
   const [imagenUrl, setImagenUrl] = useState('');
   const [imageError, setImageError] = useState(false);
+  const [precio, setPrecio] = useState('');
+  const [certificadoTemplate, setCertificadoTemplate] = useState('');
 
   // Modules list state
   const [modulos, setModulos] = useState([
@@ -95,6 +97,12 @@ const CreateCourseScreen = () => {
       return;
     }
 
+    if (!precio || isNaN(parseFloat(precio)) || parseFloat(precio) < 0) {
+      setError('El precio del curso es obligatorio y debe ser un número válido mayor o igual a 0.');
+      setSubmitting(false);
+      return;
+    }
+
     // 2. Validate modules
     for (let i = 0; i < modulos.length; i++) {
       const m = modulos[i];
@@ -118,6 +126,8 @@ const CreateCourseScreen = () => {
       titulo: cleanTitle,
       descripcion: cleanDesc,
       imagen_url: imagenUrl.trim(),
+      precio: parseFloat(precio),
+      certificado_template: certificadoTemplate,
       modulos: modulos.map(m => ({
         titulo_modulo: m.titulo_modulo.trim(),
         tipo_contenido: m.tipo_contenido,
@@ -186,7 +196,7 @@ const CreateCourseScreen = () => {
       </div>
 
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+        <h1 className="font-serif" style={{ fontSize: '2.25rem', color: 'var(--isn-blue-dark)', fontWeight: 800, marginBottom: '6px' }}>
           Crear Nuevo Curso Formativo
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
@@ -209,7 +219,7 @@ const CreateCourseScreen = () => {
           {error && (
             <div style={{
               background: 'rgba(239, 68, 68, 0.06)',
-              border: '1px solid rgba(239, 68, 68, 0.2)',
+              border: 'none',
               borderRadius: '12px',
               padding: '16px',
               display: 'flex',
@@ -226,8 +236,8 @@ const CreateCourseScreen = () => {
 
           {success && (
             <div style={{
-              background: 'rgba(78, 159, 61, 0.06)',
-              border: '1px solid rgba(78, 159, 61, 0.2)',
+              background: 'rgba(29, 78, 216, 0.06)',
+              border: 'none',
               borderRadius: '12px',
               padding: '16px',
               display: 'flex',
@@ -244,7 +254,7 @@ const CreateCourseScreen = () => {
 
           {/* Section 1: General Info */}
           <div className="glass-panel" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '20px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
+            <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue-dark)', marginBottom: '20px', paddingBottom: '4px' }}>
               1. Información General del Curso
             </h3>
 
@@ -277,8 +287,25 @@ const CreateCourseScreen = () => {
               />
             </div>
 
+            {/* Price */}
+            <div className="input-group">
+              <label className="input-label" htmlFor="course-price">Precio del Curso ($)</label>
+              <input
+                id="course-price"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="Ej. 100000"
+                className="input-field"
+                value={precio}
+                onChange={(e) => setPrecio(e.target.value)}
+                disabled={submitting}
+                required
+              />
+            </div>
+
             {/* Cover Image URL */}
-            <div className="input-group" style={{ marginBottom: 0 }}>
+            <div className="input-group">
               <label className="input-label" htmlFor="course-img">URL de Portada / Foto de Imagen</label>
               <input
                 id="course-img"
@@ -293,12 +320,63 @@ const CreateCourseScreen = () => {
                 Utiliza una URL directa de imagen (.jpg, .png, etc.). Puedes usar Unsplash para imágenes profesionales de prueba.
               </span>
             </div>
+
+            {/* Certificate Template */}
+            <div className="input-group" style={{ marginBottom: 0 }}>
+              <label className="input-label" htmlFor="certificado-template-file">Plantilla de Certificado (.html)</label>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <input
+                  id="certificado-template-file"
+                  type="file"
+                  accept=".html"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        const content = event.target?.result;
+                        if (typeof content === 'string') {
+                          setCertificadoTemplate(content);
+                        }
+                      };
+                      reader.readAsText(file);
+                    }
+                  }}
+                  disabled={submitting}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('certificado-template-file')?.click()}
+                  className="btn btn-secondary"
+                  disabled={submitting}
+                  style={{ borderRadius: '9999px', height: '42px', padding: '0 20px', whiteSpace: 'nowrap' }}
+                >
+                  Subir archivo HTML
+                </button>
+                <span style={{ fontSize: '0.85rem', color: 'var(--isn-blue)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}>
+                  {certificadoTemplate ? 'Plantilla cargada con éxito' : 'Ningún archivo seleccionado'}
+                </span>
+              </div>
+              <textarea
+                id="certificado-template-text"
+                placeholder="O pegue el código HTML de su plantilla aquí directamente..."
+                className="input-field"
+                style={{ minHeight: '120px', resize: 'vertical', marginTop: '12px', fontFamily: 'monospace', fontSize: '0.85rem' }}
+                value={certificadoTemplate}
+                onChange={(e) => setCertificadoTemplate(e.target.value)}
+                disabled={submitting}
+              />
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '6px' }}>
+                Etiquetas dinámicas disponibles: <code>{"{{NOMBRE}}"}</code>, <code>{"{{CEDULA}}"}</code>, <code>{"{{FECHA_EXPEDICION}}"}</code>, <code>{"{{MUNICIPIO_EXPEDICION}}"}</code>, <code>{"{{ANIO_NACIMIENTO}}"}</code>, <code>{"{{CODIGO_VERIFICACION}}"}</code>, <code>{"{{FECHA_EMISION}}"}</code>.
+              </span>
+            </div>
           </div>
 
           {/* Section 2: Modules Manager */}
           <div className="glass-panel" style={{ padding: '28px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px', flexWrap: 'wrap', gap: '10px' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '4px', flexWrap: 'wrap', gap: '10px' }}>
+              <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue-dark)' }}>
                 2. Gestor de Módulos Independientes
               </h3>
               
@@ -307,7 +385,7 @@ const CreateCourseScreen = () => {
                 className="btn btn-primary"
                 onClick={handleAddModule}
                 disabled={submitting}
-                style={{ padding: '8px 14px', fontSize: '0.85rem', background: 'var(--accent-teal)' }}
+                style={{ padding: '8px 16px', fontSize: '0.85rem', background: 'var(--accent-teal)' }}
               >
                 <Plus size={16} />
                 <span>+ Agregar Módulo</span>
@@ -319,10 +397,10 @@ const CreateCourseScreen = () => {
                 <div
                   key={m.id}
                   style={{
-                    border: '1px solid var(--border-glass)',
-                    borderRadius: '12px',
+                    border: 'none',
+                    borderRadius: '16px',
                     padding: '20px',
-                    background: '#FAFBFD',
+                    background: 'rgba(15, 44, 89, 0.03)',
                     position: 'relative'
                   }}
                 >
@@ -344,7 +422,7 @@ const CreateCourseScreen = () => {
                         type="button"
                         onClick={() => handleMoveUp(index)}
                         disabled={index === 0 || submitting}
-                        style={{ background: 'white', border: '1px solid #CBD5E1', borderRadius: '6px', padding: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                        style={{ background: '#FFFFFF', border: 'none', borderRadius: '50%', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', boxShadow: '0 2px 8px rgba(15, 44, 89, 0.08)' }}
                         title="Subir orden"
                       >
                         <ChevronUp size={16} color="var(--text-muted)" />
@@ -353,7 +431,7 @@ const CreateCourseScreen = () => {
                         type="button"
                         onClick={() => handleMoveDown(index)}
                         disabled={index === modulos.length - 1 || submitting}
-                        style={{ background: 'white', border: '1px solid #CBD5E1', borderRadius: '6px', padding: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                        style={{ background: '#FFFFFF', border: 'none', borderRadius: '50%', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', boxShadow: '0 2px 8px rgba(15, 44, 89, 0.08)' }}
                         title="Bajar orden"
                       >
                         <ChevronDown size={16} color="var(--text-muted)" />
@@ -362,7 +440,7 @@ const CreateCourseScreen = () => {
                         type="button"
                         onClick={() => handleRemoveModule(m.id)}
                         disabled={submitting}
-                        style={{ background: 'white', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '6px', padding: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                        style={{ background: '#FFFFFF', border: 'none', borderRadius: '50%', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', boxShadow: '0 2px 8px rgba(15, 44, 89, 0.08)' }}
                         title="Eliminar módulo"
                       >
                         <Trash2 size={16} color="var(--accent-rose)" />
@@ -430,13 +508,13 @@ const CreateCourseScreen = () => {
               ))}
             </div>
 
-            {/* Add module button bottom */}
+             {/* Add module button bottom */}
             <button
               type="button"
               className="btn btn-secondary"
               onClick={handleAddModule}
               disabled={submitting}
-              style={{ width: '100%', marginTop: '16px', borderStyle: 'dashed', borderColor: '#CBD5E1', background: 'none' }}
+              style={{ width: '100%', marginTop: '16px', borderRadius: '9999px', background: 'rgba(15, 44, 89, 0.04)', border: 'none' }}
             >
               <Plus size={18} />
               <span>Agregar Otro Módulo</span>
@@ -458,7 +536,7 @@ const CreateCourseScreen = () => {
               type="submit"
               className="btn btn-primary"
               disabled={submitting}
-              style={{ flex: 1, height: '52px', background: 'var(--accent-emerald)' }}
+              style={{ flex: 1, height: '52px', background: 'var(--isn-success)' }}
             >
               {submitting ? 'Creando Curso...' : 'Guardar Curso Completo'}
             </button>
@@ -474,7 +552,7 @@ const CreateCourseScreen = () => {
           </h4>
 
           {/* Cover Card */}
-          <div className="glass-panel" style={{ overflow: 'hidden', borderRadius: '16px' }}>
+          <div className="glass-panel" style={{ overflow: 'hidden', borderRadius: '20px' }}>
             <div style={{ position: 'relative', height: '200px', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               
               {/* Cover Image rendering */}
@@ -514,7 +592,7 @@ const CreateCourseScreen = () => {
                 }}>
                   NUEVO CURSO
                 </span>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', textShadow: '0 2px 4px rgba(0,0,0,0.3)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <h3 className="font-serif" style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', textShadow: '0 2px 4px rgba(0,0,0,0.3)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {titulo.trim() || 'Título del Curso'}
                 </h3>
               </div>
@@ -535,8 +613,8 @@ const CreateCourseScreen = () => {
           </div>
 
           {/* Theme preview mockup of modules list */}
-          <div className="glass-panel" style={{ padding: '20px' }}>
-            <h5 style={{ fontSize: '0.75rem', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px', fontWeight: 800 }}>
+          <div className="glass-panel" style={{ padding: '20px', borderRadius: '20px' }}>
+            <h5 className="font-serif" style={{ fontSize: '0.75rem', color: 'var(--isn-blue-dark)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px', fontWeight: 800 }}>
               Estructura de Módulos ({modulos.length})
             </h5>
             
@@ -558,10 +636,10 @@ const CreateCourseScreen = () => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      padding: '10px',
-                      borderRadius: '8px',
-                      background: '#F8FAFC',
-                      border: '1px solid #E2E8F0',
+                      padding: '10px 14px',
+                      borderRadius: '12px',
+                      background: 'rgba(15, 44, 89, 0.03)',
+                      border: 'none',
                       fontSize: '0.8rem'
                     }}
                   >

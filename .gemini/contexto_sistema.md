@@ -1,26 +1,37 @@
-# Contexto del Sistema - AlimSafe LMS
+# Contexto del Sistema - Instituto Superior del Norte LMS
 
-Este documento es la **Fuente de la Verdad** sobre el contexto de negocio, el flujo de usuario, el estado de implementación y la visión futura del LMS AlimSafe. Leerlo es obligatorio antes de cualquier cambio al proyecto.
+Este documento es la **Fuente de la Verdad** sobre el contexto de negocio, el flujo de usuario, el estado de implementación y la visión futura del LMS del Instituto Superior del Norte. Leerlo es obligatorio antes de cualquier cambio al proyecto.
 
 ---
 
 ## 1. Descripción General del Negocio
 
-**AlimSafe** es una plataforma LMS orientada a la certificación oficial en **Manipulación Higiénica de Alimentos**. El estudiante paga una matrícula, accede a contenidos formativos en línea, presenta un examen y obtiene un certificado PDF con código de verificación público.
+El **Instituto Superior del Norte** cuenta con una plataforma LMS orientada a la certificación oficial en **Manipulación Higiénica de Alimentos**. El estudiante paga una matrícula, accede a contenidos formativos en línea, presenta un examen y obtiene un certificado PDF con código de verificación público.
 
 ---
 
-## 2. Flujo de Usuario del Estudiante
+## 2. Flujos de Usuario y Gestión Administrativa
 
+### Flujo Estándar del Estudiante
 ```
-Acceso (Login) → Dashboard (mis cursos) → CourseViewer (módulos dinámicos)
-→ Exam (≥80% para aprobar) → Certificate (descarga PDF + email automático)
+Acceso (Login) → Dashboard (mis cursos) → CourseDetail (progreso y estado)
+→ CourseViewer (módulos dinámicos) → Exam (≥80% para aprobar) → Certificate (descarga PDF)
 ```
 
 1. **Matrícula Manual:** El admin crea la cuenta del estudiante y lo matricula en cursos desde el panel `/admin/dashboard`. Al crear la cuenta, el estudiante recibe un **email automático de bienvenida** con sus credenciales de acceso.
 2. **Consumo de Módulos:** El número de módulos es dinámico por curso (configurable desde el panel admin). El simulador multimedia del frontend avanza el progreso. El **100% de módulos completados** (calculado dinámicamente contra la tabla `modulos`) desbloquea el examen.
 3. **Examen Final:** Preguntas de opción múltiple almacenadas en la tabla `preguntas`. Mínimo 80% para aprobar. Calificación y validación son 100% en el backend. Cooldown de 10 minutos tras 3 intentos fallidos.
 4. **Certificado:** PDF generado por `pdfkit` con número correlativo (`AS-YYYY-####`), código único (`ALIM-XXXX-XXXX`) y URL de verificación pública (`/verify/:code`). Al aprobar, el sistema envía automáticamente un **email de felicitaciones** con el certificado PDF adjunto.
+
+### Sub-Flujo Alternativo: Certificación Inmediata (Bypass de Examen y Progreso)
+Para casos especiales o matriculas que ya cuenten con validaciones comerciales externas, el administrador puede otorgar la **Certificación Inmediata** al crear un estudiante:
+- Se omite la lectura manual de módulos y la presentación del examen.
+- El sistema inserta atómicamente el progreso al 100% para todos los módulos, crea un registro de examen aprobado (100%) y genera el diploma oficial en la tabla `certificados`.
+- Se genera el certificado PDF y se dispara el envío de correo con el diploma de manera automática.
+
+### Control de Precios y Pagos
+- **Precios Obligatorios:** Cada curso formativo tiene un precio obligatorio (`precio`) persistido en la base de datos, el cual debe ser ingresado obligatoriamente por el administrador al crear el curso.
+- **Estado de Pago:** Los estudiantes tienen un campo `pago_realizado` (0 o 1) que determina si ya pagaron el último curso matriculado. Este estado se muestra en el dashboard de administración para control financiero y habilitación de diplomas.
 
 ---
 
@@ -52,8 +63,9 @@ Acceso (Login) → Dashboard (mis cursos) → CourseViewer (módulos dinámicos)
 - **Stack:** React 19 + Vite 8.
 - **Enrutamiento:** React Router DOM (`HashRouter`). Las rutas declarativas son la fuente de verdad de la navegación.
   - `/login`, `/admin/login` — Autenticación.
-  - `/dashboard` — Vista del estudiante con cursos y progreso.
-  - `/course/:courseId` — CourseViewer con módulos.
+  - `/dashboard` — Vista del estudiante con la lista de cursos matriculados.
+  - `/course/:courseId/detail` — Vista individual del curso con progreso y estado.
+  - `/course/:courseId` — CourseViewer con módulos dinámicos.
   - `/course/:courseId/exam` — Examen final.
   - `/certificate/:courseId` — Vista del diploma.
   - `/admin/dashboard`, `/admin/create-course` — Panel administrativo.
@@ -108,4 +120,4 @@ Acceso (Login) → Dashboard (mis cursos) → CourseViewer (módulos dinámicos)
 > 1. **Matrícula Solo Manual:** No existe flujo de auto-registro comercial. Los estudiantes solo se crean desde el panel del admin.
 > 2. **Mojibake Residual:** Los correctores `decodeMojibake` en frontend y `normalizeToUtf8` en backend son parches. La causa raíz es la codificación de la conexión SQLite. Requiere configurar `pragma encoding = 'UTF-8'` y retirar los helpers progresivamente.
 > 3. **Cooldown de Examen:** Implementado (10 min / 3 fallos), pero sin feedback visual del tiempo restante en el frontend.
-> 4. **Email de estudiante hardcodeado:** `emailService.js` usa `${cedula}@alimsafe-student.co` como destinatario. Para producción se debe agregar campo `email` a la tabla `usuarios` y formulario de registro.
+> 4. **Email de estudiante hardcodeado:** `emailService.js` usa `${cedula}@institutosuperiordelnorte-student.co` como destinatario. Para producción se debe agregar campo `email` a la tabla `usuarios` y formulario de registro.

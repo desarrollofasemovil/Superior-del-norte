@@ -1,6 +1,7 @@
 const db = require('../repositories/dbRepository');
 const { normalizeToUtf8 } = require('../middleware/auth');
-const { sendWelcomeEmail } = require('../services/emailService');
+const { sendWelcomeEmail, sendCertificateEmail } = require('../services/emailService');
+const { generateCertificatePDF } = require('../services/pdfService');
 
 async function getCourses(req, res, next) {
   try {
@@ -25,10 +26,19 @@ async function getCoursesList(req, res, next) {
 }
 
 async function createCourse(req, res, next) {
-  const { titulo, descripcion, imagen_url, modulos } = req.body;
+  const { titulo, descripcion, imagen_url, modulos, precio, certificado_template } = req.body;
 
   if (!titulo || !titulo.trim()) {
     return res.status(400).json({ error: 'El título del curso es requerido.' });
+  }
+
+  if (precio === undefined || precio === null || precio === '') {
+    return res.status(400).json({ error: 'El precio del curso es requerido.' });
+  }
+
+  const parsedPrecio = parseFloat(precio);
+  if (isNaN(parsedPrecio) || parsedPrecio < 0) {
+    return res.status(400).json({ error: 'El precio del curso debe ser un número válido mayor o igual a 0.' });
   }
 
   if (!modulos || !Array.isArray(modulos) || modulos.length === 0) {
@@ -49,6 +59,8 @@ async function createCourse(req, res, next) {
       titulo: normalizeToUtf8(titulo),
       descripcion: normalizeToUtf8(descripcion || ''),
       imagen_url: imagen_url || '',
+      precio: parsedPrecio,
+      certificado_template: certificado_template || '',
       modulos: modulos.map(m => ({
         titulo_modulo: normalizeToUtf8(m.titulo_modulo),
         tipo_contenido: m.tipo_contenido,
@@ -89,7 +101,18 @@ async function getUsers(req, res, next) {
 }
 
 async function createStudent(req, res, next) {
-  const { cedula, nombre_completo, password, cursos } = req.body;
+  const { 
+    cedula, 
+    nombre_completo, 
+    password, 
+    cursos,
+    fecha_expedicion_cedula,
+    municipio_expedicion_cedula,
+    municipio_nacimiento,
+    anio_nacimiento,
+    pago_realizado,
+    certificar_inmediatamente
+  } = req.body;
 
   if (!cedula || !nombre_completo || !password) {
     return res.status(400).json({ error: 'La cédula, el nombre completo y la contraseña son requeridos.' });
@@ -112,6 +135,10 @@ async function createStudent(req, res, next) {
     return res.status(400).json({ error: 'Debe seleccionar al menos un curso para matricular al estudiante.' });
   }
 
+  if (!fecha_expedicion_cedula || !municipio_expedicion_cedula || !municipio_nacimiento || !anio_nacimiento) {
+    return res.status(400).json({ error: 'La fecha de expedición, el municipio de expedición, el municipio de nacimiento y el año de nacimiento son requeridos.' });
+  }
+
   try {
     const existing = await db.getUser(cedula);
     if (existing) {
@@ -119,14 +146,59 @@ async function createStudent(req, res, next) {
     }
 
     const cleanNombre = normalizeToUtf8(nombre_completo);
-    const newUser = await db.createUser(cedula, cleanNombre, password, 'estudiante');
+    const newUser = await db.createUser(
+      cedula, 
+      cleanNombre, 
+      password, 
+      'estudiante', 
+      null, 
+      {
+        fecha_expedicion_cedula: normalizeToUtf8(fecha_expedicion_cedula),
+        municipio_expedicion_cedula: normalizeToUtf8(municipio_expedicion_cedula),
+        municipio_nacimiento: normalizeToUtf8(municipio_nacimiento),
+        anio_nacimiento: parseInt(anio_nacimiento),
+        pago_realizado: pago_realizado ? 1 : 0
+      }
+    );
 
     for (const courseId of cursos) {
       await db.enrollUserInCourse(cedula, parseInt(courseId));
     }
 
-    // Fire-and-forget: enviar email de bienvenida con credenciales.
-    // No se usa await para no bloquear la respuesta HTTP si el servicio de email falla.
+    if (certificar_inmediatamente) {
+      // Loop over course IDs and perform bypass certification
+      for (const courseId of cursos) {
+        const parsedCourseId = parseInt(courseId);
+        const cert = await db.bypassCertify(cedula, parsedCourseId);
+        
+        // Fetch course title
+        const dbCourses = await db.getCourses();
+        const course = dbCourses.find(c => c.id === parsedCourseId);
+        const courseTitle = course ? course.titulo : 'Manipulación de Alimentos';
+        
+        // Fire-and-forget certificate email
+        sendCertificateEmail(
+          {
+            cedula,
+            nombre_completo: cleanNombre
+          },
+          {
+            nombre_completo: cleanNombre,
+            cedula: cedula,
+            fecha_emision: cert.fecha_emision,
+            codigo_verificacion: cert.codigo_verificacion,
+            calificacion_obtenida: 100,
+            numero_certificado: cert.numero_certificado,
+            curso_titulo: courseTitle
+          },
+          courseTitle
+        ).catch((emailErr) => {
+          console.error('[adminController] Error al enviar email de certificado de bypass:', emailErr.message);
+        });
+      }
+    }
+
+    // Always send welcome email with credentials as well
     sendWelcomeEmail({
       cedula,
       nombre_completo: cleanNombre,
@@ -171,6 +243,213 @@ async function updateStudentCourses(req, res, next) {
   }
 }
 
+async function downloadStudentCertificate(req, res, next) {
+  try {
+    const { cedula } = req.query;
+    const courseId = parseInt(req.query.courseId);
+
+    if (!cedula || !courseId) {
+      return res.status(400).json({ error: 'La cédula y el id del curso son requeridos.' });
+    }
+
+    const student = await db.getUser(cedula);
+    if (!student) {
+      return res.status(404).json({ error: 'El estudiante no existe.' });
+    }
+
+    const cert = await db.getCertificateByCedula(cedula, courseId);
+    if (!cert) {
+      return res.status(404).json({ error: 'El estudiante no cuenta con un certificado para este curso.' });
+    }
+
+    const courses = await db.getCourses();
+    const course = courses.find(c => c.id === courseId);
+    const courseTitle = course ? course.titulo : 'Manipulación de Alimentos';
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=Certificado_${courseTitle.replace(/\s+/g, '_')}_${cedula}.pdf`);
+
+    const pdfData = {
+      nombre_completo: normalizeToUtf8(student.nombre_completo),
+      cedula: cedula,
+      fecha_emision: cert.fecha_emision,
+      codigo_verificacion: cert.codigo_verificacion,
+      calificacion_obtenida: cert.calificacion_obtenida || 100,
+      numero_certificado: cert.numero_certificado || 'AS-2026-0001',
+      curso_titulo: courseTitle
+    };
+
+    generateCertificatePDF(res, pdfData);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateCourse(req, res, next) {
+  const id = parseInt(req.params.id);
+  const { titulo, descripcion, precio, certificado_template } = req.body;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'El ID del curso debe ser un número válido.' });
+  }
+
+  if (!titulo || !titulo.trim()) {
+    return res.status(400).json({ error: 'El título del curso es requerido.' });
+  }
+
+  if (precio === undefined || precio === null || precio === '') {
+    return res.status(400).json({ error: 'El precio del curso es requerido.' });
+  }
+
+  const parsedPrecio = parseFloat(precio);
+  if (isNaN(parsedPrecio) || parsedPrecio < 0) {
+    return res.status(400).json({ error: 'El precio del curso debe ser un número válido mayor o igual a 0.' });
+  }
+
+  try {
+    const courses = await db.getCourses();
+    const existing = courses.find(c => c.id === id);
+    if (!existing) {
+      return res.status(404).json({ error: 'El curso no existe.' });
+    }
+
+    const updated = await db.updateCourse(id, {
+      titulo: normalizeToUtf8(titulo),
+      descripcion: normalizeToUtf8(descripcion || ''),
+      precio: parsedPrecio,
+      certificado_template: certificado_template || ''
+    });
+
+    res.json({
+      message: 'Curso actualizado con éxito.',
+      curso: updated
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateCourseModule(req, res, next) {
+  const courseId = parseInt(req.params.courseId);
+  const moduleId = parseInt(req.params.moduleId);
+  const { titulo_modulo, tipo_contenido, data_contenido } = req.body;
+
+  if (isNaN(courseId) || isNaN(moduleId)) {
+    return res.status(400).json({ error: 'El ID del curso y del módulo deben ser números válidos.' });
+  }
+
+  if (!titulo_modulo || !titulo_modulo.trim()) {
+    return res.status(400).json({ error: 'El título del módulo es requerido.' });
+  }
+
+  if (!tipo_contenido || !tipo_contenido.trim()) {
+    return res.status(400).json({ error: 'El tipo de contenido es requerido.' });
+  }
+
+  if (data_contenido === undefined || data_contenido === null) {
+    return res.status(400).json({ error: 'El contenido del módulo es requerido.' });
+  }
+
+  try {
+    const updated = await db.updateCourseModule(courseId, moduleId, {
+      titulo_modulo: normalizeToUtf8(titulo_modulo),
+      tipo_contenido: normalizeToUtf8(tipo_contenido),
+      data_contenido: normalizeToUtf8(data_contenido)
+    });
+
+    res.json({
+      message: 'Módulo actualizado con éxito.',
+      modulo: updated
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateStudentProfile(req, res, next) {
+  const { cedula } = req.params;
+  const {
+    nombre_completo,
+    fecha_expedicion_cedula,
+    municipio_expedicion_cedula,
+    municipio_nacimiento,
+    anio_nacimiento,
+    pago_realizado
+  } = req.body;
+
+  if (!cedula) {
+    return res.status(400).json({ error: 'La cédula del estudiante es requerida.' });
+  }
+
+  if (!nombre_completo || !nombre_completo.trim()) {
+    return res.status(400).json({ error: 'El nombre completo es requerido.' });
+  }
+
+  const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
+  if (!nameRegex.test(nombre_completo)) {
+    return res.status(400).json({ error: 'El nombre debe contener únicamente letras y espacios.' });
+  }
+
+  if (!fecha_expedicion_cedula || !fecha_expedicion_cedula.trim()) {
+    return res.status(400).json({ error: 'La fecha de expedición de la cédula es requerida.' });
+  }
+
+  if (!municipio_expedicion_cedula || !municipio_expedicion_cedula.trim()) {
+    return res.status(400).json({ error: 'El municipio de expedición de la cédula es requerido.' });
+  }
+
+  if (!municipio_nacimiento || !municipio_nacimiento.trim()) {
+    return res.status(400).json({ error: 'El municipio de nacimiento es requerido.' });
+  }
+
+  if (anio_nacimiento === undefined || anio_nacimiento === null || anio_nacimiento === '') {
+    return res.status(400).json({ error: 'El año de nacimiento es requerido.' });
+  }
+
+  const parsedAnio = parseInt(anio_nacimiento);
+  if (isNaN(parsedAnio) || parsedAnio < 1900 || parsedAnio > new Date().getFullYear()) {
+    return res.status(400).json({ error: 'El año de nacimiento debe ser un año válido.' });
+  }
+
+  try {
+    const existing = await db.getUser(cedula);
+    if (!existing || existing.rol !== 'estudiante') {
+      return res.status(404).json({ error: 'El estudiante no existe.' });
+    }
+
+    const updated = await db.updateStudentProfile(cedula, {
+      nombre_completo: normalizeToUtf8(nombre_completo),
+      fecha_expedicion_cedula: normalizeToUtf8(fecha_expedicion_cedula),
+      municipio_expedicion_cedula: normalizeToUtf8(municipio_expedicion_cedula),
+      municipio_nacimiento: normalizeToUtf8(municipio_nacimiento),
+      anio_nacimiento: parsedAnio,
+      pago_realizado: pago_realizado ? 1 : 0
+    });
+
+    res.json({
+      message: 'Perfil de estudiante actualizado con éxito.',
+      user: updated
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getFinancialMetrics(req, res, next) {
+  try {
+    const data = await db.getFinancialMetrics();
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: err.message
+      }
+    });
+  }
+}
+
 module.exports = {
   getCourses,
   getCoursesList,
@@ -178,5 +457,10 @@ module.exports = {
   getMetrics,
   getUsers,
   createStudent,
-  updateStudentCourses
+  updateStudentCourses,
+  downloadStudentCertificate,
+  updateCourse,
+  updateCourseModule,
+  updateStudentProfile,
+  getFinancialMetrics
 };

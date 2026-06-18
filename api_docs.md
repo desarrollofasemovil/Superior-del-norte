@@ -1,12 +1,25 @@
-# Documentación de API - Sistema AlimSafe CMS
+# Documentación de API - Sistema Instituto Superior del Norte CMS
 
-Esta documentación describe el diseño de base de datos y la especificación de los endpoints del backend para el sistema dinámico de gestión de contenidos (CMS) multi-módulo de AlimSafe.
+Esta documentación describe el diseño de base de datos y la especificación de los endpoints del backend para el sistema dinámico de gestión de contenidos (CMS) multi-módulo de Instituto Superior del Norte.
 
 ---
 
 ## 💾 1. Esquema de Base de Datos (Relacional)
 
 El almacenamiento es compatible con SQLite (principal) y fallback de almacenamiento JSON. Soporta múltiples cursos dinámicos e independientes.
+
+### Tabla `usuarios`
+Almacena las cuentas de usuarios en el sistema (estudiantes y administradores) con su respectiva información personal y estado de pago.
+- `cedula`: `TEXT PRIMARY KEY` (Identificación nacional)
+- `nombre_completo`: `TEXT`
+- `password_hash`: `TEXT`
+- `rol`: `TEXT DEFAULT 'estudiante'` ('estudiante' o 'administrador')
+- `fecha_registro`: `TEXT` (Fecha de registro del usuario, formato `YYYY-MM-DD`)
+- `fecha_expedicion_cedula`: `TEXT`
+- `municipio_expedicion_cedula`: `TEXT`
+- `municipio_nacimiento`: `TEXT`
+- `anio_nacimiento`: `INTEGER`
+- `pago_realizado`: `INTEGER DEFAULT 0` (Estado de pago: `1` para pagado, `0` para pendiente)
 
 ### Tabla `cursos`
 Almacena la información principal de cada curso formativo.
@@ -15,6 +28,7 @@ Almacena la información principal de cada curso formativo.
 - `descripcion`: `TEXT` (Resumen curricular)
 - `imagen_url`: `TEXT` (URL de imagen de portada)
 - `creado_en`: `TEXT` (Fecha de registro de curso, formato `YYYY-MM-DD`)
+- `precio`: `REAL NOT NULL` (Precio del curso, obligatorio, valor por defecto de 100000 en semilla de desarrollo)
 
 ### Tabla `modulos`
 Almacena los módulos formativos asociados a un curso específico mediante una relación de clave foránea. **El número de módulos es dinámico por curso** — el progreso del 100% se calcula comparando registros completados contra el total de módulos del curso.
@@ -69,6 +83,7 @@ Crea de manera atómica un curso completo. Si la inserción del curso o de algú
   "titulo": "Buenas Prácticas de Higiene para Lácteos",
   "descripcion": "Curso intensivo de inocuidad en el procesamiento y empaque de productos lácteos.",
   "imagen_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150",
+  "precio": 120000,
   "modulos": [
     {
       "titulo_modulo": "Introducción e Higiene Corporal",
@@ -171,3 +186,116 @@ const handleImageChange = (val) => {
   )}
 </div>
 ```
+
+### D. Gestión de Estudiantes y Certificación Directa (Solo Administradores)
+
+#### 1. Crear Estudiante con Metadatos
+Permite matricular a un estudiante, registrando sus datos de identificación, procedencia y estado de pago de manera obligatoria. Cuenta con una opción de bypass para la emisión inmediata de certificación.
+
+- **Endpoint:** `POST /api/admin/users/create`
+- **Request Body:**
+```json
+{
+  "cedula": "987654321",
+  "nombre_completo": "María García",
+  "password": "provisional123",
+  "cursos": [1],
+  "fecha_expedicion_cedula": "2018-09-24",
+  "municipio_expedicion_cedula": "Bucaramanga",
+  "municipio_nacimiento": "Giron",
+  "anio_nacimiento": 1996,
+  "pago_realizado": 1,
+  "certificar_inmediatamente": true
+}
+```
+- **Response (201 Created):**
+```json
+{
+  "message": "Estudiante creado y matriculado con éxito.",
+  "user": {
+    "cedula": "987654321",
+    "nombre_completo": "María García",
+    "rol": "estudiante",
+    "fecha_registro": "2026-06-17",
+    "fecha_expedicion_cedula": "2018-09-24",
+    "municipio_expedicion_cedula": "Bucaramanga",
+    "municipio_nacimiento": "Giron",
+    "anio_nacimiento": 1996,
+    "pago_realizado": 1
+  }
+}
+```
+- **Lógica de Certificación Inmediata:** Si `certificar_inmediatamente` es `true`, el servidor de manera transaccional y atómica:
+  1. Registra 100% de progreso para todos los módulos asociados al curso en la tabla `progreso`.
+  2. Registra un intento aprobado (calificación 100%) en la tabla `examenes`.
+  3. Genera un registro oficial de diploma en la tabla `certificados`.
+  4. Envía de forma asíncrona un correo electrónico de felicitación con el PDF adjunto.
+
+#### 2. Descargar Certificado de Estudiante por Administrador
+Permite a los administradores descargar el diploma de cualquier estudiante proporcionando su número de cédula y el ID del curso de interés.
+
+- **Endpoint:** `GET /api/admin/certificate/download?cedula=X&courseId=Y`
+- **Response (200 OK):**
+  - Content-Type: `application/pdf`
+  - Flujo binario (PDF)
+
+#### 3. Actualizar Curso (Solo Administradores)
+Permite modificar el título, la descripción y el precio obligatorio de un curso existente.
+
+- **Endpoint:** `PUT /api/admin/courses/:id`
+- **Request Body:**
+```json
+{
+  "titulo": "Manipulación de Alimentos Premium",
+  "descripcion": "Curso actualizado con regulaciones 2026...",
+  "precio": 130000
+}
+```
+- **Response (200 OK):**
+```json
+{
+  "message": "Curso actualizado con éxito."
+}
+```
+
+#### 4. Actualizar Módulo de Curso (Solo Administradores)
+Permite modificar el título, tipo de contenido y el bloque interactive de datos de un módulo de curso formativo.
+
+- **Endpoint:** `PUT /api/admin/courses/:courseId/modules/:moduleId`
+- **Request Body:**
+```json
+{
+  "titulo_modulo": "Módulo 1: Inocuidad y BPM (Edición 2026)",
+  "tipo_contenido": "Texto",
+  "data_contenido": "{\"url\":\"https://example.com/audio.mp3\",\"text\":\"## Nuevo Contenido BPM\"}"
+}
+```
+- **Response (200 OK):**
+```json
+{
+  "message": "Módulo de curso actualizado con éxito."
+}
+```
+
+#### 5. Actualizar Perfil de Estudiante (Solo Administradores)
+Permite modificar la información de perfil tradicional y extendida de un estudiante, así como su estado de pago.
+
+- **Endpoint:** `PUT /api/admin/users/:cedula`
+- **Request Body:**
+```json
+{
+  "nombre_completo": "Juan Pérez Modificado",
+  "fecha_expedicion_cedula": "2015-05-12",
+  "municipio_expedicion_cedula": "Medellín",
+  "municipio_nacimiento": "Itagüí",
+  "anio_nacimiento": 1993,
+  "pago_realizado": 1
+}
+```
+- **Response (200 OK):**
+```json
+{
+  "message": "Perfil del estudiante actualizado con éxito."
+}
+```
+

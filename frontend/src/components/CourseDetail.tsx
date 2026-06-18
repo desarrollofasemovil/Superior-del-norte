@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { BookOpen, CheckCircle, Circle, Award, FileText, Clock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 
-const decodeMojibake = (str) => {
+const decodeMojibake = (str: string | undefined): string | undefined => {
   if (!str) return str;
   try {
     const bytes = new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
@@ -13,19 +13,19 @@ const decodeMojibake = (str) => {
     }
   } catch (e) {}
 
-  const map = {
-    'Ã¡': 'á', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 'Ãº': 'ú',
-    'Ã±': 'ñ', 'Ã‘': 'Ñ', 'Ã ': 'Á', 'Ã‰': 'É', 'Ã ': 'Í',
-    'Ã“': 'Ó', 'Ãš': 'Ú', 'Ã¼': 'ü', 'Ãœ': 'Ü'
-  };
+  const mapping = [
+    ['Ã¡', 'á'], ['Ã©', 'é'], ['Ã­', 'í'], ['Ã³', 'ó'], ['Ãº', 'ú'],
+    ['Ã±', 'ñ'], ['Ã‘', 'Ñ'], ['Ã ', 'Á'], ['Ã‰', 'É'], ['Ã ', 'Í'],
+    ['Ã“', 'Ó'], ['Ãš', 'Ú'], ['Ã¼', 'ü'], ['Ãœ', 'Ü']
+  ];
   let result = str;
-  for (const [mojibake, correct] of Object.entries(map)) {
+  for (const [mojibake, correct] of mapping) {
     result = result.replaceAll(mojibake, correct);
   }
   return result;
 };
 
-const Dashboard = () => {
+const CourseDetail = () => {
   const {
     user,
     progress,
@@ -34,39 +34,29 @@ const Dashboard = () => {
     examStatus,
     downloadCertificate,
     studentCourses,
-    activeCourseId,
-    setActiveCourseId
+    activeCourseId
   } = useContext(AppContext);
   const navigate = useNavigate();
 
   const totalModules = modules.length;
-  const completedCount = progress.modulos_completados.length;
+  const completedCount = progress?.modulos_completados?.length || 0;
   const isFinishedAllModules = completedCount === totalModules && totalModules > 0;
   const hasApprovedExam = examStatus && examStatus.aprobado;
 
-  // Active course details if any
-  const activeCourse = studentCourses.find(c => c.id === activeCourseId) || studentCourses[0];
+  const displayCourse = studentCourses.find(c => c.id === activeCourseId);
 
-  const handleCourseAction = (courseId) => {
-    setActiveCourseId(courseId);
-
-    // If it's the currently active course and we already loaded it
-    if (courseId === activeCourseId) {
-      if (isFinishedAllModules) {
-        if (hasApprovedExam) {
-          navigate(`/certificate/${courseId}`);
-        } else {
-          navigate(`/course/${courseId}/exam`);
-        }
+  const handleCourseAction = () => {
+    if (isFinishedAllModules) {
+      if (hasApprovedExam) {
+        navigate(`/certificate/${activeCourseId}`);
       } else {
-        const firstUncompleted = modules.find(m => !progress.modulos_completados.includes(m.id));
-        const targetId = firstUncompleted ? firstUncompleted.id : (modules[0]?.id || null);
-        setActiveModuleId(targetId);
-        navigate(`/course/${courseId}`);
+        navigate(`/course/${activeCourseId}/exam`);
       }
     } else {
-      // Just go to course view and let it load
-      navigate(`/course/${courseId}`);
+      const firstUncompleted = modules.find(m => !progress?.modulos_completados?.includes(m.id));
+      const targetId = firstUncompleted ? firstUncompleted.id : (modules[0]?.id || null);
+      setActiveModuleId(targetId);
+      navigate(`/course/${activeCourseId}`);
     }
   };
 
@@ -75,146 +65,43 @@ const Dashboard = () => {
     navigate(`/course/${activeCourseId}`);
   };
 
-  // 1. Loading state if no courses loaded yet
-  if (!studentCourses || studentCourses.length === 0) {
+  if (!displayCourse) {
     return (
       <div style={{ maxWidth: '600px', margin: '80px auto', textAlign: 'center', padding: '32px' }} className="glass-panel">
         <BookOpen size={48} color="var(--text-muted)" style={{ marginBottom: '16px' }} />
-        <h2 style={{ fontSize: '1.5rem', marginBottom: '8px' }}>Cargando tus cursos...</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>
-          Si es la primera vez que ingresas, espera a que el administrador te matricule en un curso formativo.
-        </p>
+        <h2 style={{ fontSize: '1.5rem', marginBottom: '8px' }}>Cargando detalles del curso...</h2>
       </div>
     );
   }
-
-  // 2. Multiple Courses View
-  if (studentCourses.length > 1 && !activeCourseId) {
-    return (
-      <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 16px' }}>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
-            ¡Bienvenido, {decodeMojibake(user?.nombre_completo)}!
-          </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
-            Selecciona uno de tus cursos matriculados para continuar tu formación.
-          </p>
-        </div>
-
-        {/* Courses Cards Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '24px'
-        }}>
-          {studentCourses.map(course => (
-            <div key={course.id} className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
-              
-              {/* Card Header Image */}
-              <div style={{ position: 'relative', height: '180px', overflow: 'hidden', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)' }}>
-                {course.imagen_url && (
-                  <img
-                    src={course.imagen_url}
-                    alt={course.titulo}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                )}
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(to top, rgba(15, 44, 89, 0.85) 0%, rgba(15, 44, 89, 0.2) 60%, transparent 100%)'
-                }} />
-                
-                <span style={{
-                  position: 'absolute',
-                  top: '16px',
-                  right: '16px',
-                  background: course.progreso_porcentaje === 100 ? 'var(--accent-emerald)' : 'var(--accent-gold)',
-                  color: '#FFFFFF',
-                  padding: '4px 10px',
-                  borderRadius: '9999px',
-                  fontSize: '0.7rem',
-                  fontWeight: 800,
-                  textTransform: 'uppercase'
-                }}>
-                  {course.progreso_porcentaje === 100 ? 'Finalizado' : `${course.progreso_porcentaje}%`}
-                </span>
-              </div>
-
-              {/* Card Body */}
-              <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px' }}>
-                  {course.titulo}
-                </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: '1.5', flex: 1, marginBottom: '20px' }}>
-                  {course.descripcion || 'Sin descripción disponible.'}
-                </p>
-
-                {/* Progress bar inside card */}
-                <div style={{ marginBottom: '20px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '6px' }}>
-                    <span>Progreso</span>
-                    <span>{course.progreso_porcentaje}%</span>
-                  </div>
-                  <div className="progress-container" style={{ height: '6px' }}>
-                    <div className="progress-bar" style={{ width: `${course.progreso_porcentaje}%` }} />
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => {
-                    setActiveCourseId(course.id);
-                    navigate(`/course/${course.id}`);
-                  }}
-                  className="btn btn-primary"
-                  style={{ width: '100%', height: '44px', fontSize: '0.9rem' }}
-                >
-                  <span>Ingresar al Curso</span>
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // 3. Single Course View (either enrolled in 1, or has active course selected)
-  const displayCourse = activeCourse || studentCourses[0];
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 16px' }}>
       
-      {/* Return button if enrolled in multiple courses */}
-      {studentCourses.length > 1 && (
-        <div style={{ marginBottom: '20px' }}>
-          <button
-            onClick={() => setActiveCourseId(null)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-muted)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              fontWeight: 700
-            }}
-          >
-            ← Volver a todos mis cursos
-          </button>
-        </div>
-      )}
+      <div style={{ marginBottom: '20px' }}>
+        <button
+          onClick={() => navigate('/dashboard')}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'var(--text-muted)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '0.85rem',
+            cursor: 'pointer',
+            fontWeight: 700
+          }}
+        >
+          ← Volver a todos mis cursos
+        </button>
+      </div>
 
       {/* Welcome Header */}
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '2.25rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: '6px' }}>
+        <h1 className="font-serif" style={{ fontSize: '2.25rem', color: 'var(--isn-blue)', fontWeight: 900, marginBottom: '6px' }}>
           ¡Bienvenido, {decodeMojibake(user?.nombre_completo)}!
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
+        <p style={{ color: 'var(--isn-charcoal)', fontSize: '1.05rem' }}>
           {isFinishedAllModules 
             ? 'Has completado todos los contenidos formativos. Continúa con tu evaluación.'
             : 'Continúa tu aprendizaje donde lo dejaste.'}
@@ -222,16 +109,12 @@ const Dashboard = () => {
       </div>
 
       {/* Main Grid Layout */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gap: '32px',
-      }} className="course-grid">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '32px' }} className="course-grid">
         
         {/* Left Side: Course Progress & Modules list */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
-          <div className="glass-panel" style={{ overflow: 'hidden' }}>
+          <div className="glass-panel" style={{ overflow: 'hidden', borderRadius: '24px', backgroundColor: '#FFFFFF' }}>
             {/* Banner Image */}
             <div style={{ position: 'relative', height: '240px', overflow: 'hidden', background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)' }}>
               {displayCourse.imagen_url && (
@@ -274,11 +157,11 @@ const Dashboard = () => {
               <div style={{ marginBottom: '24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                   <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>Progreso de la formación</span>
-                  <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent-emerald)' }}>{progress.progreso_porcentaje}%</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent-emerald)' }}>{progress?.progreso_porcentaje || 0}%</span>
                 </div>
                 
                 <div className="progress-container">
-                  <div className="progress-bar" style={{ width: `${progress.progreso_porcentaje}%` }} />
+                  <div className="progress-bar" style={{ width: `${progress?.progreso_porcentaje || 0}%` }} />
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
@@ -296,7 +179,7 @@ const Dashboard = () => {
               {/* Action Button */}
               <button 
                 className="btn btn-primary" 
-                onClick={() => handleCourseAction(displayCourse.id)} 
+                onClick={handleCourseAction} 
                 style={{ width: '100%', height: '52px', fontSize: '1rem' }}
               >
                 {isFinishedAllModules ? (
@@ -314,7 +197,7 @@ const Dashboard = () => {
                 ) : (
                   <>
                     <BookOpen size={20} />
-                    <span>{progress.progreso_porcentaje > 0 ? 'Continuar Curso' : 'Iniciar Aprendizaje'}</span>
+                    <span>{(progress?.progreso_porcentaje || 0) > 0 ? 'Continuar Curso' : 'Iniciar Aprendizaje'}</span>
                   </>
                 )}
               </button>
@@ -322,14 +205,14 @@ const Dashboard = () => {
           </div>
 
           {/* Modules List */}
-          <div className="glass-panel" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '20px', color: 'var(--text-primary)' }}>
+          <div className="glass-panel" style={{ padding: '28px', backgroundColor: '#FFFFFF' }}>
+            <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '20px', color: 'var(--isn-blue)' }}>
               Temario del Curso ({totalModules} Módulos obligatorios)
             </h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {modules.map((m, index) => {
-                const isCompleted = progress.modulos_completados.includes(m.id);
+                const isCompleted = progress?.modulos_completados?.includes(m.id);
                 return (
                   <div
                     key={m.id}
@@ -340,10 +223,10 @@ const Dashboard = () => {
                       justifyContent: 'space-between',
                       padding: '16px',
                       borderRadius: '12px',
-                      background: isCompleted ? '#FAFAFA' : '#FFFFFF',
-                      border: isCompleted ? '1px solid #E2E8F0' : '1px solid #CBD5E1',
+                      background: isCompleted ? 'rgba(15, 44, 89, 0.03)' : '#FFFFFF',
+                      border: '1px solid rgba(15, 44, 89, 0.06)',
                       cursor: 'pointer',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.01)'
+                      boxShadow: '0 2px 8px rgba(15, 44, 89, 0.02)'
                     }}
                     className="module-item-hover"
                   >
@@ -394,7 +277,7 @@ const Dashboard = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Status Widget */}
-          <div className="glass-panel" style={{ padding: '24px' }}>
+          <div className="glass-panel" style={{ padding: '24px', backgroundColor: '#FFFFFF' }}>
             <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
               <div style={{
                 width: '44px',
@@ -414,7 +297,7 @@ const Dashboard = () => {
               </div>
               
               <div style={{ flex: 1 }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '6px' }}>
+                <h3 className="font-serif" style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--isn-blue)', marginBottom: '6px' }}>
                   {hasApprovedExam ? 'Formación Finalizada' : 'Próximo Paso Requerido'}
                 </h3>
                 
@@ -423,7 +306,7 @@ const Dashboard = () => {
                     <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
                       Has aprobado exitosamente el examen final con una calificación del {examStatus.score}%.
                     </p>
-                    <div style={{ background: '#4E9F3D0C', border: '1px solid #4E9F3D30', padding: '12px', borderRadius: '10px' }}>
+                    <div style={{ background: 'rgba(15, 44, 89, 0.04)', border: '1px solid rgba(15, 44, 89, 0.1)', padding: '12px', borderRadius: '10px' }}>
                       <p style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-emerald)' }}>
                         Certificado Emitido
                       </p>
@@ -471,10 +354,10 @@ const Dashboard = () => {
 
           {/* Certificate Card */}
           <div className="glass-panel" style={{
-            background: 'linear-gradient(135deg, #0F2C59 0%, #008DDA 100%)',
+            background: 'linear-gradient(135deg, var(--isn-blue) 0%, var(--isn-blue-dark) 100%)',
             color: '#FFFFFF',
             padding: '28px',
-            border: 'none',
+            borderRadius: '24px',
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -490,7 +373,7 @@ const Dashboard = () => {
             </div>
 
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '8px' }}>
+              <h3 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '8px' }}>
                 Certificación Oficial
               </h3>
               <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', lineHeight: '1.5', marginBottom: '20px' }}>
@@ -513,14 +396,14 @@ const Dashboard = () => {
                   <button
                     onClick={() => navigate(`/certificate/${activeCourseId}`)}
                     className="btn"
-                    style={{ background: '#FFFFFF', color: 'var(--text-primary)', flex: 1, padding: '12px' }}
+                    style={{ background: '#FFFFFF', color: 'var(--text-primary)', flex: 1, padding: '12px', borderRadius: '9999px' }}
                   >
                     Ver Diploma
                   </button>
                   <button 
                     onClick={downloadCertificate}
                     className="btn" 
-                    style={{ background: 'var(--accent-emerald)', color: '#FFFFFF', flex: 1, padding: '12px' }}
+                    style={{ background: 'var(--accent-emerald)', color: '#FFFFFF', flex: 1, padding: '12px', borderRadius: '9999px' }}
                   >
                     Descargar PDF
                   </button>
@@ -548,4 +431,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default CourseDetail;

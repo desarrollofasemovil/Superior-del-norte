@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import logoNormal from '../assets/logoNormal.jpeg';
+import logoNorte from '../assets/logo_instituto_norte.png';
 import { ShieldCheck, ShieldAlert, ArrowLeft } from 'lucide-react';
 
 const AdminLogin = () => {
@@ -39,8 +39,16 @@ const AdminLogin = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '16px' }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', padding: '32px', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '16px', backgroundColor: 'var(--isn-bg-light)' }}>
+      <div className="glass-panel" style={{
+        width: '100%',
+        maxWidth: '420px',
+        padding: '32px',
+        position: 'relative',
+        overflow: 'hidden',
+        borderRadius: '24px',
+        backgroundColor: '#FFFFFF'
+      }}>
         
         {/* Top Decorative Blue Accent Bar (Deep Blue for Admin panel feel) */}
         <div style={{
@@ -48,22 +56,22 @@ const AdminLogin = () => {
           top: 0,
           left: 0,
           right: 0,
-          height: '6px',
-          background: 'var(--text-primary)'
+          height: '3px',
+          background: 'var(--isn-blue-dark)'
         }} />
 
         <div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
             <img 
-              src={logoNormal} 
-              alt="AlimSafe" 
-              style={{ width: '160px', height: 'auto', marginBottom: '16px', borderRadius: '12px' }} 
+              src={logoNorte} 
+              alt="Instituto Superior del Norte" 
+              style={{ width: '180px', height: 'auto', marginBottom: '16px' }} 
             />
-            <p style={{ color: 'var(--text-primary)', fontSize: '1rem', textAlign: 'center', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Acceso Administrativo
+            <p className="font-serif" style={{ color: 'var(--isn-blue-dark)', fontSize: '1.1rem', textAlign: 'center', fontWeight: 800 }}>
+              Instituto Superior del Norte
             </p>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '2px' }}>
-              Gestión de Estudiantes y Certificados
+            <p style={{ color: 'var(--isn-gold)', fontSize: '0.8rem', textAlign: 'center', marginTop: '4px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Acceso Administrativo
             </p>
           </div>
 
@@ -71,7 +79,7 @@ const AdminLogin = () => {
             <div style={{
               background: 'rgba(239, 68, 68, 0.06)',
               border: '1px solid rgba(239, 68, 68, 0.2)',
-              borderRadius: '8px',
+              borderRadius: '12px',
               padding: '12px',
               marginBottom: '20px',
               display: 'flex',
@@ -87,7 +95,7 @@ const AdminLogin = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="input-group">
-              <label className="input-label" htmlFor="admin-cedula">Cédula del Administrador</label>
+              <label className="input-label" htmlFor="admin-cedula" style={{ color: 'var(--isn-blue-dark)', fontWeight: 700 }}>Cédula del Administrador</label>
               <input
                 className="input-field"
                 type="text"
@@ -100,7 +108,7 @@ const AdminLogin = () => {
             </div>
 
             <div className="input-group" style={{ marginBottom: '28px' }}>
-              <label className="input-label" htmlFor="admin-password">Contraseña</label>
+              <label className="input-label" htmlFor="admin-password" style={{ color: 'var(--isn-blue-dark)', fontWeight: 700 }}>Contraseña</label>
               <input
                 className="input-field"
                 type="password"
@@ -113,18 +121,24 @@ const AdminLogin = () => {
             </div>
 
             <button
-              className="btn"
+              className="btn btn-primary"
               type="submit"
-              style={{ width: '100%', padding: '14px', background: 'var(--text-primary)', color: '#FFFFFF' }}
+              style={{
+                width: '100%',
+                padding: '14px',
+                background: 'var(--isn-blue-dark)',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
               disabled={loading}
             >
               {loading ? (
                 <span>Iniciando sesión...</span>
               ) : (
-                <>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                   <ShieldCheck size={18} />
                   <span>Ingresar al Panel</span>
-                </>
+                </div>
               )}
             </button>
           </form>
@@ -136,13 +150,14 @@ const AdminLogin = () => {
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--text-secondary)',
+                color: 'var(--isn-blue)',
                 fontSize: '0.85rem',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                fontWeight: 600
+                fontWeight: 700,
+                textDecoration: 'underline'
               }}
             >
               <ArrowLeft size={16} />
@@ -154,16 +169,15 @@ const AdminLogin = () => {
           <div style={{
             marginTop: '24px',
             padding: '14px',
-            borderRadius: '12px',
-            background: '#F8F9FA',
-            border: '1px solid #E2E8F0',
+            borderRadius: '16px',
+            background: 'var(--isn-bg-light)',
             fontSize: '0.75rem',
-            color: 'var(--text-secondary)',
+            color: 'var(--isn-charcoal)',
             textAlign: 'center'
           }}>
-            <p style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>🔑 Credenciales de Administrador</p>
-            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--text-primary)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>999999999</code></p>
-            <p>Contraseña: <code style={{ color: 'var(--text-primary)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>adminpassword</code></p>
+            <p style={{ fontWeight: 700, color: 'var(--isn-blue-dark)', marginBottom: '6px' }}>🔑 Credenciales de Administrador</p>
+            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--isn-blue-dark)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>999999999</code></p>
+            <p>Contraseña: <code style={{ color: 'var(--isn-blue-dark)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>adminpassword</code></p>
           </div>
 
         </div>

@@ -1,6 +1,6 @@
-# API Contract - AlimSafe LMS
+# API Contract - Instituto Superior del Norte LMS
 
-This contract defines the interaction between the Frontend and Backend for the AlimSafe LMS course platform.
+This contract defines the interaction between the Frontend and Backend for the Instituto Superior del Norte LMS course platform.
 
 ---
 
@@ -211,12 +211,12 @@ Allows anyone to verify the authenticity of a certificate using its verification
 
 ---
 
-## 👤 Student Management (Admin Only)
+## 👤 Student Management & Course Creation (Admin Only)
 
 All `/api/admin/*` endpoints require `Authorization: Bearer <token>` with `rol: administrador`.
 
 ### 10. Create Student
-Creates a student account, enrolls them in selected courses, and **automatically sends a welcome email** with their access credentials (cédula and provisional password).
+Creates a student account, records their metadata, registers their payment status, assigns them to courses, and optionally issues immediate certification (bypass flow).
 
 - **Endpoint:** `POST /api/admin/users/create`
 - **Request Body:**
@@ -225,7 +225,13 @@ Creates a student account, enrolls them in selected courses, and **automatically
     "cedula": "987654321",
     "nombre_completo": "María García",
     "password": "pass123",
-    "cursos": [1, 2]
+    "cursos": [1],
+    "fecha_expedicion_cedula": "2018-09-24",
+    "municipio_expedicion_cedula": "Bucaramanga",
+    "municipio_nacimiento": "Giron",
+    "anio_nacimiento": 1996,
+    "pago_realizado": 1,
+    "certificar_inmediatamente": true
   }
   ```
 - **Success Response (201 Created):**
@@ -236,8 +242,118 @@ Creates a student account, enrolls them in selected courses, and **automatically
       "cedula": "987654321",
       "nombre_completo": "María García",
       "rol": "estudiante",
-      "fecha_registro": "2026-06-12"
+      "fecha_registro": "2026-06-17",
+      "fecha_expedicion_cedula": "2018-09-24",
+      "municipio_expedicion_cedula": "Bucaramanga",
+      "municipio_nacimiento": "Giron",
+      "anio_nacimiento": 1996,
+      "pago_realizado": 1
     }
   }
   ```
-- **Side Effect:** The backend asynchronously sends a welcome email with the student's credentials to their registered email address.
+- **Bypass flow side effect:** If `certificar_inmediatamente` is `true`, it automatically creates progress at 100%, records an approved exam attempt, generates a certificate, and triggers a congratulations email with the PDF attachment without requiring the student to take the exam.
+
+### 11. Create Course formativo
+Creates a new course along with its modules. A course requires a mandatory price.
+
+- **Endpoint:** `POST /api/admin/courses`
+- **Request Body:**
+  ```json
+  {
+    "titulo": "Buenas Prácticas de Higiene para Lácteos",
+    "descripcion": "Curso intensivo de inocuidad...",
+    "imagen_url": "https://images.unsplash.com/photo-...",
+    "precio": 120000,
+    "modulos": [
+      {
+        "titulo_modulo": "Introducción",
+        "tipo_contenido": "Texto",
+        "data_contenido": "Contenido del módulo..."
+      }
+    ]
+  }
+  ```
+- **Success Response (201 Created):**
+  ```json
+  {
+    "message": "Curso creado con éxito junto con sus módulos.",
+    "curso": {
+      "id": 2,
+      "titulo": "Buenas Prácticas de Higiene para Lácteos",
+      "descripcion": "Curso intensivo de inocuidad...",
+      "imagen_url": "https://images.unsplash.com/photo-...",
+      "precio": 120000,
+      "creado_en": "2026-06-17"
+    }
+  }
+  ```
+
+### 12. Download Student Certificate
+Allows the administrator to directly download the PDF certificate of any student.
+
+- **Endpoint:** `GET /api/admin/certificate/download?cedula=X&courseId=Y`
+- **Success Response (200 OK):**
+  - Content-Type: `application/pdf`
+  - Binary Stream (PDF)
+
+### 13. Update Course
+Updates the basic metadata (title, description, mandatory price) of an existing course.
+
+- **Endpoint:** `PUT /api/admin/courses/:id`
+- **Request Body:**
+  ```json
+  {
+    "titulo": "Manipulación de Alimentos Premium",
+    "descripcion": "Curso actualizado con regulaciones 2026...",
+    "precio": 130000
+  }
+  ```
+- **Success Response (200 OK):**
+  ```json
+  {
+    "message": "Curso actualizado con éxito."
+  }
+  ```
+
+### 14. Update Course Module
+Updates the metadata (title, content type) and interactive HTML data of an existing module.
+
+- **Endpoint:** `PUT /api/admin/courses/:courseId/modules/:moduleId`
+- **Request Body:**
+  ```json
+  {
+    "titulo_modulo": "Módulo 1: Inocuidad y BPM (Edición 2026)",
+    "tipo_contenido": "Texto",
+    "data_contenido": "{\"url\":\"https://example.com/audio.mp3\",\"text\":\"## Nuevo Contenido BPM\"}"
+  }
+  ```
+- **Success Response (200 OK):**
+  ```json
+  {
+    "message": "Módulo de curso actualizado con éxito."
+  }
+  ```
+
+### 15. Update Student Profile
+Updates the profile information of a student, including name, document details, birth year, and course payment status.
+
+- **Endpoint:** `PUT /api/admin/users/:cedula`
+- **Request Body:**
+  ```json
+  {
+    "nombre_completo": "Juan Pérez Modificado",
+    "fecha_expedicion_cedula": "2015-05-12",
+    "municipio_expedicion_cedula": "Medellín",
+    "municipio_nacimiento": "Itagüí",
+    "anio_nacimiento": 1993,
+    "pago_realizado": 1
+  }
+  ```
+- **Success Response (200 OK):**
+  ```json
+  {
+    "message": "Perfil del estudiante actualizado con éxito."
+  }
+  ```
+
+

@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import logoNormal from '../assets/logoNormal.jpeg';
+import logoNorte from '../assets/logo_instituto_norte.png';
 import { Lock, ShieldAlert } from 'lucide-react';
 
 const Login = () => {
@@ -29,36 +29,44 @@ const Login = () => {
     try {
       await login(cedula, password);
     } catch (err) {
-      // API error handled by context, but we can catch to prevent crashes
+      console.error('Login error:', err);
     }
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '16px' }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', padding: '32px', position: 'relative', overflow: 'hidden' }}>
-        
-        {/* Top Decorative Green Accent Bar */}
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '16px', backgroundColor: 'var(--isn-bg-light)' }}>
+      <div className="glass-panel" style={{
+        width: '100%',
+        maxWidth: '420px',
+        padding: '32px',
+        position: 'relative',
+        overflow: 'hidden',
+        borderRadius: '24px',
+        backgroundColor: '#FFFFFF'
+      }}>
+
+        {/* Top Decorative Gold Accent Bar */}
         <div style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          height: '6px',
-          background: 'var(--accent-emerald)'
+          height: '3px',
+          background: 'var(--isn-gold)'
         }} />
 
         <div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
-            <img 
-              src={logoNormal} 
-              alt="AlimSafe" 
-              style={{ width: '160px', height: 'auto', marginBottom: '16px', borderRadius: '12px' }} 
+            <img
+              src={logoNorte}
+              alt="Instituto Superior del Norte"
+              style={{ width: '180px', height: 'auto', marginBottom: '16px' }}
             />
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', textAlign: 'center', fontWeight: 500 }}>
-              Learning Management System (LMS)
+            <p className="font-serif" style={{ color: 'var(--isn-blue)', fontSize: '1.1rem', textAlign: 'center', fontWeight: 800 }}>
+              Instituto Superior del Norte
             </p>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '2px' }}>
-              Curso de Manipulación Higiénica de Alimentos
+            <p style={{ color: 'var(--isn-charcoal)', fontSize: '0.75rem', textAlign: 'center', marginTop: '4px', fontWeight: 600 }}>
+
             </p>
           </div>
 
@@ -66,7 +74,7 @@ const Login = () => {
             <div style={{
               background: 'rgba(239, 68, 68, 0.06)',
               border: '1px solid rgba(239, 68, 68, 0.2)',
-              borderRadius: '8px',
+              borderRadius: '12px',
               padding: '12px',
               marginBottom: '20px',
               display: 'flex',
@@ -82,7 +90,7 @@ const Login = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="input-group">
-              <label className="input-label" htmlFor="cedula">Número de Cédula</label>
+              <label className="input-label" htmlFor="cedula" style={{ color: 'var(--isn-blue)', fontWeight: 700 }}>Número de Cédula</label>
               <input
                 className="input-field"
                 type="text"
@@ -95,7 +103,7 @@ const Login = () => {
             </div>
 
             <div className="input-group" style={{ marginBottom: '28px' }}>
-              <label className="input-label" htmlFor="password">Contraseña</label>
+              <label className="input-label" htmlFor="password" style={{ color: 'var(--isn-blue)', fontWeight: 700 }}>Contraseña</label>
               <input
                 className="input-field"
                 type="password"
@@ -110,16 +118,21 @@ const Login = () => {
             <button
               className="btn btn-primary"
               type="submit"
-              style={{ width: '100%', padding: '14px' }}
+              style={{
+                width: '100%',
+                padding: '14px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
               disabled={loading}
             >
               {loading ? (
                 <span>Iniciando sesión...</span>
               ) : (
-                <>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                   <Lock size={18} />
-                  <span>Ingresar al Curso</span>
-                </>
+                  <span>Ingresar al Campus</span>
+                </div>
               )}
             </button>
           </form>
@@ -128,31 +141,45 @@ const Login = () => {
           <div style={{
             marginTop: '28px',
             padding: '14px',
-            borderRadius: '12px',
-            background: '#F8F9FA',
-            border: '1px solid #E2E8F0',
+            borderRadius: '16px',
+            background: 'var(--isn-bg-light)',
             fontSize: '0.75rem',
-            color: 'var(--text-secondary)',
+            color: 'var(--isn-charcoal)',
             textAlign: 'center'
           }}>
-            <p style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>🔑 Credenciales de Acceso Demo</p>
-            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--accent-emerald)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>123456789</code></p>
-            <p>Contraseña: <code style={{ color: 'var(--accent-emerald)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>password123</code></p>
+            <p style={{ fontWeight: 700, color: 'var(--isn-blue)', marginBottom: '6px' }}>🔑 Credenciales de Acceso Demo</p>
+            <p style={{ marginBottom: '4px' }}>Cédula: <code style={{ color: 'var(--isn-blue-dark)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>123456789</code></p>
+            <p>Contraseña: <code style={{ color: 'var(--isn-blue-dark)', background: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>password123</code></p>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+            <button
+              onClick={() => navigate('/')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--isn-blue)',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                fontWeight: 700
+              }}
+            >
+              Volver al Inicio
+            </button>
             <button
               onClick={() => navigate('/admin/login')}
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--text-muted)',
+                color: 'var(--isn-gold)',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
-                textDecoration: 'underline'
+                textDecoration: 'underline',
+                fontWeight: 700
               }}
             >
-              Entrar como Administrador
+              Acceso Admin
             </button>
           </div>
 

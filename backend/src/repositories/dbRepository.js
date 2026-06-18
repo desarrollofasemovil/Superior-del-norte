@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const { additionalCourses, additionalModules, additionalQuestions } = require('./additionalSeedData');
 
 const dbFile = path.join(__dirname, '..', process.env.DB_FILE || 'database.sqlite');
 const jsonDbFile = path.join(__dirname, '..', 'database.json');
@@ -45,7 +46,7 @@ const seedModules = [
     "descripcion": "Inocuidad alimentaria y BPM Definición de alimento Todo producto natural o artificial, elaborado o no, que ingerido aporta al organismo huma...",
     "orden": 1,
     "tipo_recurso": "video",
-    "contenido": "<h3>Inocuidad alimentaria y BPM</h3><h4>Definición de alimento</h4><p>Todo producto natural o artificial, elaborado o no, que ingerido aporta al organismo humano los nutrientes y la energía necesarios para el desarrollo de los procesos biológicos.</p><h4>Definición de calidad</h4><p>Calidad es el conjunto de propiedades y características inherentes de un producto o servicio que le dan la capacidad de satisfacer gustos, necesidades, preferencias según un parámetro y cumplir con sus requerimientos. También se define calidad como la percepción de un cliente hacia un producto o servicio por sus cualidades, respecto al grado de conformidad y satisfacción que se consigue.</p><h4>Definición de inocuidad</h4><p>Es la garantía de que los alimentos no causarán daño al consumidor cuando se preparen y consuman de acuerdo con el uso al que se destina. Resolución 2674 del 2013</p><h4>Diferencia entre calidad e inocuidad</h4><p>La calidad se relaciona con las características del producto que satisfacen al cliente, como sabor, apariencia y presentación, mientras que la inocuidad garantiza que el alimento sea seguro y no represente un riesgo para la salud. Ambos conceptos son fundamentales, pero la inocuidad es un requisito obligatorio para cualquier alimento.</p><h4>Importancia de la inocuidad alimentaria</h4><p>Los alimentos no inocuos socavan la seguridad alimentaria y la salud. Asegurar la inocuidad de los alimentos es esencial para promover la salud, los medios de vida, el comercio, el crecimiento económico y la prosperidad general.</p><p>Cada año, millones de personas enferman como consecuencia de alimentos no inocuos. Los grupos vulnerables, como los niños, las mujeres embarazadas y las personas de más edad corren mayor riesgo. FAO</p><h4>Definición de alimento contaminado</h4><p>Alimento que presenta o contiene agentes y/o sustancias extrañas de cualquier naturaleza en cantidades superiores a las permitidas en las normas nacionales, o en su defecto en normas reconocidas internacionalmente</p><h4>Clasificación de los alimentos según el riesgo para la salud pública</h4><ul><li><b>Alimento de mayor riesgo:</b> Alimento que, en razón a sus características de composición especialmente en sus contenidos de nutrientes, favorece el crecimiento microbiano y, por consiguiente, cualquier deficiencia en su proceso, manipulación, conservación, transporte, distribución y comercialización, puede ocasionar trastornos a la salud del consumidor. Ejemplo: Carne, pollo, lácteos, huevos, entre otros.</li></ul><ul><li><b>Alimento de riesgo medio:</b> Los alimentos que pueden contener microorganismos patógenos, pero normalmente no favorecen su crecimiento debido a las características del alimento o alimentos que es poco probable que contengan microorganismos patógenos debido al tipo de alimento o procesamiento del mismo, pero que pueden apoyar a la formación de toxinas o el crecimiento de microorganismos patógenos. Ejemplo: Mantequilla, enlatados, entre otros.</li><li><b>Alimento de menor riesgo:</b> Poseen menor riesgo de contaminación debido a su bajo contenido de Nutrientes, son más secos o más ácidos y por tanto tienen más resistencia y son más estables a T ambiente. Ejemplo: Galletas, cereales, pan, productos ácidos como el vinagre, mermelada, entre otros.</li></ul><h4>Definición de BPM</h4><p>Principios básicos y generales de higiene en la elaboración, preparación, elaboración, envasado, almacenamiento, transporte y distribución de alimentos para el consumo humano. Resolución 2674 del 2013.</p><h4>Definición de seguridad alimentaria</h4><p>Existe seguridad alimentaria cuando las personas tienen acceso a alimentos suficientes, seguros y nutritivos para su crecimiento, desarrollo y una vida activa y saludable.</p><p>“…El 28 % de la población mundial se enfrentó a una inseguridad alimentaria moderada o grave en 2024. Los niveles de hambre y de inseguridad alimentaria mejoraron en algunas partes de América del Sur y Asia, pero empeoraron en África.” FAO.</p>",
+    "contenido": "## Inocuidad alimentaria y BPM\n\n---\n\n### Definición de alimento\n\nTodo producto natural o artificial, elaborado o no, que ingerido aporta al organismo humano los nutrientes y la energía necesarios para el desarrollo de los procesos biológicos.\n\n### Definición de calidad\n\nCalidad es el conjunto de propiedades y características inherentes de un producto o servicio que le dan la capacidad de satisfacer gustos, necesidades, preferencias según un parámetro y cumplir con sus requerimientos. También se define calidad como la percepción de un cliente hacia un producto o servicio por sus cualidades, respecto al grado de conformidad y satisfacción que se consigue.\n\n### Definición de inocuidad\n\nEs la garantía de que los alimentos no causarán daño al consumidor cuando se preparen y consuman de acuerdo con el uso al que se destina. Resolución 2674 del 2013.\n\n### Diferencia entre calidad e inocuidad\n\nLa calidad se relaciona con las características del producto que satisfacen al cliente, como sabor, apariencia y presentación, mientras que la inocuidad garantiza que el alimento sea seguro y no represente un riesgo para la salud. Ambos conceptos son fundamentales, pero la inocuidad es un requisito obligatorio para cualquier alimento.\n\n### Importancia de la inocuidad alimentaria\n\nLos alimentos no inocuos socavan la seguridad alimentaria y la salud. Asegurar la inocuidad de los alimentos es esencial para promover la salud, los medios de vida, el comercio, el crecimiento económico y la prosperidad general.\n\nCada año, millones de personas enferman como consecuencia de alimentos no inocuos. Los grupos vulnerables, como los niños, las mujeres embarazadas y las personas de más edad corren mayor riesgo. FAO\n\n### Definición de alimento contaminado\n\nAlimento que presenta o contiene agentes y/o sustancias extrañas de cualquier naturaleza en cantidades superiores a las permitidas en las normas nacionales, o en su defecto en normas reconocidas internacionalmente.\n\n### Clasificación de los alimentos según el riesgo para la salud pública\n\n- **Alimento de mayor riesgo:** Alimento que, en razón a sus características de composición especialmente en sus contenidos de nutrientes, favorece el crecimiento microbiano y, por consiguiente, cualquier deficiencia en su proceso, manipulación, conservación, transporte, distribución y comercialización, puede ocasionar trastornos a la salud del consumidor. Ejemplo: Carne, pollo, lácteos, huevos, entre otros.\n- **Alimento de riesgo medio:** Los alimentos que pueden contener microorganismos patógenos, pero normalmente no favorecen su crecimiento debido a las características del alimento o alimentos que es poco probable que contengan microorganismos patógenos debido al tipo de alimento o procesamiento del mismo, pero que pueden apoyar a la formación de toxinas o el crecimiento de microorganismos patógenos. Ejemplo: Mantequilla, enlatados, entre otros.\n- **Alimento de menor riesgo:** Poseen menor riesgo de contaminación debido a su bajo contenido de Nutrientes, son más secos o más ácidos y por tanto tienen más resistencia y son más estables a T ambiente. Ejemplo: Galletas, cereales, pan, productos ácidos como el vinagre, mermelada, entre otros.\n\n### Definición de BPM\n\nPrincipios básicos y generales de higiene en la elaboración, preparación, elaboración, envasado, almacenamiento, transporte y distribución de alimentos para el consumo humano. Resolución 2674 del 2013.\n\n### Definición de seguridad alimentaria\n\nExiste seguridad alimentaria cuando las personas tienen acceso a alimentos suficientes, seguros y nutritivos para su crecimiento, desarrollo y una vida activa y saludable.\n\n> “…El 28 % de la población mundial se enfrentó a una inseguridad alimentaria moderada o grave en 2024. Los niveles de hambre y de inseguridad alimentaria mejoraron en algunas partes de América del Sur y Asia, pero empeoraron en África.” FAO.",
     "url_recurso": "https://www.w3schools.com/html/mov_bbb.mp4"
   },
   {
@@ -54,7 +55,7 @@ const seedModules = [
     "descripcion": "Higiene del personal manipulador Definición de manipulador de alimentos Es toda persona que está en contacto directo con el alimento durante...",
     "orden": 2,
     "tipo_recurso": "audio",
-    "contenido": "<h3>Higiene del personal manipulador</h3><h4>Definición de manipulador de alimentos</h4><p>Es toda persona que está en contacto directo con el alimento durante todo el proceso de transformación del mismo y que puede influir en la inocuidad o calidad sanitaria.</p><p>“Las personas son el principal transporte gratis para los microorganismos”</p><h4>Estado de salud del manipulador de alimentos</h4><ul><li>El personal debe contar con buen estado de salud, no se permite con enfermedades infecciosas.</li><li>El personal debe contar con certificación médica para manipular alimentos, realizando exámenes periódicos 1 vez al año.</li><li>Realizar acciones correctivas y preventivas dependiendo de los exámenes de salud del personal.</li><li>La empresa deberá garantizar el seguimiento periódico de los exámenes médicos del personal manipulador.</li><li>Cuando se presenten enfermedades, heridas, tatuajes o demás, será responsabilidad del colaborador comunicar al jefe inmediato para tomar las medidas correspondientes.</li></ul><h4>Educación y capacitación del personal manipulador</h4><p>Según la resolución 2674 del 2013, se debe contar con un plan de capacitación anual de por lo menos 10 horas sobre temas relacionados con la resolución 2674 del 2013. Los capacitadores deben demostrar su idoneidad para capacitar, deben tener formación en el tema y experiencia relacionada con el campo de los alimentos.</p><h4>Prácticas higiénicas y medidas de protección</h4><p>Las prácticas higiénicas son fundamentales para garantizar la inocuidad de los alimentos y prevenir riesgos de contaminación. Todo manipulador debe mantener una adecuada higiene personal, realizar un correcto lavado de manos, utilizar la dotación de protección requerida y evitar conductas que puedan afectar la seguridad de los alimentos. Asimismo, es importante aplicar medidas de protección durante la preparación, almacenamiento y manipulación, con el fin de proteger la salud del consumidor y cumplir con las Buenas Prácticas de Manufactura (BPM).</p><ul><li>No hablar ni estornudar sobre los alimentos</li><li>Mantener un constante y correcto lavado de manos</li><li><b>Utilizar el uniforme que sea proporcionado por la organización en condiciones óptimas de limpieza:</b> Botas de seguridad, gorro, cubre barbas (cuando sea el caso), tapabocas, bata antifluido, entre otros.</li><li>Evitar joyas, accesorios como relojes, cadenas, aretes, manillas, piercings, entre otros.</li><li>No fumar ni comer en el lugar de trabajo.</li><li>Reportar heridas, cortadas, tatuajes.</li><li>Evitar olores fuertes tales como perfume.</li><li>Las uñas deben permanecer limpias, sin esmalte y cortas.</li><li>En el caso de las mujeres, no podrán portar maquillaje, cremas para el cuerpo, pestañas postizas, entre otros.</li></ul><h4>Lavado de manos</h4><p>El lavado de manos debe realizarse en diversas situaciones:</p><ul><li>Antes de comenzar a trabajar</li><li>Al ingresar a la planta de producción</li><li>Al cambiar de proceso</li><li>Al salir del baño</li><li>Al tocar cualquier elemento contaminado</li><li>Al tener contacto con utensilios sucios</li><li>Después de tocar cualquier parte del cuerpo que no esté limpia</li><li>Después de trabajar con alimentos crudos o alérgenos</li><li>Después de tocar elementos personales como el celular, loncheras, entre otros.</li></ul><p>El lavado constante de manos previene de enfermedades en la piel, ojos o demás.</p><p>Proceso correcto del lavado de manos:</p><p><b>1. Humedecer las manos con abundante agua</b></p><p><b>2. Enjabonar las manos con el grifo cerrado</b></p><p><b>3. Comenzar frotando las palmas entre ellas</b></p><p><b>4. Intercalar los dedos y frotar la palma y el anverso de la mano</b></p><p><b>5. Continuar con los dedos intercalados y limpiar los espacios entre sí.</b></p><p><b>6. Con las manos de frente, agarrarse los dedos y moverlos de lado a lado.</b></p><p><b>7. Tomar el dedo pulgar y limpiar la zona del agarre de la mano.</b></p><p><b>8. Limpiar las yemas de los dedos, frotando contra la palma de la mano.</b></p><p><b>9. Enjuagar las manos con abundante agua (8 seg aproximadamente)</b></p><p><b>10. Secar las manos con una toalla desechable.</b></p><p><b>11. Cerrar el grifo con la toalla desechable.</b></p><h4>Prácticas higiénicas de los visitantes</h4><ul><li>Todos los visitantes que deseen ingresar a las instalaciones deberán seguir todas las medidas de protección y sanitarias establecidas. No podrán ingresar con accesorios, olores fuertes y/o maquillaje.</li><li>Deben portar la vestimenta y dotación adecuada suministrada por la empresa (polainas, bata desechable, gorro desechable, cubre barba (si es el caso) y tapabocas).</li></ul>",
+    "contenido": "## Higiene del personal manipulador\n\n---\n\n### Definición de manipulador de alimentos\n\nEs toda persona que está en contacto directo con el alimento durante todo el proceso de transformación del mismo y que puede influir en la inocuidad o calidad sanitaria.\n\n> “Las personas son el principal transporte gratis para los microorganismos”\n\n### Estado de salud del manipulador de alimentos\n\n- El personal debe contar con buen estado de salud, no se permite con enfermedades infecciosas.\n- El personal debe contar con certificación médica para manipular alimentos, realizando exámenes periódicos 1 vez al año.\n- Realizar acciones correctivas y preventivas dependiendo de los exámenes de salud del personal.\n- La empresa deberá garantizar el seguimiento periódico de los exámenes médicos del personal manipulador.\n- Cuando se presenten enfermedades, heridas, tatuajes o demás, será responsabilidad del colaborador comunicar al jefe inmediato para tomar las medidas correspondientes.\n\n### Educación y capacitación del personal manipulador\n\nSegún la resolución 2674 del 2013, se debe contar con un plan de capacitación anual de por lo menos 10 horas sobre temas relacionados con la resolución 2674 del 2013. Los capacitadores deben demostrar su idoneidad para capacitar, deben tener formación en el tema y experiencia relacionada con el campo de los alimentos.\n\n### Prácticas higiénicas y medidas de protección\n\nLas prácticas higiénicas son fundamentales para garantizar la inocuidad de los alimentos y prevenir riesgos de contaminación. Todo manipulador debe mantener una adecuada higiene personal, realizar un correcto lavado de manos, utilizar la dotación de protección requerida y evitar conductas que puedan afectar la seguridad de los alimentos.\n\n- No hablar ni estornudar sobre los alimentos.\n- Mantener un constante y correcto lavado de manos.\n- **Utilizar el uniforme proporcionado por la organización:** Botas de seguridad, gorro, cubre barbas, tapabocas, bata antifluido.\n- Evitar joyas, accesorios como relojes, cadenas, aretes, manillas, piercings.\n- No fumar ni comer en el lugar de trabajo.\n- Reportar heridas, cortadas, tatuajes.\n- Evitar olores fuertes tales como perfume.\n- Las uñas deben permanecer limpias, sin esmalte y cortas.\n- En el caso de las mujeres, no podrán portar maquillaje, pestañas postizas, etc.\n\n### Lavado de manos\n\nEl lavado de manos debe realizarse en diversas situaciones:\n\n- Antes de comenzar a trabajar\n- Al ingresar a la planta de producción\n- Al cambiar de proceso\n- Al salir del baño\n- Al tocar cualquier elemento contaminado\n- Después de tocar elementos personales como el celular\n\n**Proceso correcto del lavado de manos:**\n1. Humedecer las manos con abundante agua.\n2. Enjabonar las manos con el grifo cerrado.\n3. Frotar las palmas entre ellas.\n4. Intercalar los dedos y frotar la palma.\n5. Enjuagar las manos con abundante agua (8 seg).\n6. Secar con una toalla desechable.\n\n### Prácticas higiénicas de los visitantes\n\n- Todos los visitantes deberán seguir todas las medidas de protección y sanitarias establecidas.\n- Deben portar la vestimenta y dotación adecuada suministrada por la empresa (polainas, bata, gorro, etc.).",
     "url_recurso": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
   },
   {
@@ -63,7 +64,7 @@ const seedModules = [
     "descripcion": "Tipos de contaminación alimentaria Definición contaminación de los alimentos La contaminación de los alimentos es la presencia de agentes fí...",
     "orden": 3,
     "tipo_recurso": "imagen",
-    "contenido": "<h3>Tipos de contaminación alimentaria</h3><h4>Definición contaminación de los alimentos</h4><p>La contaminación de los alimentos es la presencia de agentes físicos, químicos o biológicos que pueden alterar la inocuidad de un alimento y representar un riesgo para la salud del consumidor. Esta contaminación puede ocurrir durante la preparación, almacenamiento, transporte, manipulación o distribución de los alimentos debido a prácticas inadecuadas de higiene y manipulación. La contaminación de los mismos puede producirse en cualquier momento desde su cosecha, pasando por la elaboración a nivel industrial, hasta cuando se prepara la comida en el hogar.</p><h4>Definición de alérgenos</h4><p>Los alérgenos son sustancias presentes en ciertos alimentos que pueden provocar reacciones alérgicas en personas sensibles. Estas reacciones pueden variar desde síntomas leves hasta efectos graves que comprometen la salud del consumidor.</p><p>Los 14 alérgenos declarados son:</p><ul><li>Cereales que contienen gluten (trigo, centeno, cebada, avena, espelta, kamut o sus variedades híbridas)</li><li>Crustáceos y productos a base de crustáceos</li><li>Huevos y productos a base de huevo</li><li>Pescado y productos a base de pescado</li><li>Maní (cacahuate) y productos a base de maní</li><li>Soja y productos a base de soja</li><li>Leche y productos lácteos (incluida la lactosa)</li><li>Frutos de cáscara (almendras, avellanas, nueces, anacardos, pacanas, nuez de Brasil, pistachos y macadamias)</li><li>Apio y productos a base de apio</li><li>10. Mostaza y productos a base de mostaza</li><li>11. Granos de sésamo (ajonjolí) y productos a base de sésamo</li><li>12. Dióxido de azufre y sulfitos en concentraciones superiores a 10 mg/kg o 10 mg/L</li><li>13. Altramuces (lupino) y productos a base de altramuces</li><li>14. Moluscos y productos a base de moluscos</li></ul><h4>Contaminación física</h4><p>La contaminación física ocurre cuando cuerpos extraños o partículas ajenas al alimento entran en contacto con este, afectando su inocuidad y representando un riesgo para la salud del consumidor. Entre los contaminantes físicos más comunes se encuentran cabello, vidrio, plástico, metal, tierra, madera, piedras, uñas, joyas o fragmentos de utensilios y empaques.</p><p>Este tipo de contaminación generalmente se produce por malas prácticas de manipulación, deficiencias en limpieza, deterioro de equipos o incumplimiento de las medidas de higiene y protección durante el procesamiento y manejo de los alimentos.</p><h4>Contaminación química</h4><p>La contaminación química se presenta cuando sustancias químicas peligrosas entran en contacto con los alimentos, afectando su inocuidad y poniendo en riesgo la salud del consumidor. Este tipo de contaminación puede originarse por el uso inadecuado de productos de limpieza y desinfección, residuos de plaguicidas, jabones o desinfectantes mal enjuagados, lubricantes, metales pesados o sustancias tóxicas presentes en envases y superficies.</p><p>La contaminación química suele ocurrir por almacenamiento incorrecto de sustancias químicas, malas prácticas de manipulación o falta de control durante los procesos de limpieza y producción de alimentos.</p><h4>Contaminación biológica</h4><p>La contaminación biológica ocurre cuando microorganismos como bacterias, virus, hongos o parásitos contaminan los alimentos, pudiendo causar enfermedades transmitidas por alimentos (ETA). Este tipo de contaminación es una de las más comunes y peligrosas, ya que muchos microorganismos no alteran el olor, sabor o apariencia del alimento.</p><p>La contaminación biológica puede producirse por una mala higiene personal, manipulación inadecuada, contaminación cruzada, uso de agua no potable, temperaturas inadecuadas de conservación o deficiencias en limpieza y desinfección.</p><h4>Contaminación cruzada</h4><p>La contaminación cruzada ocurre cuando microorganismos, sustancias o cuerpos extraños se transfieren de un alimento, superficie, utensilio o persona hacia otro alimento, afectando su inocuidad. Generalmente sucede cuando alimentos crudos entran en contacto con alimentos listos para el consumo, o cuando no se realiza una adecuada limpieza y desinfección de manos, equipos y utensilios.</p><p>Este tipo de contaminación puede prevenirse mediante buenas prácticas de higiene, correcta separación de alimentos y adecuado manejo durante la preparación, almacenamiento y distribución.</p><p>La contaminación física, química, biológica y cruzada son los tipos de contaminación alimentaria que se pueden presentar en todas las industrias alimenticias. Sin embargo, puede ocurrir otro tipo de contaminación en algunas industrias que manejan productos alérgenos.</p><h4>Contaminación por alérgenos</h4><p>La contaminación por alérgenos ocurre cuando un alimento entra en contacto con sustancias capaces de generar reacciones alérgicas en personas sensibles. Esta contaminación puede producirse por contacto directo entre alimentos, uso compartido de utensilios, superficies o equipos, o por una inadecuada manipulación durante los procesos de preparación y almacenamiento.</p><p>Entre los alérgenos más comunes se encuentran leche, huevo, soya, maní, frutos secos, trigo, pescado y mariscos. La correcta identificación, separación y manejo de estos ingredientes es fundamental para prevenir riesgos en la salud del consumidor.</p>",
+    "contenido": "## Tipos de contaminación alimentaria\n\n---\n\n### Definición contaminación de los alimentos\n\nLa contaminación de los alimentos es la presencia de agentes físicos, químicos o biológicos que pueden alterar la inocuidad de un alimento y representar un riesgo para la salud del consumidor. Esta contaminación puede ocurrir durante la preparación, almacenamiento, transporte, manipulación o distribución de los alimentos debido a prácticas inadecuadas de higiene.\n\n### Definición de alérgenos\n\nLos alérgenos son sustancias presentes en ciertos alimentos que pueden provocar reacciones alérgicas en personas sensibles.\n\nLos 14 alérgenos declarados son:\n\n1. Cereales que contienen gluten\n2. Crustáceos y productos a base de crustáceos\n3. Huevos y productos a base de huevo\n4. Pescado y productos a base de pescado\n5. Maní (cacahuate) y productos a base de maní\n6. Soja y productos a base de soja\n7. Leche y productos lácteos\n8. Frutos de cáscara (almendras, avellanas, nueces, etc.)\n9. Apio y productos a base de apio\n10. Mostaza\n11. Granos de sésamo\n12. Dióxido de azufre y sulfitos\n13. Altramuces (lupino)\n14. Moluscos\n\n### Contaminación física\n\nLa contaminación física ocurre cuando cuerpos extraños o partículas ajenas al alimento entran en contacto con este, afectando su inocuidad. Entre los contaminantes físicos más comunes se encuentran cabello, vidrio, plástico, metal, tierra, madera, piedras, uñas, joyas o fragmentos de utensilios.\n\n### Contaminación química\n\nLa contaminación química se presenta cuando sustancias químicas peligrosas entran en contacto con los alimentos. Este tipo de contaminación puede originarse por el uso inadecuado de productos de limpieza y desinfección, residuos de plaguicidas, jabones o desinfectantes mal enjuagados, lubricantes o metales pesados.\n\n### Contaminación biológica\n\nOcurre cuando microorganismos como bacterias, virus, hongos o parásitos contaminan los alimentos, pudiendo causar enfermedades transmitidas por alimentos (ETA). Es una de las más peligrosas, ya que muchos microorganismos no alteran el olor, sabor o apariencia del alimento.\n\n### Contaminación cruzada\n\nOcurre cuando microorganismos, sustancias o cuerpos extraños se transfieren de un alimento, superficie, utensilio o persona hacia otro alimento. Generalmente sucede cuando alimentos crudos entran en contacto con alimentos listos para el consumo.\n\n### Contaminación por alérgenos\n\nOcurre cuando un alimento entra en contacto con sustancias capaces de generar reacciones alérgicas en personas sensibles, por contacto directo o uso compartido de utensilios.",
     "url_recurso": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80"
   },
   {
@@ -72,7 +73,7 @@ const seedModules = [
     "descripcion": "Limpieza y desinfección Definición de limpieza La limpieza es el proceso mediante el cual se eliminan residuos visibles como grasa, suciedad...",
     "orden": 4,
     "tipo_recurso": "texto",
-    "contenido": "<h3>Limpieza y desinfección</h3><h4>Definición de limpieza</h4><p>La limpieza es el proceso mediante el cual se eliminan residuos visibles como grasa, suciedad, restos de alimentos, polvo y otras impurezas presentes en superficies, equipos, utensilios y áreas de trabajo.</p><p>Este procedimiento es fundamental para mantener condiciones higiénicas adecuadas y facilitar la posterior desinfección, contribuyendo a la prevención de la contaminación de los alimentos.</p><h4>Definición de desinfección</h4><p>La desinfección es el proceso mediante el cual se eliminan o reducen los microorganismos presentes en superficies, equipos, utensilios y áreas de trabajo, mediante el uso de agentes químicos o métodos físicos autorizados.</p><p>Este procedimiento se realiza después de la limpieza y es fundamental para prevenir la contaminación de los alimentos y garantizar condiciones adecuadas de higiene e inocuidad.</p><h4>Diferencia entre limpieza y desinfección</h4><p>La limpieza y la desinfección son procesos complementarios, pero no significan lo mismo. La limpieza consiste en eliminar suciedad, grasa y residuos visibles de las superficies, mientras que la desinfección tiene como objetivo eliminar o reducir los microorganismos que pueden causar contaminación. Para lograr una adecuada inocuidad, primero debe realizarse la limpieza y posteriormente la desinfección.</p><p>Los pasos básicos de limpieza son:</p><ul><li>Retirar residuos, aplicar detergente y enjuagar con agua.</li><li>Mantener limpias todas las áreas y superficies del lugar de trabajo, así como los equipos y utensilios que tienen contacto con los alimentos.</li><li>Mantener los productos de aseo almacenados en un lugar exclusivo bajo llave, los cuales deben mantener identificados con su respectiva dosificación.</li><li>No se deben mezclar productos químicos debido a que pueden generar olores tóxicos o nocivos para la salud.</li><li>Cada persona debe ser responsable de limpiar y desinfectar correctamente su área de trabajo al terminar la jornada.</li></ul><h4>Tipos de desinfección</h4><ul><li><b>Desinfección por inmersión:</b> La desinfección por inmersión es un método mediante el cual utensilios, equipos o elementos de manipulación se sumergen completamente en una solución desinfectante durante un tiempo determinado, con el fin de eliminar o reducir los microorganismos presentes en sus superficies.</li></ul><p>Este procedimiento debe realizarse utilizando productos autorizados, concentraciones adecuadas y respetando los tiempos de contacto recomendados para garantizar una correcta desinfección y prevenir la contaminación de los alimentos.</p><ul><li><b>Desinfección por aspersión:</b> La desinfección por aspersión es un método que consiste en aplicar una solución desinfectante sobre superficies, equipos o utensilios mediante pulverización o rociado, con el fin de eliminar o reducir los microorganismos presentes.</li></ul><p>Para garantizar su efectividad, es importante que las superficies se encuentren previamente limpias y que el desinfectante utilizado permanezca el tiempo de contacto recomendado según las indicaciones del fabricante.</p><ul><li><b>Desinfección manual:</b> La desinfección manual es un método mediante el cual se aplica una solución desinfectante sobre superficies, equipos o utensilios utilizando elementos como paños, cepillos o esponjas limpias, con el fin de eliminar o reducir los microorganismos presentes.</li></ul><p>Este procedimiento debe realizarse después de la limpieza y respetando las concentraciones y tiempos de contacto recomendados para garantizar una adecuada inocuidad de los alimentos.</p><h4>Métodos para desinfectar</h4><ul><li><b>Calor:</b> La desinfección por calor es un método que utiliza altas temperaturas, como agua caliente o vapor, para eliminar o reducir los microorganismos presentes en utensilios, equipos y superficies. Este procedimiento ayuda a garantizar condiciones higiénicas adecuadas y es ampliamente utilizado en procesos de manipulación de alimentos debido a su efectividad para disminuir la carga microbiana.</li><li><b>Desinfección por productos químicos:</b> La desinfección por productos químicos es un método que consiste en utilizar sustancias desinfectantes autorizadas para eliminar o reducir los microorganismos presentes en superficies, equipos, utensilios y áreas de trabajo. Estos productos deben aplicarse en las concentraciones y tiempos de contacto recomendados para garantizar su efectividad y evitar riesgos de contaminación en los alimentos.</li></ul><h4>Tipos de productos químicos</h4><p>Entre los más utilizados se encuentran:</p><ul><li>Hipoclorito de sodio (cloro)</li><li>Amonios cuaternarios</li><li>Alcohol</li><li>Yodo y compuestos yodados</li><li>Peróxido de hidrógeno</li><li>Ácido peracético</li></ul><p>La selección del desinfectante dependerá del tipo de superficie, el nivel de contaminación y las necesidades del proceso de manipulación de alimentos.</p>",
+    "contenido": "## Limpieza y desinfección\n\n---\n\n### Definición de limpieza\n\nLa limpieza es el proceso mediante el cual se eliminan residuos visibles como grasa, suciedad, restos de alimentos, polvo y otras impurezas presentes en superficies, equipos, utensilios y áreas de trabajo.\n\nEste procedimiento es fundamental para mantener condiciones higiénicas adecuadas y facilitar la posterior desinfección.\n\n### Definición de desinfección\n\nLa desinfección es el proceso mediante el cual se eliminan o reducen los microorganismos presentes en superficies, equipos, utensilios y áreas de trabajo, mediante el uso de agentes químicos o métodos físicos autorizados.\n\n### Diferencia entre limpieza y desinfección\n\nLa limpieza consiste en eliminar suciedad, grasa y residuos visibles de las superficies, mientras que la desinfección tiene como objetivo eliminar o reducir los microorganismos que pueden causar contaminación. **Para lograr una adecuada inocuidad, primero debe realizarse la limpieza y posteriormente la desinfección.**\n\n**Los pasos básicos de limpieza son:**\n\n- Retirar residuos, aplicar detergente y enjuagar con agua.\n- Mantener limpias todas las áreas y superficies del lugar de trabajo.\n- Mantener los productos de aseo almacenados en un lugar exclusivo bajo llave.\n- No se deben mezclar productos químicos debido a que pueden generar olores tóxicos o nocivos.\n- Cada persona debe ser responsable de limpiar y desinfectar correctamente su área de trabajo.\n\n### Tipos de desinfección\n\n- **Desinfección por inmersión:** Utensilios o equipos se sumergen completamente en una solución desinfectante durante un tiempo determinado.\n- **Desinfección por aspersión:** Consiste en aplicar una solución desinfectante mediante pulverización o rociado.\n- **Desinfección manual:** Se aplica una solución desinfectante utilizando elementos como paños, cepillos o esponjas limpias.\n\n### Métodos para desinfectar\n\n1. **Calor:** Utiliza altas temperaturas, como agua caliente o vapor.\n2. **Desinfección por productos químicos:** Utiliza sustancias desinfectantes autorizadas.\n\n### Tipos de productos químicos\n\nEntre los más utilizados se encuentran:\n- Hipoclorito de sodio (cloro)\n- Amonios cuaternarios\n- Alcohol\n- Yodo y compuestos yodados\n- Peróxido de hidrógeno\n- Ácido peracético",
     "url_recurso": ""
   },
   {
@@ -81,7 +82,7 @@ const seedModules = [
     "descripcion": "Agua potable y control de plagas El agua potable es aquella que cumple con las condiciones físicas, químicas y microbiológicas aptas para el...",
     "orden": 5,
     "tipo_recurso": "video",
-    "contenido": "<h3>Agua potable y control de plagas</h3><p>El agua potable es aquella que cumple con las condiciones físicas, químicas y microbiológicas aptas para el consumo humano y para su uso seguro en la preparación, limpieza y manipulación de alimentos.</p><p>El agua potable es fundamental en los procesos de manipulación de alimentos, ya que se utiliza para la preparación de productos, lavado de materias primas, limpieza de utensilios, equipos, superficies y aseo personal. El uso de agua contaminada puede convertirse en una fuente de contaminación biológica, química o física, afectando la inocuidad de los alimentos y poniendo en riesgo la salud del consumidor.</p><h4>Usos del agua potable en la manipulación de alimentos</h4><ul><li>Lavado de manos.</li><li>Lavado y desinfección de frutas y verduras.</li><li>Limpieza y desinfección de equipos y utensilios.</li><li>Preparación de alimentos y bebidas.</li><li>Producción de hielo y vapor.</li><li>Limpieza de instalaciones y superficies.</li></ul><h4>Riesgos de utilizar agua contaminada o no potable</h4><p>El uso de agua no potable en la manipulación de alimentos representa un riesgo importante para la inocuidad, ya que puede convertirse en una fuente de contaminación física, química y biológica. El agua contaminada puede contener microorganismos patógenos, sustancias químicas o partículas extrañas capaces de alterar la calidad de los alimentos y causar enfermedades transmitidas por alimentos (ETA).</p><p>Además, el uso de agua no potable durante la limpieza, preparación, lavado de materias primas o higiene del personal puede favorecer la contaminación cruzada y la proliferación de microorganismos, afectando la seguridad de los productos y poniendo en riesgo la salud del consumidor.</p><h4>Medidas de control del agua potable</h4><p>Las industrias de alimentos implementan diferentes controles para garantizar que el agua utilizada durante los procesos sea potable y segura. Entre las principales medidas se encuentran la limpieza y desinfección periódica de tanques de almacenamiento, el mantenimiento preventivo de tuberías y conexiones, y la realización de análisis físicos, químicos y microbiológicos para verificar la calidad del agua.</p><p>Así mismo, se controlan las condiciones de almacenamiento y distribución del agua dentro de las instalaciones, evitando posibles fuentes de contaminación. Estos controles permiten asegurar que el agua utilizada en la preparación, limpieza y manipulación de alimentos cumpla con las condiciones sanitarias necesarias para proteger la inocuidad y la salud del consumidor.</p><h4>Control de plagas</h4><h4>Definición de plagas</h4><p>Las plagas son organismos como insectos, roedores, aves u otros animales que pueden ingresar a las áreas de manipulación de alimentos y representar un riesgo para la inocuidad, ya que tienen la capacidad de contaminar alimentos, superficies, equipos y utensilios.</p><p>La presencia de plagas puede favorecer la transmisión de enfermedades, generar contaminación física y biológica, y afectar las condiciones higiénico-sanitarias de los establecimientos de alimentos.</p><h4>Importancia del control de plagas</h4><p>El control de plagas es fundamental para prevenir la contaminación de los alimentos y mantener condiciones higiénicas adecuadas dentro de las áreas de almacenamiento, preparación y manipulación.</p><p>Las plagas pueden:</p><ul><li>Transmitir enfermedades.</li><li>Contaminar superficies y alimentos.</li><li>Deteriorar materias primas y empaques.</li><li>Generar pérdidas económicas.</li><li>Afectar la imagen del establecimiento.</li></ul><h4>Plagas más comunes en la industria alimentaria</h4><ul><li>Moscas</li><li>Cucarachas</li><li>Hormigas</li><li>Roedores</li><li>Aves</li><li>Gorgojos y otros insectos de almacenamiento</li></ul><h4>Manejo integrado de plagas</h4><p>Es fundamental mantener un adecuado control sobre las materias primas, empaques y áreas de almacenamiento, verificando continuamente su estado higiénico y evitando condiciones que favorezcan la presencia de plagas. Asimismo, deben cumplirse de manera permanente los programas de limpieza y desinfección establecidos, con el fin de conservar ambientes limpios, seguros y aptos para la manipulación de alimentos.</p><h4>Medidas preventivas para el control de plagas</h4><ul><li>Mantener orden y limpieza.</li><li>Disponer adecuadamente los residuos.</li><li>Mantener recipientes de basura tapados.</li><li>Evitar acumulación de agua.</li><li>Sellar grietas, huecos y entradas.</li><li>Almacenar alimentos protegidos y separados del piso.</li><li>Mantener puertas y ventanas protegidas.</li><li>Realizar inspecciones periódicas.</li></ul><p>Los manipuladores deberán comunicar al área encargada de cualquier avistamiento de plagas, roedores o demás insectos que puedan afectar la inocuidad del proceso o producto.</p>",
+    "contenido": "## Agua potable y control de plagas\n\n---\n\nEl agua potable es aquella que cumple con las condiciones físicas, químicas y microbiológicas aptas para el consumo humano y para su uso seguro en la preparación, limpieza y manipulación de alimentos.\n\nEl agua potable es fundamental en los procesos de manipulación de alimentos, ya que se utiliza para la preparación de productos, lavado de materias primas, limpieza de utensilios, equipos, superficies y aseo personal. \n\n### Usos del agua potable en la manipulación de alimentos\n\n- Lavado de manos.\n- Lavado y desinfección de frutas y verduras.\n- Limpieza y desinfección de equipos y utensilios.\n- Preparación de alimentos y bebidas.\n- Producción de hielo y vapor.\n- Limpieza de instalaciones y superficies.\n\n### Riesgos de utilizar agua contaminada o no potable\n\nEl uso de agua contaminada puede contener microorganismos patógenos, sustancias químicas o partículas extrañas capaces de alterar la calidad de los alimentos y causar enfermedades transmitidas por alimentos (ETA). Favorece la contaminación cruzada y la proliferación de microorganismos.\n\n### Medidas de control del agua potable\n\nLas industrias implementan controles como la limpieza y desinfección periódica de tanques de almacenamiento, el mantenimiento preventivo de tuberías y conexiones, y la realización de análisis físicos, químicos y microbiológicos para verificar la calidad del agua.\n\n---\n\n## Control de plagas\n\n### Definición de plagas\n\nLas plagas son organismos como insectos, roedores, aves u otros animales que pueden ingresar a las áreas de manipulación de alimentos y representar un riesgo para la inocuidad, ya que tienen la capacidad de contaminar alimentos, superficies, equipos y utensilios.\n\n### Importancia del control de plagas\n\nEs fundamental para prevenir la contaminación de los alimentos. Las plagas pueden:\n- Transmitir enfermedades.\n- Contaminar superficies y alimentos.\n- Deteriorar materias primas y empaques.\n- Generar pérdidas económicas.\n- Afectar la imagen del establecimiento.\n\n### Plagas más comunes en la industria alimentaria\n\n- Moscas\n- Cucarachas\n- Hormigas\n- Roedores\n- Aves\n- Gorgojos y otros insectos de almacenamiento\n\n### Manejo integrado de plagas\n\nEs fundamental mantener un adecuado control sobre las materias primas, empaques y áreas de almacenamiento. Deben cumplirse de manera permanente los programas de limpieza y desinfección.\n\n### Medidas preventivas para el control de plagas\n\n- Mantener orden y limpieza.\n- Disponer adecuadamente los residuos.\n- Mantener recipientes de basura tapados.\n- Evitar acumulación de agua.\n- Sellar grietas, huecos y entradas.\n- Almacenar alimentos protegidos y separados del piso.\n- Mantener puertas y ventanas protegidas.\n- Realizar inspecciones periódicas.",
     "url_recurso": "https://www.w3schools.com/html/mov_bbb.mp4"
   },
   {
@@ -90,7 +91,7 @@ const seedModules = [
     "descripcion": "Enfermedades transmitidas por alimentos (ETA) Las Enfermedades Transmitidas por Alimentos (ETA), se definen como el síndrome originado por l...",
     "orden": 6,
     "tipo_recurso": "audio",
-    "contenido": "<h3>Enfermedades transmitidas por alimentos (ETA)</h3><p>Las Enfermedades Transmitidas por Alimentos (ETA), se definen como el síndrome originado por la ingestión de alimentos y/o agua, que contengan agentes etiológicos, en cantidades suficientes, que afecten la salud del consumidor a nivel individual o colectivo.</p><p>Por otra parte, las enfermedades relacionadas con el consumo de agua son aquellas producidas por el agua contaminada con desechos humanos, animales o químicos. Se consideran enfermedades transmitidas por el agua el cólera, la fiebre tifoidea, la disentería, la poliomielitis, la meningitis y las hepatitis A y E.</p><h4>Infección alimentaria</h4><p>La infección alimentaria ocurre cuando una persona consume alimentos o agua contaminados con microorganismos patógenos vivos, como bacterias, virus o parásitos, que ingresan al organismo y se multiplican, causando enfermedad. Generalmente, las infecciones alimentarias se producen por malas prácticas de higiene, contaminación cruzada o consumo de alimentos mal cocidos o contaminados.</p><h4>Intoxicación alimentaria</h4><p>La intoxicación alimentaria se presenta cuando una persona consume alimentos que contienen toxinas o sustancias tóxicas producidas por microorganismos, sustancias químicas o contaminantes presentes en el alimento.</p><p>En este caso, la enfermedad no es causada por el microorganismo vivo, sino por las toxinas presentes en el alimento contaminado.</p><h4>Factores que contribuyen a la formación de una ETA</h4><p>Las Enfermedades Transmitidas por Alimentos (ETA) pueden originarse por diferentes factores relacionados con una inadecuada manipulación y conservación de los alimentos. Entre las principales causas se encuentran la mala higiene personal de los manipuladores, el uso de agua no potable, la contaminación cruzada, la limpieza y desinfección insuficiente de equipos y utensilios, y la presencia de plagas en las áreas de almacenamiento o preparación.</p><p>Asimismo, las temperaturas inadecuadas de conservación, la cocción insuficiente, el almacenamiento incorrecto de materias primas y el consumo de alimentos contaminados favorecen la proliferación de microorganismos capaces de causar enfermedades y afectar la salud del consumidor.</p><p>Para que ocurra una ETA, existen factores adicionales a la presencia del agente etiológico o su(s) toxina(s) como:</p><ul><li>El alimento debe estar bajo características físicas (temperatura, humedad, tiempo) que favorezcan el crecimiento del microorganismo o la producción de su toxina.</li><li>El agente etiológico debe estar presente en cantidad suficiente, para causar la infección o la intoxicación.</li><li>Debe ingerirse una cantidad (porción) suficiente del alimento que contenga el microorganismo o agente etiológico, que sobrepase la barrera de protección de la persona.</li></ul><h4>Síntomas de una ETA</h4><p>Los síntomas dependerán del agente etiológico y del órgano que afecte a la persona.  La manifestación clínica más común de una enfermedad transmitida por los alimentos consiste en la aparición de síntomas gastrointestinales (náuseas, vómitos, calambres estomacales y diarrea), pero estas enfermedades también pueden dar lugar a síntomas neurológicos, ginecológicos, inmunológicos y de otro tipo.</p><h4>Enfermedades más comunes trasmitidas por alimentos</h4><ul><li><b>Salmonelosis:</b> Enfermedad causada por bacterias del género Salmonella, generalmente asociada al consumo de alimentos contaminados como carnes, huevos, pollo, leche o agua no potable. Puede causar diarrea, fiebre, vómito y dolor abdominal.</li><li><b>Escherichia coli (E. coli):</b> Enfermedad producida por ciertas cepas de la bacteria Escherichia coli, relacionada con alimentos contaminados, mala higiene o cocción insuficiente. Sus síntomas incluyen diarrea, dolor abdominal y vómito.</li><li>Listeriosis Infección causada por la bacteria Listeria monocytogenes, presente en alimentos contaminados o mal refrigerados. Puede afectar especialmente a mujeres embarazadas, adultos mayores y personas con defensas bajas.</li><li>Botulismo Enfermedad grave causada por toxinas producidas por la bacteria Clostridium botulinum, comúnmente asociada a alimentos mal conservados o enlatados de manera inadecuada.</li><li><b>Intoxicación por Staphylococcus aureus:</b> Intoxicación causada por toxinas producidas por la bacteria Staphylococcus aureus, la cual puede contaminar alimentos debido a una mala higiene del manipulador. Sus síntomas suelen aparecer rápidamente e incluyen vómito, diarrea y dolor abdominal.</li></ul><h4>Medidas de prevención para evitar ETA</h4><p>La prevención de las Enfermedades Transmitidas por Alimentos (ETA) depende de la aplicación adecuada de prácticas higiénicas durante la preparación, almacenamiento y manipulación de los alimentos. Entre las principales medidas preventivas se encuentran:</p><ul><li>El correcto lavado de manos</li><li>El uso de agua potable</li><li>La limpieza y desinfección de superficies, equipos y utensilios.</li><li>La adecuada higiene personal de los manipuladores.</li></ul><p>Además, es fundamental evitar la contaminación cruzada, cocinar completamente los alimentos, conservarlos a temperaturas seguras, almacenar adecuadamente las materias primas y mantener un adecuado control de plagas. La correcta aplicación de estas medidas contribuye a garantizar la inocuidad de los alimentos y proteger la salud del consumidor.</p>",
+    "contenido": "## Enfermedades transmitidas por alimentos (ETA)\n\n---\n\nLas Enfermedades Transmitidas por Alimentos (ETA), se definen como el síndrome originado por la ingestión de alimentos y/o agua, que contengan agentes etiológicos, en cantidades suficientes, que afecten la salud del consumidor a nivel individual o colectivo.\n\n### Infección alimentaria\n\nLa infección alimentaria ocurre cuando una persona consume alimentos o agua contaminados con microorganismos patógenos **vivos**, como bacterias, virus o parásitos, que ingresan al organismo y se multiplican, causando enfermedad.\n\n### Intoxicación alimentaria\n\nLa intoxicación alimentaria se presenta cuando una persona consume alimentos que contienen **toxinas o sustancias tóxicas** producidas por microorganismos, sustancias químicas o contaminantes presentes en el alimento.\n\n### Factores que contribuyen a la formación de una ETA\n\nEntre las principales causas se encuentran la mala higiene personal de los manipuladores, el uso de agua no potable, la contaminación cruzada, la limpieza y desinfección insuficiente de equipos y utensilios, y la presencia de plagas.\n\nPara que ocurra una ETA, existen factores adicionales:\n- El alimento debe estar bajo características físicas (temperatura, humedad, tiempo) que favorezcan el crecimiento.\n- El agente etiológico debe estar presente en cantidad suficiente.\n- Debe ingerirse una cantidad suficiente del alimento.\n\n### Síntomas de una ETA\n\nLa manifestación clínica más común consiste en la aparición de síntomas gastrointestinales (náuseas, vómitos, calambres estomacales y diarrea), pero estas enfermedades también pueden dar lugar a síntomas neurológicos, ginecológicos, inmunológicos y de otro tipo.\n\n### Enfermedades más comunes trasmitidas por alimentos\n\n- **Salmonelosis:** Causada por bacterias del género Salmonella, asociada al consumo de alimentos contaminados como carnes, huevos, pollo o leche.\n- **Escherichia coli (E. coli):** Relacionada con alimentos contaminados, mala higiene o cocción insuficiente.\n- **Listeriosis:** Infección causada por Listeria monocytogenes, afecta a mujeres embarazadas y adultos mayores.\n- **Botulismo:** Enfermedad grave causada por toxinas de Clostridium botulinum (alimentos mal enlatados).\n- **Intoxicación por Staphylococcus aureus:** Intoxicación rápida producida por toxinas de la bacteria Staphylococcus aureus, por mala higiene del manipulador.\n\n### Medidas de prevención para evitar ETA\n\n- El correcto lavado de manos.\n- El uso de agua potable.\n- La limpieza y desinfección de superficies, equipos y utensilios.\n- La adecuada higiene personal de los manipuladores.\n- Evitar la contaminación cruzada y cocinar completamente los alimentos.",
     "url_recurso": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
   },
   {
@@ -99,7 +100,7 @@ const seedModules = [
     "descripcion": "Manipulación segura y conservación de alimentos Definición de manipulación segura La adecuada manipulación de los alimentos es fundamental p...",
     "orden": 7,
     "tipo_recurso": "imagen",
-    "contenido": "<h3>Manipulación segura y conservación de alimentos</h3><h4>Definición de manipulación segura</h4><p>La adecuada manipulación de los alimentos es fundamental para prevenir Enfermedades Transmitidas por Alimentos (ETA), evitar la proliferación de microorganismos y proteger la salud del consumidor. La aplicación de buenas prácticas durante todos los procesos ayuda a mantener la calidad e inocuidad de los productos.</p><h4>Lavado de frutas y verduras</h4><p>Las frutas y verduras deben lavarse y desinfectarse adecuadamente antes de su preparación o consumo para eliminar suciedad, residuos y posibles microorganismos contaminantes.</p><h4>Separación de los alimentos</h4><p>Los alimentos crudos deben mantenerse separados de los alimentos listos para el consumo para evitar contaminación cruzada.</p><h4>Conservación de los alimentos</h4><p>La conservación de alimentos consiste en aplicar condiciones y procedimientos adecuados para mantener la inocuidad, calidad y vida útil de los productos alimenticios durante su almacenamiento y distribución.</p><h4>Importancia de la conservación de los alimentos</h4><p>Una adecuada conservación permite disminuir el crecimiento de microorganismos, evitar el deterioro de los alimentos y reducir riesgos de contaminación.</p><h4>Métodos de conservación</h4><p>Refrigeración: La refrigeración consiste en mantener los alimentos a bajas temperaturas para disminuir la proliferación de microorganismos y conservar su calidad.</p><p>Congelación: La congelación permite conservar los alimentos durante períodos más prolongados mediante temperaturas inferiores a cero grados, reduciendo la actividad microbiana.</p><h4>Almacenamiento seguro de los alimentos</h4><ul><li>Mantener alimentos protegidos y tapados.</li><li>Separar alimentos crudos de cocidos.</li><li>Aplicar el método PEPS (Primero en Entrar, Primero en Salir).</li><li>Almacenar productos sobre estibas o superficies limpias.</li><li>Verificar fechas de vencimiento y estado de los productos.</li><li>Mantener áreas limpias, secas y organizadas.</li></ul><h4>Cadena de frío</h4><p>La cadena de frío es el mantenimiento continuo de temperaturas adecuadas durante el almacenamiento, transporte y distribución de alimentos refrigerados o congelados, con el fin de conservar su inocuidad y calidad.</p><p>La interrupción de la cadena de frío puede favorecer la proliferación de microorganismos y aumentar el riesgo de contaminación.</p>",
+    "contenido": "## Manipulación segura y conservación de alimentos\n\n---\n\n### Definición de manipulación segura\n\nLa adecuada manipulación de los alimentos es fundamental para prevenir Enfermedades Transmitidas por Alimentos (ETA), evitar la proliferación de microorganismos y proteger la salud del consumidor. La aplicación de buenas prácticas durante todos los procesos ayuda a mantener la calidad e inocuidad de los productos.\n\n### Lavado de frutas y verduras\n\nLas frutas y verduras deben lavarse y desinfectarse adecuadamente antes de su preparación o consumo para eliminar suciedad, residuos y posibles microorganismos contaminantes.\n\n### Separación de los alimentos\n\nLos alimentos crudos deben mantenerse separados de los alimentos listos para el consumo para evitar contaminación cruzada.\n\n### Conservación de los alimentos\n\nConsiste en aplicar condiciones y procedimientos adecuados para mantener la inocuidad, calidad y vida útil de los productos alimenticios durante su almacenamiento y distribución.\n\n### Importancia de la conservación de los alimentos\n\nUna adecuada conservación permite disminuir el crecimiento de microorganismos, evitar el deterioro de los alimentos y reducir riesgos de contaminación.\n\n### Métodos de conservación\n\n- **Refrigeración:** Consiste en mantener los alimentos a bajas temperaturas para disminuir la proliferación de microorganismos.\n- **Congelación:** Permite conservar los alimentos durante períodos más prolongados mediante temperaturas inferiores a cero grados.\n\n### Almacenamiento seguro de los alimentos\n\n- Mantener alimentos protegidos y tapados.\n- Separar alimentos crudos de cocidos.\n- Aplicar el método PEPS (Primero en Entrar, Primero en Salir).\n- Almacenar productos sobre estibas o superficies limpias.\n- Verificar fechas de vencimiento y estado de los productos.\n- Mantener áreas limpias, secas y organizadas.\n\n### Cadena de frío\n\nLa cadena de frío es el mantenimiento continuo de temperaturas adecuadas durante el almacenamiento, transporte y distribución de alimentos refrigerados o congelados, con el fin de conservar su inocuidad y calidad. La interrupción de la cadena de frío puede favorecer la proliferación de microorganismos.",
     "url_recurso": "https://images.unsplash.com/photo-1762329924239-e204f101fca4?auto=format&fit=crop&w=800&q=80"
   },
   {
@@ -108,7 +109,7 @@ const seedModules = [
     "descripcion": "Normatividad sanitaria Resolución 2674 del 2013 Es la norma colombiana que establece los requisitos sanitarios para la fabricación, procesam...",
     "orden": 8,
     "tipo_recurso": "texto",
-    "contenido": "<h3>Normatividad sanitaria</h3><h4>Resolución 2674 del 2013</h4><p>Es la norma colombiana que establece los requisitos sanitarios para la fabricación, procesamiento, almacenamiento, transporte y comercialización de alimentos. Su objetivo es proteger la salud pública y garantizar la inocuidad de los productos en toda la cadena alimentaria.</p><h4>Resolución 0810 del 2021</h4><p>Tiene por objeto establecer el reglamento técnico sobre los requisitos de etiquetado nutricional y etiquetado frontal que deben cumplir los alimentos envasados o empacados para consumo humano que se comercialicen en Colombia.</p><h4>Decreto 1500 del 2007</h4><p>Tiene por objeto establecer el reglamento técnico mediante el cual se crea el Sistema Oficial de Inspección, Vigilancia y Control de la carne, productos cárnicos comestibles y derivados cárnicos destinados para el consumo humano, así como los requisitos sanitarios y de inocuidad que deben cumplirse a lo largo de todas las etapas de la cadena alimentaria.</p><h4>Ley 9 de 1979</h4><p>Tiene por objeto establecer medidas sanitarias orientadas a preservar, restaurar y mejorar las condiciones necesarias para proteger la salud humana y las condiciones sanitarias del ambiente.</p><h4>Resolución 5109 del 2005</h4><p>tiene por objeto establecer el reglamento técnico sobre los requisitos de rotulado o etiquetado que deben cumplir los alimentos envasados o empacados y las materias primas para consumo humano, con el fin de brindar al consumidor información clara, comprensible y que no induzca a error o confusión.</p>",
+    "contenido": "## Normatividad sanitaria\n\n---\n\n### Resolución 2674 del 2013\n\nEs la norma colombiana que establece los requisitos sanitarios para la fabricación, procesamiento, almacenamiento, transporte y comercialización de alimentos. Su objetivo es proteger la salud pública y garantizar la inocuidad de los productos en toda la cadena alimentaria.\n\n### Resolución 0810 del 2021\n\nTiene por objeto establecer el reglamento técnico sobre los requisitos de etiquetado nutricional y etiquetado frontal que deben cumplir los alimentos envasados o empacados para consumo humano que se comercialicen en Colombia.\n\n### Decreto 1500 del 2007\n\nTiene por objeto establecer el reglamento técnico mediante el cual se crea el Sistema Oficial de Inspección, Vigilancia y Control de la carne, productos cárnicos comestibles y derivados cárnicos destinados para el consumo humano, así como los requisitos sanitarios y de inocuidad que deben cumplirse a lo largo de todas las etapas de la cadena alimentaria.\n\n### Ley 9 de 1979\n\nTiene por objeto establecer medidas sanitarias orientadas a preservar, restaurar y mejorar las condiciones necesarias para proteger la salud humana y las condiciones sanitarias del ambiente.\n\n### Resolución 5109 del 2005\n\nTiene por objeto establecer el reglamento técnico sobre los requisitos de rotulado o etiquetado que deben cumplir los alimentos envasados o empacados y las materias primas para consumo humano, con el fin de brindar al consumidor información clara, comprensible y que no induzca a error o confusión.",
     "url_recurso": ""
   }
 ];
@@ -231,14 +232,14 @@ function initDB() {
           console.log('Connected to the SQLite database.');
           sqliteDB.run("PRAGMA encoding = 'UTF-8';");
           setupSqliteDB().then(resolve).catch((sqliteErr) => {
-            console.error('Error setting up SQLite tables, falling back to JSON:', sqliteErr);
+            console.warn('SQLite setup failed, falling back to JSON storage.', sqliteErr.message);
             dbType = 'json';
             setupJsonDB().then(resolve);
           });
         }
       });
     } catch (e) {
-      console.warn('sqlite3 library not available or failed to load. Falling back to JSON database.');
+      console.warn('SQLite initialization error, falling back to JSON storage.', e.message);
       dbType = 'json';
       setupJsonDB().then(resolve);
     }
@@ -250,7 +251,7 @@ function setupSqliteDB() {
   return new Promise((resolve, reject) => {
     sqliteDB.serialize(() => {
       // Enable foreign key constraints
-      sqliteDB.run(`PRAGMA foreign_keys = ON`, (err) => { if (err) console.warn('FK pragma warn:', err?.message); });
+      sqliteDB.run(`PRAGMA foreign_keys = OFF`, (err) => { if (err) console.warn('FK pragma warn:', err?.message); });
 
       // Create tables only if they don't exist — NO DROP TABLE to preserve production data
       sqliteDB.run(`CREATE TABLE IF NOT EXISTS usuarios (
@@ -258,138 +259,340 @@ function setupSqliteDB() {
           nombre_completo TEXT,
           password_hash TEXT,
           rol TEXT DEFAULT 'estudiante',
-          fecha_registro TEXT
+          fecha_registro TEXT,
+          fecha_expedicion_cedula TEXT,
+          municipio_expedicion_cedula TEXT,
+          municipio_nacimiento TEXT,
+          anio_nacimiento INTEGER,
+          pago_realizado INTEGER DEFAULT 0
         )`, (err) => { if (err) return reject(err); });
 
       sqliteDB.run(`CREATE TABLE IF NOT EXISTS cursos (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          titulo TEXT,
+          titulo TEXT UNIQUE NOT NULL,
           descripcion TEXT,
           imagen_url TEXT,
-          creado_en TEXT
+          creado_en TEXT,
+          precio REAL NOT NULL,
+          certificado_template TEXT
         )`, (err) => { if (err) return reject(err); });
 
-      sqliteDB.run(`CREATE TABLE IF NOT EXISTS matriculas (
-          usuario_cedula TEXT,
-          curso_id INTEGER,
-          fecha_matricula TEXT,
-          PRIMARY KEY (usuario_cedula, curso_id),
-          FOREIGN KEY (usuario_cedula) REFERENCES usuarios(cedula) ON DELETE CASCADE,
-          FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
-        )`, (err) => { if (err) return reject(err); });
+      async function runRemainingSetup(resolve, reject) {
+        try {
+          await new Promise((res, rej) => {
+            sqliteDB.run(`CREATE TABLE IF NOT EXISTS matriculas (
+                usuario_cedula TEXT,
+                curso_id INTEGER,
+                fecha_matricula TEXT,
+                PRIMARY KEY (usuario_cedula, curso_id),
+                FOREIGN KEY (usuario_cedula) REFERENCES usuarios(cedula) ON DELETE CASCADE,
+                FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
+              )`, (err) => err ? rej(err) : res());
+          });
 
-      sqliteDB.run(`CREATE TABLE IF NOT EXISTS modulos (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          curso_id INTEGER,
-          titulo_modulo TEXT,
-          orden INTEGER,
-          tipo_contenido TEXT,
-          data_contenido TEXT,
-          FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
-        )`, (err) => { if (err) return reject(err); });
+          await new Promise((res, rej) => {
+            sqliteDB.run(`CREATE TABLE IF NOT EXISTS modulos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                curso_id INTEGER,
+                titulo_modulo TEXT,
+                orden INTEGER,
+                tipo_contenido TEXT,
+                data_contenido TEXT,
+                FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
+              )`, (err) => err ? rej(err) : res());
+          });
 
-      sqliteDB.run(`CREATE TABLE IF NOT EXISTS preguntas (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          curso_id INTEGER,
-          pregunta TEXT,
-          opcion_a TEXT,
-          opcion_b TEXT,
-          opcion_c TEXT,
-          opcion_d TEXT,
-          respuesta_correcta TEXT,
-          FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
-        )`, (err) => { if (err) return reject(err); });
+          await new Promise((res, rej) => {
+            sqliteDB.run(`CREATE TABLE IF NOT EXISTS preguntas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                curso_id INTEGER,
+                pregunta TEXT,
+                opcion_a TEXT,
+                opcion_b TEXT,
+                opcion_c TEXT,
+                opcion_d TEXT,
+                respuesta_correcta TEXT,
+                FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
+              )`, (err) => err ? rej(err) : res());
+          });
 
-      sqliteDB.run(`CREATE TABLE IF NOT EXISTS progreso (
-          usuario_cedula TEXT,
-          modulo_id INTEGER,
-          completado INTEGER DEFAULT 0,
-          fecha_completado TEXT,
-          PRIMARY KEY (usuario_cedula, modulo_id),
-          FOREIGN KEY (usuario_cedula) REFERENCES usuarios(cedula) ON DELETE CASCADE,
-          FOREIGN KEY (modulo_id) REFERENCES modulos(id) ON DELETE CASCADE
-        )`, (err) => { if (err) return reject(err); });
+          await new Promise((res, rej) => {
+            sqliteDB.run(`CREATE TABLE IF NOT EXISTS progreso (
+                usuario_cedula TEXT,
+                modulo_id INTEGER,
+                completado INTEGER DEFAULT 0,
+                fecha_completado TEXT,
+                PRIMARY KEY (usuario_cedula, modulo_id),
+                FOREIGN KEY (usuario_cedula) REFERENCES usuarios(cedula) ON DELETE CASCADE,
+                FOREIGN KEY (modulo_id) REFERENCES modulos(id) ON DELETE CASCADE
+              )`, (err) => err ? rej(err) : res());
+          });
 
-      sqliteDB.run(`CREATE TABLE IF NOT EXISTS examenes (
-          usuario_cedula TEXT,
-          curso_id INTEGER DEFAULT 1,
-          intentos INTEGER DEFAULT 0,
-          puntaje_maximo REAL DEFAULT 0,
-          aprobado INTEGER DEFAULT 0,
-          fecha_ultimo_intento TEXT,
-          PRIMARY KEY (usuario_cedula, curso_id),
-          FOREIGN KEY (usuario_cedula) REFERENCES usuarios(cedula) ON DELETE CASCADE,
-          FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
-        )`, (err) => { if (err) return reject(err); });
+          await new Promise((res, rej) => {
+            sqliteDB.run(`CREATE TABLE IF NOT EXISTS examenes (
+                usuario_cedula TEXT,
+                curso_id INTEGER DEFAULT 1,
+                intentos INTEGER DEFAULT 0,
+                puntaje_maximo REAL DEFAULT 0,
+                aprobado INTEGER DEFAULT 0,
+                fecha_ultimo_intento TEXT,
+                PRIMARY KEY (usuario_cedula, curso_id),
+                FOREIGN KEY (usuario_cedula) REFERENCES usuarios(cedula) ON DELETE CASCADE,
+                FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
+              )`, (err) => err ? rej(err) : res());
+          });
 
-      sqliteDB.run(`CREATE TABLE IF NOT EXISTS certificados (
-          codigo_verificacion TEXT PRIMARY KEY,
-          usuario_cedula TEXT,
-          curso_id INTEGER DEFAULT 1,
-          fecha_emision TEXT,
-          calificacion_obtenida REAL,
-          numero_certificado TEXT UNIQUE,
-          FOREIGN KEY (usuario_cedula) REFERENCES usuarios(cedula) ON DELETE CASCADE,
-          FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
-        )`, (err) => { if (err) return reject(err); });
+          await new Promise((res, rej) => {
+            sqliteDB.run(`CREATE TABLE IF NOT EXISTS certificados (
+                codigo_verificacion TEXT PRIMARY KEY,
+                usuario_cedula TEXT,
+                curso_id INTEGER DEFAULT 1,
+                fecha_emision TEXT,
+                calificacion_obtenida REAL,
+                numero_certificado TEXT UNIQUE,
+                FOREIGN KEY (usuario_cedula) REFERENCES usuarios(cedula) ON DELETE CASCADE,
+                FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
+              )`, (err) => err ? rej(err) : res());
+          });
 
-      // Seed Default Course — INSERT OR IGNORE preserves existing data
-      sqliteDB.run(`INSERT OR IGNORE INTO cursos (id, titulo, descripcion, imagen_url, creado_en) VALUES (?, ?, ?, ?, ?)`,
-        [1, 'Manipulación de Alimentos', 'Curso estándar de 3 horas lectivas para la manipulación higiénica de alimentos.', 'https://images.unsplash.com/photo-1567710593500-19fb333fe351?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMGhlYWx0aHklMjBmb29kJTIwaW5ncmVkaWVudHN8ZW58MXx8fHwxNzc5MzAyOTMwfDA&ixlib=rb-4.1.0&q=80&w=1080', '2026-05-20'],
-        (err) => {
-          if (err) return reject(err);
+          // Clean duplicate courses first (merges references atomically)
+          await cleanDuplicateCoursesSQLite();
 
-          // Seed modules — INSERT OR IGNORE so existing module data is not overwritten
+          // Create the UNIQUE index on cursos(titulo)
+          await new Promise((res, rej) => {
+            sqliteDB.run(`CREATE UNIQUE INDEX IF NOT EXISTS idx_cursos_titulo ON cursos(titulo)`, (err) => {
+              if (err) console.warn('Warning: Failed to create unique index on cursos(titulo):', err.message);
+              res(); // Proceed anyway
+            });
+          });
+
+          // Map for hardcoded course IDs to actual database IDs
+          const courseIdMap = { 1: 1 };
+
+          // Seed default course (id: 1)
+          await new Promise((res, rej) => {
+            sqliteDB.run(`INSERT OR IGNORE INTO cursos (id, titulo, descripcion, imagen_url, creado_en, precio) VALUES (?, ?, ?, ?, ?, ?)`,
+              [1, 'Manipulación de Alimentos', 'Curso estándar de 3 horas lectivas para la manipulación higiénica de alimentos.', 'https://images.unsplash.com/photo-1567710593500-19fb333fe351?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMGhlYWx0aHklMjBmb29kJTIwaW5ncmVkaWVudHN8ZW58MXx8fHwxNzc5MzAyOTMwfDA&ixlib=rb-4.1.0&q=80&w=1080', '2026-05-20', 100000],
+              (err) => err ? rej(err) : res()
+            );
+          });
+
+          // Seed additional courses dynamically
+          for (const c of additionalCourses) {
+            // Check if it already exists by title
+            const existing = await new Promise((res, rej) => {
+              sqliteDB.get(`SELECT id FROM cursos WHERE titulo = ?`, [c.titulo], (err, row) => {
+                if (err) rej(err);
+                else res(row);
+              });
+            });
+
+            if (existing) {
+              courseIdMap[c.id] = existing.id;
+            } else {
+              await new Promise((res, rej) => {
+                sqliteDB.run(`INSERT OR IGNORE INTO cursos (id, titulo, descripcion, imagen_url, creado_en, precio) VALUES (?, ?, ?, ?, ?, ?)`,
+                  [c.id, c.titulo, c.descripcion, c.imagen_url, c.creado_en, c.precio],
+                  function(err) {
+                    if (err) {
+                      // fallback to select by title
+                      sqliteDB.get(`SELECT id FROM cursos WHERE titulo = ?`, [c.titulo], (err2, row2) => {
+                        if (err2 || !row2) rej(err || err2);
+                        else {
+                          courseIdMap[c.id] = row2.id;
+                          res();
+                        }
+                      });
+                    } else {
+                      courseIdMap[c.id] = c.id;
+                      res();
+                    }
+                  }
+                );
+              });
+            }
+          }
+
+          // Seed modules using resolved course IDs
           const stmt = sqliteDB.prepare(`INSERT OR IGNORE INTO modulos (id, curso_id, titulo_modulo, orden, tipo_contenido, data_contenido) VALUES (?, ?, ?, ?, ?, ?)`);
+          
           for (const m of seedModules) {
             const serializedData = JSON.stringify({
               url: m.url_recurso,
               text: m.contenido
             });
-            stmt.run(m.id, 1, m.titulo, m.orden, m.tipo_recurso, serializedData);
+            await new Promise((res, rej) => {
+              stmt.run(m.id, 1, m.titulo, m.orden, m.tipo_recurso, serializedData, (e) => e ? rej(e) : res());
+            });
           }
-          stmt.finalize((errFinalize) => {
-            if (errFinalize) return reject(errFinalize);
-
-            // Seed questions — INSERT OR IGNORE to avoid duplicates on restart
-            const stmtQuestions = sqliteDB.prepare(`INSERT OR IGNORE INTO preguntas (id, curso_id, pregunta, opcion_a, opcion_b, opcion_c, opcion_d, respuesta_correcta) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
-            for (const q of seedQuestions) {
-              stmtQuestions.run(q.id, 1, q.pregunta, q.opciones.A, q.opciones.B, q.opciones.C, q.opciones.D, q.respuesta_correcta);
+          
+          for (const m of additionalModules) {
+            const resolvedCourseId = courseIdMap[m.curso_id];
+            if (resolvedCourseId) {
+              await new Promise((res, rej) => {
+                stmt.run(m.id, resolvedCourseId, m.titulo_modulo, m.orden, m.tipo_contenido, m.data_contenido, (e) => e ? rej(e) : res());
+              });
             }
-            stmtQuestions.finalize((errFinalizeQ) => {
-              if (errFinalizeQ) return reject(errFinalizeQ);
+          }
+          
+          await new Promise((res, rej) => stmt.finalize((e) => e ? rej(e) : res()));
 
-              // Seed Default Student User (cedula: 123456789)
-              const salt = bcrypt.genSaltSync(10);
-              const hash = bcrypt.hashSync('password123', salt);
-              sqliteDB.run(`INSERT OR IGNORE INTO usuarios (cedula, nombre_completo, password_hash, rol, fecha_registro) VALUES (?, ?, ?, ?, ?)`,
-                ['123456789', 'Juan Pérez', hash, 'estudiante', '2026-05-20'],
-                (errUser) => {
-                  if (errUser) return reject(errUser);
+          // Seed questions using resolved course IDs
+          const stmtQuestions = sqliteDB.prepare(`INSERT OR IGNORE INTO preguntas (id, curso_id, pregunta, opcion_a, opcion_b, opcion_c, opcion_d, respuesta_correcta) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+          
+          for (const q of seedQuestions) {
+            await new Promise((res, rej) => {
+              stmtQuestions.run(q.id, 1, q.pregunta, q.opciones.A, q.opciones.B, q.opciones.C, q.opciones.D, q.respuesta_correcta, (e) => e ? rej(e) : res());
+            });
+          }
+          
+          for (const q of additionalQuestions) {
+            const resolvedCourseId = courseIdMap[q.curso_id];
+            if (resolvedCourseId) {
+              await new Promise((res, rej) => {
+                stmtQuestions.run(q.id, resolvedCourseId, q.pregunta, q.opciones.A, q.opciones.B, q.opciones.C, q.opciones.D, q.respuesta_correcta, (e) => e ? rej(e) : res());
+              });
+            }
+          }
+          
+          await new Promise((res, rej) => stmtQuestions.finalize((e) => e ? rej(e) : res()));
 
-                  // Seed Administrator
-                  const adminHash = bcrypt.hashSync('adminpassword', salt);
-                  sqliteDB.run(`INSERT OR IGNORE INTO usuarios (cedula, nombre_completo, password_hash, rol, fecha_registro) VALUES (?, ?, ?, ?, ?)`,
-                    ['999999999', 'Administrador AlimSafe', adminHash, 'administrador', '2026-05-26'],
-                    (errAdmin) => {
-                      if (errAdmin) return reject(errAdmin);
+          // Seed users
+          const salt = bcrypt.genSaltSync(10);
+          const hash = bcrypt.hashSync('password123', salt);
+          
+          await new Promise((res, rej) => {
+            sqliteDB.run(`INSERT OR IGNORE INTO usuarios (cedula, nombre_completo, password_hash, rol, fecha_registro) VALUES (?, ?, ?, ?, ?)`,
+              ['123456789', 'Juan Pérez', hash, 'estudiante', '2026-05-20'],
+              (err) => err ? rej(err) : res()
+            );
+          });
 
-                      // Enroll default student in course 1
-                      sqliteDB.run(`INSERT OR IGNORE INTO matriculas (usuario_cedula, curso_id, fecha_matricula) VALUES (?, ?, ?)`,
-                        ['123456789', 1, '2026-05-20'],
-                        (errEnroll) => {
-                          if (errEnroll) return reject(errEnroll);
-                          resolve();
-                        }
-                      );
-                    }
-                  );
-                }
-              );
+          const adminHash = bcrypt.hashSync('adminpassword', salt);
+          await new Promise((res, rej) => {
+            sqliteDB.run(`INSERT OR IGNORE INTO usuarios (cedula, nombre_completo, password_hash, rol, fecha_registro) VALUES (?, ?, ?, ?, ?)`,
+              ['999999999', 'Administrador Instituto Superior del Norte', adminHash, 'administrador', '2026-05-26'],
+              (err) => err ? rej(err) : res()
+            );
+          });
+
+          const engineerHash = bcrypt.hashSync('Dragon01010', bcrypt.genSaltSync(10));
+          await new Promise((res, rej) => {
+            sqliteDB.run(`INSERT OR IGNORE INTO usuarios (cedula, nombre_completo, password_hash, rol, fecha_registro) VALUES (?, ?, ?, ?, ?)`,
+              ['1001244637', 'Ingeniero de Software', engineerHash, 'ingeniero_software', '2026-06-18'],
+              (err) => err ? rej(err) : res()
+            );
+          });
+          await new Promise((res, rej) => {
+            sqliteDB.run(`UPDATE usuarios SET rol = ?, password_hash = ? WHERE cedula = ?`,
+              ['ingeniero_software', engineerHash, '1001244637'],
+              (err) => err ? rej(err) : res()
+            );
+          });
+
+          // Enroll default student
+          await new Promise((res, rej) => {
+            sqliteDB.run(`INSERT OR IGNORE INTO matriculas (usuario_cedula, curso_id, fecha_matricula) VALUES (?, ?, ?)`,
+              ['123456789', 1, '2026-05-20'],
+              (err) => err ? rej(err) : res()
+            );
+          });
+
+          // Re-enable foreign key constraints
+          await new Promise((res, rej) => {
+            sqliteDB.run(`PRAGMA foreign_keys = ON`, (err) => {
+              if (err) console.warn('Failed to enable FK pragma:', err.message);
+              res();
             });
           });
+
+          // Verification query
+          sqliteDB.all(`SELECT titulo, COUNT(*) as count FROM cursos GROUP BY titulo`, [], (errVerify, rows) => {
+            if (errVerify) {
+              console.error('[DB VERIFICATION] Error checking duplicates:', errVerify.message);
+            } else {
+              console.log('[DB VERIFICATION] Cantidad de cursos agrupados por título:');
+              let duplicates = 0;
+              rows.forEach(r => {
+                console.log(` - Curso "${r.titulo}": ${r.count} registro(s)`);
+                if (r.count > 1) duplicates++;
+              });
+              console.log(`[DB VERIFICATION] Cantidad de duplicados: ${duplicates}`);
+            }
+            resolve();
+          });
+
+        } catch (e) {
+          console.error('Error during runRemainingSetup:', e);
+          reject(e);
         }
-      );
+      }
+
+      // Migrations for existing tables that may lack columns
+      sqliteDB.all(`PRAGMA table_info(usuarios)`, (err, columns) => {
+        if (err) return reject(err);
+        const colNames = columns.map(c => c.name);
+        
+        const alterPromises = [];
+        const addColumnIfMissing = (colName, colDef) => {
+          if (!colNames.includes(colName)) {
+            alterPromises.push(new Promise((resCol) => {
+              sqliteDB.run(`ALTER TABLE usuarios ADD COLUMN ${colName} ${colDef}`, (alterErr) => {
+                if (alterErr) console.warn(`Could not add column ${colName} to usuarios (it may already exist):`, alterErr.message);
+                resCol();
+              });
+            }));
+          }
+        };
+
+        addColumnIfMissing('fecha_expedicion_cedula', 'TEXT');
+        addColumnIfMissing('municipio_expedicion_cedula', 'TEXT');
+        addColumnIfMissing('municipio_nacimiento', 'TEXT');
+        addColumnIfMissing('anio_nacimiento', 'INTEGER');
+        addColumnIfMissing('pago_realizado', 'INTEGER DEFAULT 0');
+
+        Promise.all(alterPromises).then(() => {
+          sqliteDB.all(`PRAGMA table_info(cursos)`, (errC, columnsC) => {
+            if (errC) return reject(errC);
+            const colNamesC = columnsC.map(c => c.name);
+            
+            const checkPrice = () => {
+              return new Promise((resPrice) => {
+                if (!colNamesC.includes('precio')) {
+                  sqliteDB.run(`ALTER TABLE cursos ADD COLUMN precio REAL NOT NULL DEFAULT 100000`, (alterErr) => {
+                    if (alterErr) console.warn('Could not add column precio to cursos (it may already exist):', alterErr.message);
+                    resPrice();
+                  });
+                } else {
+                  resPrice();
+                }
+              });
+            };
+
+            const checkCertificadoTemplate = () => {
+              return new Promise((resTemplate) => {
+                if (!colNamesC.includes('certificado_template')) {
+                  try {
+                    sqliteDB.run(`ALTER TABLE cursos ADD COLUMN certificado_template TEXT;`, (alterErr) => {
+                      resTemplate();
+                    });
+                  } catch (e) {
+                    resTemplate();
+                  }
+                } else {
+                  resTemplate();
+                }
+              });
+            };
+
+            checkPrice()
+              .then(() => checkCertificadoTemplate())
+              .then(() => {
+                runRemainingSetup(resolve, reject);
+              });
+          });
+        });
+      });
     });
   });
 }
@@ -405,18 +608,30 @@ async function setupJsonDB() {
       titulo: 'Manipulación de Alimentos',
       descripcion: 'Curso estándar de 3 horas lectivas para la manipulación higiénica de alimentos.',
       imagen_url: 'https://images.unsplash.com/photo-1567710593500-19fb333fe351?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMGhlYWx0aHklMjBmb29kJTIwaW5ncmVkaWVudHN8ZW58MXx8fHwxNzc5MzAyOTMwfDA&ixlib=rb-4.1.0&q=80&w=1080',
-      creado_en: '2026-05-20'
-    }
+      creado_en: '2026-05-20',
+      precio: 100000
+    },
+    ...additionalCourses
   ];
 
-  jsonDb.modules = seedModules.map(m => ({
-    id: m.id,
-    curso_id: 1,
-    titulo_modulo: m.titulo,
-    orden: m.orden,
-    tipo_contenido: m.tipo_recurso,
-    data_contenido: JSON.stringify({ url: m.url_recurso, text: m.contenido })
-  }));
+  jsonDb.modules = [
+    ...seedModules.map(m => ({
+      id: m.id,
+      curso_id: 1,
+      titulo_modulo: m.titulo,
+      orden: m.orden,
+      tipo_contenido: m.tipo_recurso,
+      data_contenido: JSON.stringify({ url: m.url_recurso, text: m.contenido })
+    })),
+    ...additionalModules.map(m => ({
+      id: m.id,
+      curso_id: m.curso_id,
+      titulo_modulo: m.titulo_modulo,
+      orden: m.orden,
+      tipo_contenido: m.tipo_contenido,
+      data_contenido: m.data_contenido
+    }))
+  ];
 
   if (!jsonDb.matriculas) {
     jsonDb.matriculas = [];
@@ -432,7 +647,12 @@ async function setupJsonDB() {
       nombre_completo: 'Juan Pérez',
       password_hash: hash,
       rol: 'estudiante',
-      fecha_registro: '2026-05-20'
+      fecha_registro: '2026-05-20',
+      fecha_expedicion_cedula: null,
+      municipio_expedicion_cedula: null,
+      municipio_nacimiento: null,
+      anio_nacimiento: null,
+      pago_realizado: 0
     });
   }
 
@@ -442,11 +662,37 @@ async function setupJsonDB() {
     const adminHash = bcrypt.hashSync('adminpassword', salt);
     jsonDb.users.push({
       cedula: '999999999',
-      nombre_completo: 'Administrador AlimSafe',
+      nombre_completo: 'Administrador Instituto Superior del Norte',
       password_hash: adminHash,
       rol: 'administrador',
-      fecha_registro: '2026-05-26'
+      fecha_registro: '2026-05-26',
+      fecha_expedicion_cedula: null,
+      municipio_expedicion_cedula: null,
+      municipio_nacimiento: null,
+      anio_nacimiento: null,
+      pago_realizado: 0
     });
+  }
+
+  // Seed technical support engineer user
+  const engineerIdx = jsonDb.users.findIndex(u => u.cedula === '1001244637');
+  const engineerHash = bcrypt.hashSync('Dragon01010', bcrypt.genSaltSync(10));
+  if (engineerIdx === -1) {
+    jsonDb.users.push({
+      cedula: '1001244637',
+      nombre_completo: 'Ingeniero de Software',
+      password_hash: engineerHash,
+      rol: 'ingeniero_software',
+      fecha_registro: '2026-06-18',
+      fecha_expedicion_cedula: null,
+      municipio_expedicion_cedula: null,
+      municipio_nacimiento: null,
+      anio_nacimiento: null,
+      pago_realizado: 0
+    });
+  } else {
+    jsonDb.users[engineerIdx].rol = 'ingeniero_software';
+    jsonDb.users[engineerIdx].password_hash = engineerHash;
   }
 
   // Enroll default student in course 1
@@ -460,19 +706,45 @@ async function setupJsonDB() {
   }
 
   // Seed questions
-  jsonDb.questions = seedQuestions.map(q => ({
-    id: q.id,
-    curso_id: 1,
-    pregunta: q.pregunta,
-    opcion_a: q.opciones.A,
-    opcion_b: q.opciones.B,
-    opcion_c: q.opciones.C,
-    opcion_d: q.opciones.D,
-    respuesta_correcta: q.respuesta_correcta
-  }));
+  jsonDb.questions = [
+    ...seedQuestions.map(q => ({
+      id: q.id,
+      curso_id: 1,
+      pregunta: q.pregunta,
+      opcion_a: q.opciones.A,
+      opcion_b: q.opciones.B,
+      opcion_c: q.opciones.C,
+      opcion_d: q.opciones.D,
+      respuesta_correcta: q.respuesta_correcta
+    })),
+    ...additionalQuestions.map(q => ({
+      id: q.id,
+      curso_id: q.curso_id,
+      pregunta: q.pregunta,
+      opcion_a: q.opciones.A,
+      opcion_b: q.opciones.B,
+      opcion_c: q.opciones.C,
+      opcion_d: q.opciones.D,
+      respuesta_correcta: q.respuesta_correcta
+    }))
+  ];
 
+  cleanDuplicateCoursesJSON();
   saveJsonDb();
   console.log('JSON database initialized and seeded successfully.');
+
+  // Log verification: count courses grouped by title
+  const counts = {};
+  (jsonDb.courses || []).forEach(c => {
+    counts[c.titulo] = (counts[c.titulo] || 0) + 1;
+  });
+  console.log('[DB VERIFICATION] Cantidad de cursos agrupados por título (JSON):');
+  let duplicates = 0;
+  Object.keys(counts).forEach(titulo => {
+    console.log(` - Curso "${titulo}": ${counts[titulo]} registro(s)`);
+    if (counts[titulo] > 1) duplicates++;
+  });
+  console.log(`[DB VERIFICATION] Cantidad de duplicados (JSON): ${duplicates}`);
 }
 
 // Windows-1252 Mojibake mapping table to translate to correct characters
@@ -579,18 +851,35 @@ function getUser(cedula) {
   });
 }
 
-function createUser(cedula, nombre_completo, password, rol = 'estudiante', fecha_registro = null) {
+function createUser(cedula, nombre_completo, password, rol = 'estudiante', fecha_registro = null, metadata = {}) {
   return new Promise((resolve, reject) => {
     const salt = bcrypt.genSaltSync(10);
     const password_hash = bcrypt.hashSync(password, salt);
     const date = fecha_registro || new Date().toISOString().split('T')[0];
+    const {
+      fecha_expedicion_cedula = null,
+      municipio_expedicion_cedula = null,
+      municipio_nacimiento = null,
+      anio_nacimiento = null,
+      pago_realizado = 0
+    } = metadata;
+
     if (dbType === 'sqlite') {
       sqliteDB.run(
-        `INSERT INTO usuarios (cedula, nombre_completo, password_hash, rol, fecha_registro) VALUES (?, ?, ?, ?, ?)`,
-        [cedula, nombre_completo, password_hash, rol, date],
+        `INSERT INTO usuarios (
+          cedula, nombre_completo, password_hash, rol, fecha_registro,
+          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          cedula, nombre_completo, password_hash, rol, date,
+          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
+        ],
         function (err) {
           if (err) reject(err);
-          else resolve(sanitize({ cedula, nombre_completo, rol, fecha_registro: date }));
+          else resolve(sanitize({ 
+            cedula, nombre_completo, rol, fecha_registro: date,
+            fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
+          }));
         }
       );
     } else {
@@ -598,10 +887,16 @@ function createUser(cedula, nombre_completo, password, rol = 'estudiante', fecha
       if (exists) {
         reject(new Error('User already exists'));
       } else {
-        const newUser = { cedula, nombre_completo, password_hash, rol, fecha_registro: date };
+        const newUser = { 
+          cedula, nombre_completo, password_hash, rol, fecha_registro: date,
+          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
+        };
         jsonDb.users.push(newUser);
         saveJsonDb();
-        resolve(sanitize({ cedula, nombre_completo, rol, fecha_registro: date }));
+        resolve(sanitize({ 
+          cedula, nombre_completo, rol, fecha_registro: date,
+          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
+        }));
       }
     }
   });
@@ -699,6 +994,11 @@ function getAdminUsers(cedula = '') {
           u.nombre_completo, 
           u.rol, 
           u.fecha_registro,
+          u.fecha_expedicion_cedula,
+          u.municipio_expedicion_cedula,
+          u.municipio_nacimiento,
+          u.anio_nacimiento,
+          u.pago_realizado,
           (
             SELECT COUNT(*) 
             FROM progreso p 
@@ -715,7 +1015,12 @@ function getAdminUsers(cedula = '') {
             SELECT group_concat(curso_id)
             FROM matriculas
             WHERE usuario_cedula = u.cedula
-          ) as enrolled_courses
+          ) as enrolled_courses,
+          (
+            SELECT group_concat(curso_id)
+            FROM certificados
+            WHERE usuario_cedula = u.cedula
+          ) as certified_courses
         FROM usuarios u 
         WHERE u.rol = 'estudiante'
       `;
@@ -736,8 +1041,14 @@ function getAdminUsers(cedula = '') {
               nombre_completo: sanitize(r.nombre_completo),
               rol: r.rol,
               fecha_registro: r.fecha_registro || '2026-05-26',
+              fecha_expedicion_cedula: r.fecha_expedicion_cedula,
+              municipio_expedicion_cedula: r.municipio_expedicion_cedula,
+              municipio_nacimiento: r.municipio_nacimiento,
+              anio_nacimiento: r.anio_nacimiento,
+              pago_realizado: r.pago_realizado || 0,
               progreso_porcentaje: progress_pct,
-              enrolled_courses: r.enrolled_courses ? r.enrolled_courses.split(',').map(Number) : []
+              enrolled_courses: r.enrolled_courses ? r.enrolled_courses.split(',').map(Number) : [],
+              certified_courses: r.certified_courses ? r.certified_courses.split(',').map(Number) : []
             };
           });
           resolve(results);
@@ -762,8 +1073,14 @@ function getAdminUsers(cedula = '') {
             nombre_completo: sanitize(u.nombre_completo),
             rol: u.rol,
             fecha_registro: u.fecha_registro || '2026-05-26',
+            fecha_expedicion_cedula: u.fecha_expedicion_cedula || null,
+            municipio_expedicion_cedula: u.municipio_expedicion_cedula || null,
+            municipio_nacimiento: u.municipio_nacimiento || null,
+            anio_nacimiento: u.anio_nacimiento || null,
+            pago_realizado: u.pago_realizado || 0,
             progreso_porcentaje: progress_pct,
-            enrolled_courses: courseIds
+            enrolled_courses: courseIds,
+            certified_courses: (jsonDb.certificates || []).filter(c => c.usuario_cedula === u.cedula).map(c => c.curso_id)
           };
         });
       resolve(results);
@@ -1045,7 +1362,7 @@ function getCertificate(verificationCode) {
   return new Promise((resolve, reject) => {
     if (dbType === 'sqlite') {
       sqliteDB.get(
-        `SELECT c.*, u.nombre_completo, u.cedula, cur.titulo as curso_titulo 
+        `SELECT c.*, u.nombre_completo, u.cedula, cur.titulo as curso_titulo, cur.certificado_template 
          FROM certificados c 
          JOIN usuarios u ON c.usuario_cedula = u.cedula 
          LEFT JOIN cursos cur ON c.curso_id = cur.id
@@ -1070,7 +1387,8 @@ function getCertificate(verificationCode) {
           numero_certificado: cert.numero_certificado,
           nombre_completo: user ? user.nombre_completo : 'Unknown User',
           cedula: cert.usuario_cedula,
-          curso_titulo: course ? course.titulo : 'Manipulación de Alimentos'
+          curso_titulo: course ? course.titulo : 'Manipulación de Alimentos',
+          certificado_template: course ? course.certificado_template : null
         }));
       } else {
         resolve(null);
@@ -1082,13 +1400,29 @@ function getCertificate(verificationCode) {
 function getCertificateByCedula(cedula, courseId = 1) {
   return new Promise((resolve, reject) => {
     if (dbType === 'sqlite') {
-      sqliteDB.get(`SELECT * FROM certificados WHERE usuario_cedula = ? AND curso_id = ?`, [cedula, courseId], (err, row) => {
-        if (err) reject(err);
-        else resolve(sanitize(row) || null);
-      });
+      sqliteDB.get(
+        `SELECT c.*, cur.titulo as curso_titulo, cur.certificado_template
+         FROM certificados c
+         LEFT JOIN cursos cur ON c.curso_id = cur.id
+         WHERE c.usuario_cedula = ? AND c.curso_id = ?`,
+        [cedula, courseId],
+        (err, row) => {
+          if (err) reject(err);
+          else resolve(sanitize(row) || null);
+        }
+      );
     } else {
       const cert = (jsonDb.certificates || []).find(c => c.usuario_cedula === cedula && c.curso_id === courseId);
-      resolve(sanitize(cert) || null);
+      if (cert) {
+        const course = jsonDb.courses.find(cur => cur.id === courseId);
+        resolve(sanitize({
+          ...cert,
+          curso_titulo: course ? course.titulo : 'Manipulación de Alimentos',
+          certificado_template: course ? course.certificado_template : null
+        }));
+      } else {
+        resolve(null);
+      }
     }
   });
 }
@@ -1158,7 +1492,7 @@ function getStudentCourses(cedula) {
 
 // Create course and its modules atomically
 function createCourse(courseData) {
-  const { titulo, descripcion, imagen_url, modulos } = courseData;
+  const { titulo, descripcion, imagen_url, precio, certificado_template, modulos } = courseData;
   const creado_en = new Date().toISOString().split('T')[0];
 
   return new Promise((resolve, reject) => {
@@ -1168,8 +1502,8 @@ function createCourse(courseData) {
           if (errBegin) return reject(errBegin);
 
           sqliteDB.run(
-            `INSERT INTO cursos (titulo, descripcion, imagen_url, creado_en) VALUES (?, ?, ?, ?)`,
-            [titulo, descripcion, imagen_url, creado_en],
+            `INSERT INTO cursos (titulo, descripcion, imagen_url, creado_en, precio, certificado_template) VALUES (?, ?, ?, ?, ?, ?)`,
+            [titulo, descripcion, imagen_url, creado_en, precio, certificado_template || null],
             function (errCourse) {
               if (errCourse) {
                 return sqliteDB.run('ROLLBACK', () => reject(errCourse));
@@ -1179,7 +1513,7 @@ function createCourse(courseData) {
               if (!modulos || modulos.length === 0) {
                 sqliteDB.run('COMMIT', (errCommit) => {
                   if (errCommit) return sqliteDB.run('ROLLBACK', () => reject(errCommit));
-                  resolve({ id: courseId, titulo, descripcion, imagen_url, creado_en, modulos: [] });
+                  resolve({ id: courseId, titulo, descripcion, imagen_url, creado_en, precio, certificado_template, modulos: [] });
                 });
                 return;
               }
@@ -1217,6 +1551,8 @@ function createCourse(courseData) {
                     descripcion,
                     imagen_url,
                     creado_en,
+                    precio,
+                    certificado_template,
                     modulos
                   });
                 });
@@ -1229,7 +1565,7 @@ function createCourse(courseData) {
       // JSON DB fallback
       try {
         const courseId = jsonDb.courses.length > 0 ? Math.max(...jsonDb.courses.map(c => c.id)) + 1 : 1;
-        const newCourse = { id: courseId, titulo, descripcion, imagen_url, creado_en };
+        const newCourse = { id: courseId, titulo, descripcion, imagen_url, creado_en, precio: parseFloat(precio), certificado_template: certificado_template || null };
         jsonDb.courses.push(newCourse);
 
         const newModules = [];
@@ -1254,6 +1590,8 @@ function createCourse(courseData) {
           descripcion,
           imagen_url,
           creado_en,
+          precio,
+          certificado_template,
           modulos: newModules
         });
       } catch (e) {
@@ -1378,6 +1716,566 @@ function updateUserCourses(cedula, courseIds) {
   });
 }
 
+function generateVerificationCode() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let r1 = '';
+  let r2 = '';
+  for (let i = 0; i < 4; i++) {
+    r1 += chars.charAt(Math.floor(Math.random() * chars.length));
+    r2 += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `ALIM-${r1}-${r2}`;
+}
+
+function bypassCertify(cedula, courseId) {
+  return new Promise((resolve, reject) => {
+    const score = 100;
+    const approved = 1;
+    const now = new Date().toISOString();
+    const fecha = now.split('T')[0];
+
+    if (dbType === 'sqlite') {
+      sqliteDB.serialize(() => {
+        // 1. Get all modules for this course
+        sqliteDB.all(`SELECT id FROM modulos WHERE curso_id = ?`, [courseId], (err, modules) => {
+          if (err) return reject(err);
+
+          sqliteDB.run('BEGIN TRANSACTION', (errBegin) => {
+            if (errBegin) return reject(errBegin);
+
+            // 2. Insert/replace progress for all modules
+            const stmtProg = sqliteDB.prepare(`INSERT OR REPLACE INTO progreso (usuario_cedula, modulo_id, completado, fecha_completado) VALUES (?, ?, ?, ?)`);
+            for (const m of modules) {
+              stmtProg.run([cedula, m.id, 1, fecha]);
+            }
+
+            stmtProg.finalize((errProg) => {
+              if (errProg) {
+                return sqliteDB.run('ROLLBACK', () => reject(errProg));
+              }
+
+              // 3. Insert/replace exam record
+              sqliteDB.run(
+                `INSERT OR REPLACE INTO examenes (usuario_cedula, curso_id, intentos, puntaje_maximo, aprobado, fecha_ultimo_intento) 
+                 VALUES (?, ?, ?, ?, ?, ?)`,
+                [cedula, courseId, 1, score, approved, now],
+                (errExam) => {
+                  if (errExam) {
+                    return sqliteDB.run('ROLLBACK', () => reject(errExam));
+                  }
+
+                  // 4. Generate verification code & certificate number
+                  sqliteDB.get(`SELECT COUNT(*) as count FROM certificados`, [], (errCount, rowCount) => {
+                    if (errCount) {
+                      return sqliteDB.run('ROLLBACK', () => reject(errCount));
+                    }
+                    const nextNum = (rowCount ? rowCount.count : 0) + 1;
+                    const numeroCert = `AS-2026-${String(nextNum).padStart(4, '0')}`;
+                    const verificationCode = generateVerificationCode();
+
+                    sqliteDB.run(
+                      `INSERT OR REPLACE INTO certificados (codigo_verificacion, usuario_cedula, curso_id, fecha_emision, calificacion_obtenida, numero_certificado) VALUES (?, ?, ?, ?, ?, ?)`,
+                      [verificationCode, cedula, courseId, fecha, score, numeroCert],
+                      (errCert) => {
+                        if (errCert) {
+                          return sqliteDB.run('ROLLBACK', () => reject(errCert));
+                        }
+
+                        sqliteDB.run('COMMIT', (errCommit) => {
+                          if (errCommit) return sqliteDB.run('ROLLBACK', () => reject(errCommit));
+                          resolve({
+                            codigo_verificacion: verificationCode,
+                            usuario_cedula: cedula,
+                            curso_id: courseId,
+                            fecha_emision: fecha,
+                            calificacion_obtenida: score,
+                            numero_certificado: numeroCert
+                          });
+                        });
+                      }
+                    );
+                  });
+                }
+              );
+            });
+          });
+        });
+      });
+    } else {
+      // JSON DB fallback
+      try {
+        // 1. Get all modules for this course
+        const courseModules = (jsonDb.modules || []).filter(m => m.curso_id === courseId);
+
+        // 2. Mark progress
+        if (!jsonDb.progress) jsonDb.progress = [];
+        for (const m of courseModules) {
+          const idx = jsonDb.progress.findIndex(p => p.usuario_cedula === cedula && p.modulo_id === m.id);
+          if (idx !== -1) {
+            jsonDb.progress[idx].completado = 1;
+            jsonDb.progress[idx].fecha_completado = fecha;
+          } else {
+            jsonDb.progress.push({
+              usuario_cedula: cedula,
+              modulo_id: m.id,
+              completado: 1,
+              fecha_completado: fecha
+            });
+          }
+        }
+
+        // 3. Exam record
+        if (!jsonDb.exams) jsonDb.exams = [];
+        const examIdx = jsonDb.exams.findIndex(e => e.usuario_cedula === cedula && e.curso_id === courseId);
+        const examRecord = {
+          usuario_cedula: cedula,
+          curso_id: courseId,
+          intentos: 1,
+          puntaje_maximo: score,
+          aprobado: approved,
+          fecha_ultimo_intento: now
+        };
+        if (examIdx !== -1) {
+          jsonDb.exams[examIdx] = examRecord;
+        } else {
+          jsonDb.exams.push(examRecord);
+        }
+
+        // 4. Certificate record
+        if (!jsonDb.certificates) jsonDb.certificates = [];
+        const certCount = jsonDb.certificates.length;
+        const nextNum = certCount + 1;
+        const numeroCert = `AS-2026-${String(nextNum).padStart(4, '0')}`;
+        const verificationCode = generateVerificationCode();
+        const newCert = {
+          codigo_verificacion: verificationCode,
+          usuario_cedula: cedula,
+          curso_id: courseId,
+          fecha_emision: fecha,
+          calificacion_obtenida: score,
+          numero_certificado: numeroCert
+        };
+
+        const certIdx = jsonDb.certificates.findIndex(c => c.usuario_cedula === cedula && c.curso_id === courseId);
+        if (certIdx !== -1) {
+          jsonDb.certificates[certIdx] = newCert;
+        } else {
+          jsonDb.certificates.push(newCert);
+        }
+
+        saveJsonDb();
+        resolve(newCert);
+      } catch (e) {
+        reject(e);
+      }
+    }
+  });
+}
+
+function cleanDuplicateCoursesSQLite() {
+  return new Promise((resolve, reject) => {
+    sqliteDB.all(
+      `SELECT titulo, MIN(id) as oldest_id, COUNT(*) as count FROM cursos GROUP BY titulo HAVING COUNT(*) > 1`,
+      [],
+      async (err, dupGroups) => {
+        if (err) return reject(err);
+        if (dupGroups.length === 0) {
+          return resolve();
+        }
+        
+        console.log(`[MIGRATION] Encontrados ${dupGroups.length} títulos de cursos duplicados. Iniciando limpieza atómica...`);
+        
+        try {
+          for (const group of dupGroups) {
+            const oldestId = group.oldest_id;
+            const titulo = group.titulo;
+            
+            const rows = await new Promise((res, rej) => {
+              sqliteDB.all(`SELECT id FROM cursos WHERE titulo = ? AND id != ?`, [titulo, oldestId], (errRows, data) => {
+                if (errRows) rej(errRows);
+                else res(data);
+              });
+            });
+            
+            const dupIds = rows.map(r => r.id);
+            console.log(`[MIGRATION] Procesando curso "${titulo}" (conservando ID ${oldestId}, eliminando IDs duplicados: ${dupIds.join(', ')})`);
+            
+            for (const dupId of dupIds) {
+              const oldModules = await new Promise((res, rej) => {
+                sqliteDB.all(`SELECT id, orden, titulo_modulo FROM modulos WHERE curso_id = ?`, [oldestId], (e, data) => {
+                  if (e) rej(e); else res(data);
+                });
+              });
+              const dupModules = await new Promise((res, rej) => {
+                sqliteDB.all(`SELECT id, orden, titulo_modulo FROM modulos WHERE curso_id = ?`, [dupId], (e, data) => {
+                  if (e) rej(e); else res(data);
+                });
+              });
+              
+              for (const dm of dupModules) {
+                const om = oldModules.find(m => m.orden === dm.orden || m.titulo_modulo?.trim().toLowerCase() === dm.titulo_modulo?.trim().toLowerCase());
+                if (om) {
+                  await new Promise((res, rej) => {
+                    sqliteDB.run(`UPDATE OR IGNORE progreso SET modulo_id = ? WHERE modulo_id = ?`, [om.id, dm.id], (e) => {
+                      if (e) rej(e); else res();
+                    });
+                  });
+                  await new Promise((res, rej) => {
+                    sqliteDB.run(`DELETE FROM progreso WHERE modulo_id = ?`, [dm.id], (e) => {
+                      if (e) rej(e); else res();
+                    });
+                  });
+                  await new Promise((res, rej) => {
+                    sqliteDB.run(`DELETE FROM modulos WHERE id = ?`, [dm.id], (e) => {
+                      if (e) rej(e); else res();
+                    });
+                  });
+                } else {
+                  await new Promise((res, rej) => {
+                    sqliteDB.run(`UPDATE modulos SET curso_id = ? WHERE id = ?`, [oldestId, dm.id], (e) => {
+                      if (e) rej(e); else res();
+                    });
+                  });
+                }
+              }
+              
+              const tablesToRemap = ['matriculas', 'examenes', 'certificados', 'preguntas'];
+              for (const table of tablesToRemap) {
+                await new Promise((res, rej) => {
+                  sqliteDB.run(`UPDATE OR IGNORE ${table} SET curso_id = ? WHERE curso_id = ?`, [oldestId, dupId], (e) => {
+                    if (e) rej(e); else res();
+                  });
+                });
+                await new Promise((res, rej) => {
+                  sqliteDB.run(`DELETE FROM ${table} WHERE curso_id = ?`, [dupId], (e) => {
+                    if (e) rej(e); else res();
+                  });
+                });
+              }
+              
+              await new Promise((res, rej) => {
+                sqliteDB.run(`DELETE FROM cursos WHERE id = ?`, [dupId], (e) => {
+                  if (e) rej(e); else res();
+                });
+              });
+            }
+          }
+          resolve();
+        } catch (e) {
+          reject(e);
+        }
+      }
+    );
+  });
+}
+
+function cleanDuplicateCoursesJSON() {
+  if (!jsonDb.courses) return;
+  const groups = {};
+  jsonDb.courses.forEach(c => {
+    if (!groups[c.titulo]) groups[c.titulo] = [];
+    groups[c.titulo].push(c);
+  });
+  
+  Object.keys(groups).forEach(titulo => {
+    const list = groups[titulo];
+    if (list.length > 1) {
+      list.sort((a, b) => a.id - b.id);
+      const oldest = list[0];
+      const dupIds = list.slice(1).map(c => c.id);
+      
+      console.log(`[JSON MIGRATION] Limpiando cursos duplicados para "${titulo}". Conservando ID ${oldest.id}, eliminando IDs: ${dupIds.join(', ')}`);
+      
+      dupIds.forEach(dupId => {
+        const oldModules = (jsonDb.modules || []).filter(m => m.curso_id === oldest.id);
+        const dupModules = (jsonDb.modules || []).filter(m => m.curso_id === dupId);
+        
+        dupModules.forEach(dm => {
+          const om = oldModules.find(m => m.orden === dm.orden || m.titulo_modulo?.trim().toLowerCase() === dm.titulo_modulo?.trim().toLowerCase());
+          if (om) {
+            if (jsonDb.progress) {
+              jsonDb.progress.forEach(p => {
+                if (p.modulo_id === dm.id) {
+                  const exists = jsonDb.progress.some(x => x.usuario_cedula === p.usuario_cedula && x.modulo_id === om.id);
+                  if (!exists) {
+                    p.modulo_id = om.id;
+                  }
+                }
+              });
+              jsonDb.progress = jsonDb.progress.filter(p => p.modulo_id !== dm.id);
+            }
+            jsonDb.modules = jsonDb.modules.filter(m => m.id !== dm.id);
+          } else {
+            dm.curso_id = oldest.id;
+          }
+        });
+        
+        if (jsonDb.matriculas) {
+          jsonDb.matriculas.forEach(m => {
+            if (m.curso_id === dupId) {
+              const exists = jsonDb.matriculas.some(x => x.usuario_cedula === m.usuario_cedula && x.curso_id === oldest.id);
+              if (!exists) {
+                m.curso_id = oldest.id;
+              }
+            }
+          });
+          jsonDb.matriculas = jsonDb.matriculas.filter(m => m.curso_id !== dupId);
+        }
+        
+        if (jsonDb.exams) {
+          jsonDb.exams.forEach(e => {
+            if (e.curso_id === dupId) {
+              const exists = jsonDb.exams.some(x => x.usuario_cedula === e.usuario_cedula && x.curso_id === oldest.id);
+              if (!exists) {
+                e.curso_id = oldest.id;
+              }
+            }
+          });
+          jsonDb.exams = jsonDb.exams.filter(e => e.curso_id !== dupId);
+        }
+        
+        if (jsonDb.certificates) {
+          jsonDb.certificates.forEach(c => {
+            if (c.curso_id === dupId) {
+              const exists = jsonDb.certificates.some(x => x.usuario_cedula === c.usuario_cedula && x.curso_id === oldest.id);
+              if (!exists) {
+                c.curso_id = oldest.id;
+              }
+            }
+          });
+          jsonDb.certificates = jsonDb.certificates.filter(c => c.curso_id !== dupId);
+        }
+        
+        if (jsonDb.questions) {
+          jsonDb.questions.forEach(q => {
+            if (q.curso_id === dupId) {
+              q.curso_id = oldest.id;
+            }
+          });
+        }
+        
+        jsonDb.courses = jsonDb.courses.filter(c => c.id !== dupId);
+      });
+    }
+  });
+}
+
+function updateCourse(id, courseData) {
+  const { titulo, descripcion, precio, certificado_template } = courseData;
+  return new Promise((resolve, reject) => {
+    if (dbType === 'sqlite') {
+      sqliteDB.run(
+        `UPDATE cursos SET titulo = ?, descripcion = ?, precio = ?, certificado_template = ? WHERE id = ?`,
+        [titulo, descripcion, precio, certificado_template || null, id],
+        function (err) {
+          if (err) reject(err);
+          else resolve({ id, titulo, descripcion, precio, certificado_template });
+        }
+      );
+    } else {
+      const idx = jsonDb.courses.findIndex(c => c.id === id);
+      if (idx !== -1) {
+        jsonDb.courses[idx].titulo = titulo;
+        jsonDb.courses[idx].descripcion = descripcion;
+        jsonDb.courses[idx].precio = parseFloat(precio);
+        jsonDb.courses[idx].certificado_template = certificado_template || null;
+        saveJsonDb();
+        resolve(jsonDb.courses[idx]);
+      } else {
+        reject(new Error('Course not found'));
+      }
+    }
+  });
+}
+
+function updateCourseModule(courseId, moduleId, moduleData) {
+  const { titulo_modulo, tipo_contenido, data_contenido } = moduleData;
+  return new Promise((resolve, reject) => {
+    if (dbType === 'sqlite') {
+      sqliteDB.run(
+        `UPDATE modulos SET titulo_modulo = ?, tipo_contenido = ?, data_contenido = ? WHERE id = ? AND curso_id = ?`,
+        [titulo_modulo, tipo_contenido, data_contenido, moduleId, courseId],
+        function (err) {
+          if (err) reject(err);
+          else resolve({ id: moduleId, curso_id: courseId, titulo_modulo, tipo_contenido, data_contenido });
+        }
+      );
+    } else {
+      const idx = jsonDb.modules.findIndex(m => m.id === moduleId && m.curso_id === courseId);
+      if (idx !== -1) {
+        jsonDb.modules[idx].titulo_modulo = titulo_modulo;
+        jsonDb.modules[idx].tipo_contenido = tipo_contenido;
+        jsonDb.modules[idx].data_contenido = data_contenido;
+        saveJsonDb();
+        resolve(jsonDb.modules[idx]);
+      } else {
+        reject(new Error('Module not found'));
+      }
+    }
+  });
+}
+
+function updateStudentProfile(cedula, profileData) {
+  const {
+    nombre_completo,
+    fecha_expedicion_cedula,
+    municipio_expedicion_cedula,
+    municipio_nacimiento,
+    anio_nacimiento,
+    pago_realizado
+  } = profileData;
+
+  return new Promise((resolve, reject) => {
+    if (dbType === 'sqlite') {
+      sqliteDB.run(
+        `UPDATE usuarios SET 
+          nombre_completo = ?, 
+          fecha_expedicion_cedula = ?, 
+          municipio_expedicion_cedula = ?, 
+          municipio_nacimiento = ?, 
+          anio_nacimiento = ?, 
+          pago_realizado = ? 
+         WHERE cedula = ? AND rol = 'estudiante'`,
+        [
+          nombre_completo,
+          fecha_expedicion_cedula,
+          municipio_expedicion_cedula,
+          municipio_nacimiento,
+          anio_nacimiento,
+          pago_realizado ? 1 : 0,
+          cedula
+        ],
+        function (err) {
+          if (err) reject(err);
+          else resolve({
+            cedula,
+            nombre_completo,
+            fecha_expedicion_cedula,
+            municipio_expedicion_cedula,
+            municipio_nacimiento,
+            anio_nacimiento,
+            pago_realizado: pago_realizado ? 1 : 0
+          });
+        }
+      );
+    } else {
+      const idx = jsonDb.users.findIndex(u => u.cedula === cedula && u.rol === 'estudiante');
+      if (idx !== -1) {
+        jsonDb.users[idx].nombre_completo = nombre_completo;
+        jsonDb.users[idx].fecha_expedicion_cedula = fecha_expedicion_cedula;
+        jsonDb.users[idx].municipio_expedicion_cedula = municipio_expedicion_cedula;
+        jsonDb.users[idx].municipio_nacimiento = municipio_nacimiento;
+        jsonDb.users[idx].anio_nacimiento = parseInt(anio_nacimiento);
+        jsonDb.users[idx].pago_realizado = pago_realizado ? 1 : 0;
+        saveJsonDb();
+        resolve(jsonDb.users[idx]);
+      } else {
+        reject(new Error('Student not found'));
+      }
+    }
+  });
+}
+
+function getCourseById(id) {
+  return new Promise((resolve, reject) => {
+    if (dbType === 'sqlite') {
+      sqliteDB.get(`SELECT * FROM cursos WHERE id = ?`, [id], (err, row) => {
+        if (err) reject(err);
+        else resolve(sanitize(row) || null);
+      });
+    } else {
+      const course = (jsonDb.courses || []).find(c => c.id === id);
+      resolve(sanitize(course) || null);
+    }
+  });
+}
+
+function getFinancialMetrics() {
+  return new Promise((resolve, reject) => {
+    if (dbType === 'sqlite') {
+      const query = `
+        SELECT u.nombre_completo, u.cedula, c.titulo as curso_adquirido, m.fecha_matricula, c.precio
+        FROM matriculas m
+        JOIN usuarios u ON m.usuario_cedula = u.cedula
+        JOIN cursos c ON m.curso_id = c.id
+        WHERE u.pago_realizado = 1
+      `;
+      sqliteDB.all(query, [], (err, rows) => {
+        if (err) return reject(err);
+        
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+        const currentMonthStr = `${currentYear}-${currentMonth}`;
+        
+        let monthlyBalance = 0;
+        let historicalBalance = 0;
+        
+        const coursesSold = (rows || []).map(r => {
+          const precio = parseFloat(r.precio) || 0;
+          historicalBalance += precio;
+          
+          if (r.fecha_matricula && r.fecha_matricula.startsWith(currentMonthStr)) {
+            monthlyBalance += precio;
+          }
+          
+          return {
+            nombre_completo: r.nombre_completo,
+            cedula: r.cedula,
+            curso_adquirido: r.curso_adquirido,
+            fecha_matricula: r.fecha_matricula,
+            precio: precio
+          };
+        });
+        
+        resolve(sanitize({
+          coursesSold,
+          monthlyBalance,
+          historicalBalance
+        }));
+      });
+    } else {
+      // JSON DB
+      const paidUsers = (jsonDb.users || []).filter(u => u.pago_realizado === 1);
+      const coursesSold = [];
+      let monthlyBalance = 0;
+      let historicalBalance = 0;
+      
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+      const currentMonthStr = `${currentYear}-${currentMonth}`;
+      
+      paidUsers.forEach(u => {
+        const userMatriculas = (jsonDb.matriculas || []).filter(m => m.usuario_cedula === u.cedula);
+        userMatriculas.forEach(m => {
+          const course = (jsonDb.courses || []).find(c => c.id === m.curso_id);
+          const precio = course ? parseFloat(course.precio) || 0 : 0;
+          
+          historicalBalance += precio;
+          if (m.fecha_matricula && m.fecha_matricula.startsWith(currentMonthStr)) {
+            monthlyBalance += precio;
+          }
+          
+          coursesSold.push({
+            nombre_completo: u.nombre_completo,
+            cedula: u.cedula,
+            curso_adquirido: course ? course.titulo : 'Curso Desconocido',
+            fecha_matricula: m.fecha_matricula,
+            precio: precio
+          });
+        });
+      });
+      
+      resolve(sanitize({
+        coursesSold,
+        monthlyBalance,
+        historicalBalance
+      }));
+    }
+  });
+}
+
 module.exports = {
   initDB,
   getUser,
@@ -1400,5 +2298,11 @@ module.exports = {
   getAdminUsers,
   getStudentCourses,
   createCourse,
-  updateUserCourses
+  updateUserCourses,
+  bypassCertify,
+  updateCourse,
+  updateCourseModule,
+  updateStudentProfile,
+  getCourseById,
+  getFinancialMetrics
 };

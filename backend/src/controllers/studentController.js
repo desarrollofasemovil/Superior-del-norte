@@ -224,6 +224,18 @@ async function submitExam(req, res, next) {
   }
 }
 
+function interpolateTemplate(template, user, cert) {
+  if (!template) return '';
+  return template
+    .replace(/\{\{NOMBRE\}\}/g, user.nombre_completo || '')
+    .replace(/\{\{CEDULA\}\}/g, user.cedula || '')
+    .replace(/\{\{FECHA_EXPEDICION\}\}/g, user.fecha_expedicion_cedula || '')
+    .replace(/\{\{MUNICIPIO_EXPEDICION\}\}/g, user.municipio_expedicion_cedula || '')
+    .replace(/\{\{ANIO_NACIMIENTO\}\}/g, user.anio_nacimiento !== undefined && user.anio_nacimiento !== null ? String(user.anio_nacimiento) : '')
+    .replace(/\{\{CODIGO_VERIFICACION\}\}/g, cert.codigo_verificacion || '')
+    .replace(/\{\{FECHA_EMISION\}\}/g, cert.fecha_emision || '');
+}
+
 async function getCertificateDetail(req, res, next) {
   try {
     let courseId = parseInt(req.query.courseId);
@@ -240,6 +252,12 @@ async function getCertificateDetail(req, res, next) {
     if (!cert) {
       return res.status(404).json({ error: 'Certificado no emitido aún.' });
     }
+
+    if (cert.certificado_template) {
+      const fullUser = await db.getUser(req.user.cedula);
+      cert.certificado_template = interpolateTemplate(cert.certificado_template, fullUser, cert);
+    }
+
     res.json(cert);
   } catch (err) {
     next(err);

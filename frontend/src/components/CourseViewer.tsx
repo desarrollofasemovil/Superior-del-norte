@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { Play, Pause, ChevronLeft, ChevronRight, CheckCircle2, Award, ArrowLeft, Volume2, Film, Image as ImageIcon } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 const CourseViewer = () => {
   const {
@@ -174,11 +175,11 @@ const CourseViewer = () => {
       {/* Sidebar index */}
       <div className="glass-panel" style={{ height: 'fit-content', padding: '24px' }}>
         <button
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate(`/course/${activeCourseId}/detail`)}
           style={{
             background: 'none',
             border: 'none',
-            color: 'var(--accent-teal)',
+            color: 'var(--isn-blue)',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
@@ -189,10 +190,10 @@ const CourseViewer = () => {
           }}
         >
           <ArrowLeft size={18} />
-          <span>Volver al Dashboard</span>
+          <span>Volver al Detalle</span>
         </button>
 
-        <h3 style={{ fontSize: '0.8rem', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '8px', fontWeight: 800 }}>Módulos del Curso</h3>
+        <h3 className="font-serif" style={{ fontSize: '0.9rem', color: 'var(--isn-blue)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '8px', fontWeight: 800 }}>Módulos del Curso</h3>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {modules.map((m, idx) => {
@@ -206,16 +207,16 @@ const CourseViewer = () => {
                   width: '100%',
                   textAlign: 'left',
                   padding: '14px',
-                  borderRadius: '10px',
-                  background: isModActive ? 'rgba(0, 141, 218, 0.08)' : '#FFFFFF',
-                  border: '1px solid',
-                  borderColor: isModActive ? 'var(--accent-teal)' : '#E2E8F0',
-                  color: isModActive ? 'var(--accent-teal)' : 'var(--text-primary)',
+                  borderRadius: '12px',
+                  background: isModActive ? 'rgba(15, 44, 89, 0.06)' : 'transparent',
+                  border: 'none',
+                  color: isModActive ? 'var(--isn-blue)' : 'var(--isn-charcoal)',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  gap: '8px'
+                  gap: '8px',
+                  boxShadow: isModActive ? '0 4px 12px rgba(15, 44, 89, 0.04)' : 'none'
                 }}
               >
                 <span style={{ fontSize: '0.85rem', fontWeight: isModActive ? 700 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '180px' }}>
@@ -235,17 +236,17 @@ const CourseViewer = () => {
         <div style={{ borderBottom: '1px solid var(--border-glass)', paddingBottom: '20px', marginBottom: '28px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
             <span style={{
-              background: 'rgba(0, 141, 218, 0.1)',
-              color: 'var(--accent-teal)',
+              background: 'rgba(15, 44, 89, 0.08)',
+              color: 'var(--isn-blue)',
               fontSize: '0.75rem',
               padding: '4px 10px',
-              borderRadius: '6px',
+              borderRadius: '9999px',
               fontWeight: 700
             }}>MÓDULO {currentModule.orden}</span>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>{currentModule.tipo_recurso}</span>
           </div>
-          <h2 style={{ fontSize: '2rem', color: 'var(--text-primary)', fontWeight: 800 }}>{currentModule.titulo}</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '8px', lineHeight: '1.6' }}>{currentModule.descripcion}</p>
+          <h2 className="font-serif" style={{ fontSize: '2rem', color: 'var(--isn-blue)', fontWeight: 900 }}>{currentModule.titulo}</h2>
+          <p style={{ color: 'var(--isn-charcoal)', fontSize: '0.95rem', marginTop: '8px', lineHeight: '1.6' }}>{currentModule.descripcion}</p>
         </div>
 
         {/* Dynamic Simulator */}
@@ -255,8 +256,13 @@ const CourseViewer = () => {
         <div
           className="course-content-markdown"
           style={{ lineHeight: '1.8', fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '32px' }}
-          dangerouslySetInnerHTML={{ __html: currentModule.contenido }}
-        />
+        >
+          {/<\/?[a-z][\s\S]*>/i.test(currentModule.contenido || '') ? (
+            <div dangerouslySetInnerHTML={{ __html: currentModule.contenido }} />
+          ) : (
+            <ReactMarkdown>{currentModule.contenido}</ReactMarkdown>
+          )}
+        </div>
 
         {/* Actions & Completion */}
         <div style={{

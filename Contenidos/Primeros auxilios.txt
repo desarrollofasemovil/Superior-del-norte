@@ -1,0 +1,201 @@
+Módulo 1: Principios Básicos y Marco Ético-Legal
+La atención prehospitalaria no solo requiere habilidades técnicas, sino también un firme entendimiento de los marcos éticos y legales que protegen tanto al paciente como al socorrista
+.
+Conducta P.A.S. (Proteger, Avisar, Socorrer) Ante cualquier incidente, el socorrista debe seguir estos tres pasos secuenciales:
+Proteger (P): Antes de actuar, es imperativo garantizar la seguridad de la escena. El socorrista no debe intervenir si su vida corre peligro (ej. electrocución, incendios, materiales peligrosos) a menos que esté entrenado y equipado adecuadamente
+. La regla principal es no causar más daño y no convertirse en una segunda víctima
+.
+Avisar (A): Las directrices de 2025 enfatizan que el primer paso ante una persona inconsciente es llamar inmediatamente a los servicios de emergencias médicas (SEM) antes incluso de comprobar detalladamente la respiración
+. Al llamar, se debe poner el teléfono en modo altavoz ("manos libres"); los operadores están entrenados para guiar al socorrista a evaluar la respiración y dictar las instrucciones para realizar la RCP paso a paso
+.
+Socorrer (S): Una vez asegurada la escena y activado el SEM, se procede a la evaluación de las condiciones que amenazan la vida, como la falta de consciencia, ausencia de respiración o hemorragias masivas
+.
+Marco Ético y Legal (Principialismo) La práctica de los primeros auxilios se fundamenta en cuatro principios morales de igual importancia
+:
+Beneficencia: Actuar con el objetivo de hacer el bien, preservando la vida y aliviando el sufrimiento del paciente
+.
+No maleficencia: La obligación ética de "no hacer daño" o no empeorar la situación (ej. no administrar medicamentos desconocidos o mover a un paciente con trauma espinal sin necesidad)
+.
+Respeto por la autonomía (Consentimiento): El socorrista siempre debe presentarse e informar al paciente qué planea hacer. Si la persona está consciente y con sus facultades mentales intactas, se debe obtener su consentimiento explícito
+. Si el paciente se niega, se debe respetar su decisión, llamar al SEM y mantenerse a una distancia segura
+. Si el paciente está inconsciente, confundido o gravemente lesionado, la ley asume que desearía recibir atención vital, lo cual se conoce como consentimiento implícito
+.
+Justicia: Tratar a todas las personas de manera justa, imparcial y equitativa
+.
+Módulo 2: Cadena de Supervivencia y Triage en Emergencias
+La Cadena de Supervivencia 2025 La American Heart Association (AHA) ha unificado las cadenas de supervivencia en un único marco de seis eslabones aplicable a adultos y niños, tanto en entornos hospitalarios como extrahospitalarios
+.
+Prevención y Preparación: Incluye la educación comunitaria, las reuniones breves de seguridad en el trabajo y la detección temprana del deterioro clínico antes de que ocurra el paro
+.
+Reconocimiento y Activación: Evaluar rápidamente el estado de consciencia. Si la persona no responde, se asume un paro cardíaco y se alerta al SEM. Las guías advierten que la respiración agónica o los jadeos son signos de paro
+.
+RCP de Alta Calidad: Iniciar compresiones torácicas inmediatamente para mantener la presión de perfusión coronaria
+.
+Desfibrilación Temprana: Cada minuto de retraso en la desfibrilación reduce la probabilidad de supervivencia en aproximadamente un 10%
+.
+Cuidados Posreanimación: Manejo avanzado hemodinámico, oxigenación y control de temperatura para proteger el tejido cerebral tras el retorno de la circulación
+.
+Recuperación y Supervivencia: Nuevo enfoque en 2025 que aborda las necesidades físicas, cognitivas y el apoyo psicológico a largo plazo tanto para los sobrevivientes como para los cuidadores y socorristas que intervinieron
+.
+Clasificación de Múltiples Víctimas (Método START) Cuando los socorristas se enfrentan a un incidente con múltiples víctimas (MCI) donde las víctimas superan a los recursos, se utiliza el triage START (Simple Triage and Rapid Treatment) para evaluar a cada paciente en menos de 30 segundos
+. Se evalúan tres parámetros fisiológicos, conocidos como RPM:
+Respiración: Si la frecuencia respiratoria es mayor a 30 por minuto, se etiqueta como Rojo (Inmediato)
+. Si no respira tras abrir la vía aérea, es Negro (Fallecido)
+.
+Perfusión: Se evalúa mediante el pulso radial o el llenado capilar. Si el llenado capilar es mayor a 2 segundos o no hay pulso radial, se etiqueta como Rojo
+.
+Mental (Estado Mental): Si el paciente no puede seguir órdenes simples (ej. "cierre los ojos"), se etiqueta como Rojo. Si sigue órdenes y sus otros signos están estables, es Amarillo (Demorado)
+.
+Verde (Leve): Pacientes que pueden caminar y alejarse por sí mismos del área del siniestro
+.
+Nota pediátrica: Para niños, se utiliza el JumpSTART, el cual considera la apnea pediátrica como frecuentemente reversible. Si el niño no respira pero tiene pulso, se le administran 5 ventilaciones de rescate ("jumpstart") antes de clasificarlo
+.
+Módulo 3: Soporte Vital Básico (SVB) y Uso del DEA
+Técnica de RCP de Alta Calidad La reanimación cardiopulmonar de alta calidad es el pilar de la supervivencia.
+Compresiones: El socorrista debe arrodillarse al lado del paciente, con el torso idealmente a la altura de las rodillas para aplicar una fuerza descendente con los brazos rectos
+. Se debe comprimir en la mitad inferior del esternón ("centro del pecho") a una profundidad de al menos 5 cm y no más de 6 cm en adultos
+.
+Frecuencia y Superficie: El ritmo debe ser de 100 a 120 compresiones por minuto
+. Las compresiones son más efectivas sobre una superficie firme, pero si el paciente está en una cama blanda, las guías 2025 recomiendan iniciar la RCP allí mismo y aumentar la profundidad, en lugar de perder tiempo bajándolo al suelo
+.
+Relación y Pausas: Para adultos, se utiliza una relación de 30 compresiones y 2 ventilaciones (30:2)
+. Si el socorrista no está capacitado para ventilar o le resulta inseguro, debe realizar RCP solo con las manos (compresiones ininterrumpidas)
+. Las interrupciones no deben superar los 10 segundos
+.
+RCP Pediátrica (Novedades 2025): Para los lactantes, ya no se recomienda la maniobra de los 2 dedos por su ineficacia para alcanzar la profundidad. Las nuevas guías dictan que se debe utilizar la base de una mano o, preferiblemente, la técnica de los dos pulgares con las manos rodeando el tórax
+.
+Desfibrilador Externo Automático (DEA) El DEA analiza el ritmo cardíaco y aplica una descarga si detecta Fibrilación Ventricular o Taquicardia Ventricular sin pulso
+.
+Las almohadillas deben colocarse sobre la piel desnuda y seca
+. En pacientes femeninas, si el sujetador interfiere de forma crítica, debe retirarse rápidamente, priorizando la intervención vital sobre el pudor
+.
+Nadie debe tocar al paciente durante el análisis ni durante la descarga
+. Inmediatamente después de la descarga (o si el DEA indica que no se aconseja descarga), se deben reanudar las compresiones torácicas sin perder un segundo
+.
+Obstrucción de la Vía Aérea por Cuerpo Extraño (OVACE) Una actualización fundamental de las Guías 2025 para el atragantamiento grave en adultos y niños conscientes indica que se debe abandonar la maniobra de Heimlich exclusiva. Ahora se debe iniciar con ciclos repetidos de 5 golpes en la espalda (palmadas) seguidos de 5 compresiones abdominales hasta que se expulse el objeto o la víctima quede inconsciente
+. La evidencia ha demostrado que los golpes interescapulares son altamente efectivos y causan menos lesiones internas
+. Para los lactantes, se alternan 5 golpes en la espalda con 5 presiones torácicas (usando la base de una mano); las compresiones abdominales están totalmente contraindicadas por el riesgo de lesión visceral
+.
+Módulo 4: Control de Hemorragias y Protocolo MARCH
+En la atención moderna del trauma, el algoritmo ABC ha sido reemplazado por el MARCH, elevando la Hemorragia Masiva ("M" de Massive bleeding) a la máxima prioridad
+. Un paciente puede desangrarse en menos de 3 minutos debido a la rotura de una arteria principal
+.
+Técnicas Escaladas de Control Hemorrágico
+Presión Directa: La primera línea de defensa. Aplicar presión firme y constante directamente sobre el origen del sangrado usando gasas
+. Si la gasa se empapa de sangre, nunca debe retirarse para evitar arrancar el coágulo; se deben añadir más gasas encima y aplicar más presión
+.
+Torniquetes (Para Extremidades): Ha dejado de ser el "último recurso" para convertirse en el estándar de oro inicial en hemorragias exanguinantes de brazos y piernas
+. Debe aplicarse "alto y apretado" (high and tight) sobre la extremidad
+. Se debe girar la varilla de ajuste hasta que el sangrado arterial de color rojo brillante cese por completo y el pulso distal desaparezca
+. Es vital anotar siempre la hora exacta de colocación
+.
+Empaquetamiento de Heridas (Wound Packing) y Agentes Hemostáticos: Diseñado para sangrados masivos en "zonas de unión" (axilas, ingles, cuello) donde un torniquete no es viable
+. Consiste en introducir la gasa en la profundidad de la cavidad hasta contactar directamente con el vaso sangrante, generando presión desde adentro hacia afuera
+.
+Agentes de Caolín (ej. QuikClot Combat Gauze): El caolín es un mineral inerte que activa fuertemente el Factor XII de la cascada de coagulación intrínseca. Requiere 3 minutos de presión manual directa
+.
+Agentes de Quitosano (ej. Celox): Funcionan de forma independiente a la cascada de coagulación del paciente mediante la formación de un gel mucoadhesivo al contacto con la sangre. Son sumamente efectivos incluso si el paciente sufre hipotermia o está tomando medicamentos anticoagulantes, requiriendo en algunas presentaciones tan solo 1 minuto de presión directa
+.
+Módulo 5: Heridas, Partes Blandas y Quemaduras
+Cuidado de Heridas Generales Una herida es la pérdida de la integridad de la piel. Para prevenir infecciones, la herida debe limpiarse con agua corriente o suero fisiológico
+. La limpieza siempre debe realizarse de dentro hacia afuera para no arrastrar gérmenes al interior de la lesión
+. Se debe secar la zona aledaña con gasas estériles (nunca usar algodón que deje filamentos) y aplicar un antiséptico como povidona yodada antes de cubrirla
+. En caso de heridas en el abdomen con órganos expuestos (evisceración), nunca se debe intentar empujar los órganos hacia adentro. Se deben cubrir sin apretar con un apósito estéril humedecido y plástico
+.
+Clasificación y Manejo de las Quemaduras Las quemaduras se evalúan por su profundidad y extensión, utilizando la "Regla de los 9" para calcular la superficie corporal quemada (SCQ)
+.
+Superficiales (1er Grado): Afectan solo la capa externa (epidermis). Piel roja, seca y dolorosa
+.
+Espesor Parcial (2do Grado): Afectan la dermis. Producen ampollas (flictenas) que exudan líquido
+. Regla de oro: Nunca reventar las ampollas, ya que actúan como apósito natural y su ruptura incrementa enormemente el riesgo de infección
+.
+Espesor Completo (3er Grado): Destruyen todas las capas de la piel y pueden dañar grasa y nervios. Son indoloras al tacto y su aspecto es blanquecino, coriáceo o carbonizado
+.
+Tratamiento Específico por Agente:
+Térmicas (Fuego, Líquidos Calientes): Detener el proceso de quemado. Enfriar inmediatamente con agua corriente fresca (no helada, ni aplicar hielo) durante al menos 20 minutos o hasta aliviar el dolor
+. Cubrir con gasas estériles secas sin apretar
+. No usar remedios caseros ni ungüentos que atrapen el calor
+.
+Químicas (Industria y Limpieza): El daño químico continúa hasta que la sustancia es eliminada o neutralizada
+. El lavado con agua ha sido tradicional, pero es un método pasivo e hipotónico, pudiendo "empujar" el químico al interior de la piel por osmosis
+. El estándar moderno (si está disponible) es la Diphoterine®, una solución hipertónica y anfótera que atrae el tóxico hacia el exterior del tejido y neutraliza activamente tanto ácidos como álcalis de forma segura
+. Para quemaduras específicas por Ácido Fluorhídrico (HF), un químico mortal que inactiva el calcio y causa arritmias fatales, se debe utilizar Hexafluorine® o lavados prolongadísimos de agua si no se tiene
+.
+Módulo 6: Lesiones Traumatológicas y Mecánica Corporal
+Los traumatismos musculoesqueléticos rara vez amenazan la vida de forma inmediata a menos que comprometan arterias principales (ej. fracturas de fémur o pelvis), pero pueden ser extremadamente dolorosos e incapacitantes
+.
+Principios de Manejo de Lesiones Osteoarticulares:
+Fracturas: Pueden ser cerradas o expuestas (abiertas). En las fracturas abiertas, el hueso rompe la piel
+. El socorrista debe cubrir la herida con material estéril y bajo ninguna circunstancia intentar reintroducir fragmentos de hueso a su lugar anatómico
+.
+Regla R.I.F.E.: El tratamiento prehospitalario de esguinces, luxaciones y fracturas cerradas se rige por: Reposo (detener la actividad), Inmovilización (usar férulas o cabestrillos en la posición encontrada), Frío (aplicar compresas de hielo protegidas por un paño durante periodos de 20 minutos para reducir edema y dolor) y Elevación (si no causa más dolor o inestabilidad)
+.
+Mecánica Básica de Movilización y Traslado: Como norma general, nunca se debe mover a un paciente traumatizado a menos que la escena se vuelva inminentemente peligrosa (ej. fuego, derrumbe) o se necesite reubicarlo sobre una superficie firme para aplicar RCP
+. Al acercarse a una víctima de trauma inconsciente, se debe asumir que presenta una lesión en la columna cervical (cuello) y se deben evitar los movimientos de flexión, extensión o torsión de la cabeza
+. Si el movimiento es absolutamente necesario, deben utilizarse técnicas seguras de arrastre por el eje longitudinal (tirando desde los hombros de la ropa) para minimizar el impacto sobre la columna vertebral, protegiendo siempre la alineación de cabeza, cuello y torso
+.
+Módulo 7: Lesiones por Calor, Frío y Electricidad
+Los factores ambientales pueden provocar emergencias letales al desequilibrar la homeostasis del organismo.
+Exceso de Calor (Hipertermia / Golpe de Calor) Ocurre por exposición extrema o esfuerzo donde fallan los mecanismos de sudoración. Se caracteriza por temperaturas superiores a 40°C, piel roja (caliente y a menudo seca), estado mental alterado o convulsiones.
+Actuación Guías 2025: Se exige un enfriamiento agresivo y rápido de al menos 0.15 °C/min
+. Se considera ideal la inmersión del paciente en agua helada (1 a 5 °C) o cubrirlo con paños mojados con hielo, priorizando axilas, ingles y cuello (zonas de alto flujo sanguíneo)
+. Se debe detener el enfriamiento activo al llegar a 38.6 °C para evitar el sobreenfriamiento
+. No dar antipiréticos, ya que la hipertermia ambiental no responde a estos medicamentos
+.
+Exceso de Frío (Hipotermia) Se produce cuando el cuerpo pierde calor más rápido de lo que lo produce. Inicialmente, se presentan temblores intensos; cuando la hipotermia se agrava, los temblores cesan, el pulso se ralentiza, aparece la confusión y el paciente entra en un letargo que puede terminar en paro cardíaco
+.
+Actuación Guías 2025: Como criterio de alto riesgo de paro cardíaco, se considera una frecuencia cardíaca <45 lpm en hipotermia
+. El paciente debe ser manejado con extrema delicadeza; el corazón hipotérmico es muy irritable y cualquier sacudida brusca al moverlo o quitarle ropa mojada puede inducir una Fibrilación Ventricular (arritmia letal)
+. Cambiar la ropa húmeda por seca y aplicar calentamiento pasivo (mantas)
+. Nunca dar alcohol, ya que es un vasodilatador que acelera la pérdida de calor y empeora la hipotermia
+.
+Lesiones Eléctricas y por Rayos La corriente eléctrica causa daños en la superficie (quemaduras en puntos de entrada y salida) y graves daños internos a lo largo del recorrido de la electricidad (afectando corazón, pulmones y sistema nervioso)
+.
+Actuación: Jamás tocar a la persona si sigue en contacto con la fuente eléctrica. Desconectar la corriente desde el cuadro general de mando primero
+. La electrocución a menudo causa paro cardíaco y respiratorio
+. Una vez que el área es segura (fuente desconectada o apartada con material aislante seco), inicie la RCP y use el DEA inmediatamente, pues estas emergencias presentan altas tasas de supervivencia si se desfibrila tempranamente
+.
+Módulo 8: Intoxicaciones y Emergencias Médicas
+El conocimiento para evaluar una emergencia médica repentina (infarto, ACV, anafilaxia, intoxicación) requiere observación meticulosa y entrevistas al paciente o familiares
+.
+Sobredosis e Intoxicaciones por Opioides (Actualización 2025) Ante el incremento global de sobredosis de opioides (ej. heroína, fentanilo), las Guías AHA 2025 establecen explícitamente el uso de antagonistas de opioides (como la Naloxona) para reanimadores legos capacitados y profesionales, incorporándolo directamente a los algoritmos de SVB
+. Se debe capacitar a los reanimadores para reconocer los signos de intoxicación (respiración anormalmente lenta o ausente, pupilas puntiformes) y administrar Naloxona (intramuscular o intranasal) paralelamente a las maniobras de RCP, sin retrasar el inicio de las compresiones torácicas
+.
+Anafilaxia (Choque Alérgico Severo) Una reacción alérgica sistémica, de rápida instauración que compromete las vías respiratorias y/o el sistema cardiovascular (shock y caída de presión arterial)
+.
+Tratamiento de elección: Administración inmediata de Adrenalina Intramuscular (IM) a una dosis de 0.01 ml/kg de solución 1/1000. (Dosis máxima de 0.5 ml en adultos/mayores de 12 años, y 0.3 ml en niños menores de 12 años)
+. Si no hay mejoría o empeoran los síntomas, se debe repetir la dosis de adrenalina cada 5 a 10 minutos
+.
+Posicionamiento: El paciente debe ser posicionado en decúbito supino (boca arriba) con las piernas elevadas para contrarrestar la hipotensión. Si predomina la dificultad respiratoria severa y no hay hipotensión, el paciente puede estar semiincorporado o sentado para facilitar la ventilación
+.
+Módulo 9: Lesiones Oculares, Picaduras y Mordeduras
+Lesiones Oculares El ojo es un órgano extremadamente delicado.
+Cuerpos extraños o cortes: Nunca intente extraer un objeto incrustado o frotar el ojo
+. Se debe cubrir sin presión con apósitos estériles. Si la lesión es severa, es recomendable vendar ambos ojos para evitar que los movimientos oculares del ojo sano por simpatía dañen más el ojo lesionado
+.
+Químicos en el ojo: Produce dolor intenso, fotofobia y lagrimeo. Se debe inclinar la cabeza de manera que el ojo afectado quede por debajo del ojo sano para evitar que el agua con químico escurra y afecte al lado bueno
+. Irrigar con suero fisiológico, agua limpia o solución especializada (Diphoterine) por al menos 15-20 minutos continuos
+.
+Mordeduras y Picaduras (Animales y Vectores)
+Serpientes: Mantener la extremidad afectada inmovilizada, idealmente a nivel del corazón o ligeramente por debajo (nunca elevarla por encima, ya que acelera el retorno venoso y linfático que disemina el veneno)
+. El uso de vendajes constrictores anchos (que retrasan el drenaje linfático pero no bloquean la arteria) debe hacerse siempre bajo los protocolos del servicio médico de emergencias local
+. Mitos descartados: Jamás se deben hacer cortes, usar torniquetes arteriales o intentar succionar el veneno [basic validation/standard first aid protocol].
+Garrapatas: Vectores de enfermedades graves (ej. Lyme). No se deben asfixiar con aceites o quemar con fósforos. Se deben retirar agarrando la cabeza lo más cerca de la piel posible con pinzas finas y tirando lenta pero firmemente hacia arriba, sin aplastar el abdomen para no inyectar fluidos de la garrapata en la piel
+.
+Módulo 10: Botiquín, Gestión del Estrés y Debriefing Clínico (Novedades 2025)
+La formación integral de un profesional del primer contacto no termina cuando el paciente es entregado en el hospital.
+Bienestar del Personal y Debriefing Clínico (Guías 2025) Las Guías 2025 reconocen explícitamente que los esfuerzos de reanimación o la atención de víctimas traumatizadas pueden tener un profundo impacto psicológico y emocional en los socorristas (profesionales o legos)
+.
+Se aconseja implementar la evaluación y derivación temprana por angustia emocional (estrés postraumático, ansiedad) para todos los implicados en un rescate
+.
+Se recomienda formalizar el Debriefing Clínico, realizando reuniones estructuradas en dos fases: un debriefing "en caliente" (inmediatamente posterior al evento) para discutir problemas técnicos o logísticos, y un debriefing "en frío" (diferido días después) para una revisión más profunda del sistema y apoyo psicológico del equipo
+.
+El Botiquín Avanzado de Primeros Auxilios Todo curso debe enseñar a usar las herramientas modernas que optimizan la supervivencia
+. Un botiquín actualizado y profesional debe contener:
+Bioseguridad: Guantes de nitrilo sin látex (mínimo dos pares), gafas de protección y mascarillas/barreras de bolsillo para ventilación en RCP (con válvula unidireccional)
+.
+Control de Hemorragias: Apósitos de gasa estériles de gran grosor, vendas compresivas auto-adhesivas o elásticas, Agentes Hemostáticos (como gasas impregnadas en Caolín tipo QuikClot o Quitosano tipo Celox) y Torniquetes prefabricados (CAT o SOFT-T) comprobados para control arterial de extremidades
+.
+Quemaduras e Irrigación: Soluciones neutras estériles, suero fisiológico y soluciones de lavado activo (si su protocolo lo dicta, Diphoterine)
+. Apósitos estériles no adherentes y mantas de supervivencia térmica o "sábanas térmicas" para prevenir hipotermia en pacientes con shock o quemaduras
+.

@@ -50,7 +50,7 @@ export function CertificateModal({ onClose }: CertificateModalProps) {
                 <div className="flex justify-center items-center gap-3 mb-6">
                   <Award className="w-12 h-12 text-[#0F2C59]" />
                   <div>
-                    <h1 className="text-4xl font-bold text-[#0F2C59]">AlimSafe</h1>
+                    <h1 className="text-4xl font-bold text-[#0F2C59]">Instituto Superior del Norte</h1>
                     <div className="h-1 w-24 bg-[#4E9F3D] mx-auto rounded-full mt-1"></div>
                   </div>
                 </div>

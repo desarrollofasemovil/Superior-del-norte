@@ -1,4 +1,4 @@
-# Arquitectura y Diseño del Sistema - AlimSafe LMS
+# Arquitectura y Diseño del Sistema - Instituto Superior del Norte LMS
 
 Este documento define la arquitectura vigente, los patrones adoptados, la estructura de directorios actual y las decisiones de diseño que los agentes deben respetar.
 
@@ -34,7 +34,8 @@ AppProvider (AppContext.jsx)       ← Estado global y fetch functions
               └── Routes
                     ├── /login             → Login.jsx
                     ├── /admin/login       → AdminLogin.jsx
-                    ├── /dashboard         → Dashboard.jsx
+                    ├── /dashboard         → Dashboard.jsx (Mis Cursos Inscritos)
+                    ├── /course/:courseId/detail → CourseRouteWrapper → CourseDetail.jsx
                     ├── /course/:courseId  → CourseRouteWrapper → CourseViewer.jsx
                     ├── /course/:id/exam   → CourseRouteWrapper → Exam.jsx
                     ├── /certificate/:id   → CourseRouteWrapper → Certificate.jsx
@@ -63,7 +64,8 @@ AppProvider (AppContext.jsx)       ← Estado global y fetch functions
 │   └── src/
 │       ├── server.js            # Express: configuración, CORS, registro de routers
 │       ├── database.sqlite      # Base de datos SQLite activa
-│       ├── logoNormal.jpeg      # Logo para certificados PDF
+│       ├── assets/
+│       │   └── logo instituto superior del norte.png # Logo oficial para toda la aplicación (Frontend/Backend)
 │       ├── middleware/
 │       │   ├── auth.js          # authenticateToken, requireAdmin, normalizeToUtf8
 │       │   └── errorHandler.js  # Centralized error handler — no expone stack traces
@@ -74,7 +76,7 @@ AppProvider (AppContext.jsx)       ← Estado global y fetch functions
 │       │   └── publicRoutes.js  # GET /api/certificate/verify/:codigo (sin auth)
 │       ├── controllers/
 │       │   ├── authController.js    # login, register
-│       │   ├── adminController.js   # getCourses, createCourse, getMetrics, getUsers, createStudent (+ email bienvenida), updateStudentCourses
+│       │   ├── adminController.js   # getCourses, createCourse (con precio), getMetrics, getUsers, createStudent (+ metadatos + bypass de certificación), updateStudentCourses, downloadStudentCertificate
 │       │   ├── studentController.js # getStudentCourses, getCourseContent, getProgress, updateProgress, getExamQuestions, submitExam (+ email certificado), getCertificateDetail, downloadCertificate
 │       │   └── publicController.js  # verifyCertificate
 │       ├── services/
@@ -94,6 +96,7 @@ AppProvider (AppContext.jsx)       ← Estado global y fetch functions
         │   ├── Login.jsx
         │   ├── AdminLogin.jsx
         │   ├── Dashboard.jsx
+        │   ├── CourseDetail.jsx
         │   ├── CourseViewer.jsx
         │   ├── Exam.jsx
         │   ├── Certificate.jsx
@@ -122,14 +125,7 @@ AppProvider (AppContext.jsx)       ← Estado global y fetch functions
 - Todas las funciones de fetch están envueltas en `useCallback` con `[token]` como dependencia.
 - Esto estabiliza la referencia de la función entre renders y permite incluirlas en deps de `useEffect` sin causar loops.
 
-### Patrón de setActiveCourseId en fetchStudentCourses
-```js
-// CORRECTO: Usa setter funcional para no depender del valor anterior como closure
-setActiveCourseId(prev => (data.length > 0 && !prev) ? data[0].id : prev);
 
-// INCORRECTO: Crearía una dependencia de activeCourseId en el useCallback
-if (data.length > 0 && !activeCourseId) setActiveCourseId(data[0].id);
-```
 
 ---
 
@@ -152,14 +148,26 @@ erDiagram
 ### Tablas del Sistema
 | Tabla | Descripción |
 |---|---|
-| `usuarios` | `cedula`, `nombre_completo`, `password_hash`, `rol`, `fecha_registro` |
-| `cursos` | `titulo`, `descripcion`, `imagen_url`, `creado_en` |
+| `usuarios` | `cedula`, `nombre_completo`, `password_hash`, `rol`, `fecha_registro`, `fecha_expedicion_cedula`, `municipio_expedicion_cedula`, `municipio_nacimiento`, `anio_nacimiento`, `pago_realizado` |
+| `cursos` | `titulo` (UNIQUE), `descripcion`, `imagen_url`, `creado_en`, `precio` |
 | `matriculas` | Relación N:M entre `usuarios` y `cursos` |
 | `modulos` | `curso_id`, `titulo_modulo`, `tipo_contenido`, `data_contenido` (JSON `{url, text}`), `orden` |
 | `progreso` | `usuario_cedula`, `modulo_id`, `completado`, `fecha_completado` |
 | `examenes` | `usuario_cedula`, `curso_id`, `puntaje_maximo`, `aprobado`, `intentos`, `fecha_ultimo_intento` |
 | `certificados` | `codigo_verificacion`, `usuario_cedula`, `curso_id`, `numero_certificado`, `fecha_emision`, `calificacion_obtenida` |
 | `preguntas` | `curso_id`, `pregunta`, `opcion_a`, `opcion_b`, `opcion_c`, `opcion_d`, `respuesta_correcta` |
+
+### Restricción UNIQUE(titulo) y Limpieza de Duplicados
+Para evitar que la sentencia `INSERT OR IGNORE` del seeding genere registros duplicados en arranques o reinicios del servidor, la columna `titulo` de la tabla `cursos` posee la restricción `UNIQUE` y un índice único `idx_cursos_titulo`. 
+
+Al iniciar, se ejecuta de manera automática una migración atómica (`cleanDuplicateCoursesSQLite`) que:
+1. Identifica cursos duplicados con el mismo título.
+2. Re-mapea las claves foráneas en cascada en las tablas dependientes (`modulos`, `matriculas`, `progreso`, `examenes`, `certificados`, `preguntas`) para que apunten al `id` del curso único conservado (el más antiguo, `MIN(id)`).
+3. Elimina de forma segura los cursos duplicados y sus módulos duplicados correspondientes.
+
+### Regla de Seeding
+- El seeding usa `INSERT OR IGNORE` en todas las tablas para ser **idempotente** — seguro de ejecutar en cada arranque sin borrar datos existentes.
+- **NUNCA** usar `DROP TABLE` + `CREATE TABLE` en `setupSqliteDB()`. Esto destruiría datos de producción en cada reinicio.
 
 ### Esquema de la tabla `preguntas`
 ```sql

@@ -1,29 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-primary: #FAFAFA;
+  /* ISN Brand Colors */
+  --isn-bg-light: #F7F9FA;
+  --isn-blue: #0F2C59;
+  --isn-blue-dark: #071E3D;
+  --isn-gold: #D4AF37; /* Premium Gold instead of Orange */
+  --isn-charcoal: #2D3748;
+  --isn-success: #1D4ED8; /* Vibrant Blue for active progress/success states */
+
+  --bg-primary: var(--isn-bg-light);
   --bg-secondary: #FFFFFF;
   --bg-glass: rgba(255, 255, 255, 0.95);
   --border-glass: #E2E8F0;
-  --border-active: #008DDA;
+  --border-active: var(--isn-gold);
   
-  --accent-emerald: #4E9F3D;
-  --accent-emerald-hover: #3d8030;
+  --accent-emerald: var(--isn-success); /* Re-mapped to Blue */
+  --accent-emerald-hover: #1E40AF;
   --accent-teal: #008DDA;
-  --accent-gold: #F0A500;
-  --accent-gold-hover: #d49200;
+  --accent-gold: var(--isn-gold);
+  --accent-gold-hover: #B89028;
   --accent-rose: #EF4444;
   
-  --text-primary: #0F2C59;
-  --text-secondary: #475569;
+  /* Exclusive green accent ONLY for "Ver programas academicos" button */
+  --accent-green-btn: #10B981;
+  --accent-green-btn-hover: #059669;
+  
+  --text-primary: var(--isn-blue);
+  --text-secondary: var(--isn-charcoal);
   --text-muted: #64748B;
   
-  --shadow-glow: 0 4px 20px rgba(78, 159, 61, 0.12);
-  --shadow-card: 0 10px 25px -5px rgba(15, 44, 89, 0.06), 0 8px 10px -6px rgba(15, 44, 89, 0.04);
+  --shadow-glow: 0 4px 20px rgba(15, 44, 89, 0.06);
+  --shadow-card: 0 10px 30px -5px rgba(15, 44, 89, 0.04), 0 8px 20px -6px rgba(15, 44, 89, 0.03);
   
   --font-title: 'Outfit', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
 }
+
+.font-serif {
+  font-family: 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+.font-sans-mono {
+  font-family: 'Courier New', Courier, monospace;
+}
+
 
 * {
   box-sizing: border-box;
@@ -48,23 +69,24 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
 }
 
-/* Premium Containers */
+/* Premium Containers - Soft Neumorphic Shadows instead of hard borders */
 .glass-panel {
   background: var(--bg-secondary);
-  border: 1px solid var(--border-glass);
-  border-radius: 16px;
+  border: none;
+  border-radius: 20px; /* Fluid, organic rounded corners */
   box-shadow: var(--shadow-card);
 }
 
 .glass-panel:hover {
-  border-color: #CBD5E1;
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -10px rgba(15, 44, 89, 0.08), 0 10px 20px -10px rgba(15, 44, 89, 0.05);
 }
 
 .glow-panel {
   box-shadow: var(--shadow-glow), var(--shadow-card);
 }
 
-/* Buttons */
+/* Buttons - Grounded Pill shape without outline borders */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -73,33 +95,31 @@ h1, h2, h3, h4, h5, h6 {
   padding: 12px 24px;
   font-family: var(--font-title);
   font-weight: 600;
-  border-radius: 12px;
+  border-radius: 9999px; /* Max roundness - Grounded Pill */
   cursor: pointer;
-  border: 1px solid transparent;
+  border: none; /* No outline/stroke border */
   font-size: 0.95rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-primary {
-  background: var(--accent-emerald);
+  background: var(--accent-emerald); /* This is now Blue */
   color: #FFFFFF;
 }
 
 .btn-primary:hover {
   background: var(--accent-emerald-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(78, 159, 61, 0.25);
+  box-shadow: 0 4px 12px rgba(15, 44, 89, 0.15);
 }
 
 .btn-secondary {
   background: #F1F5F9;
-  border-color: #E2E8F0;
   color: #334155;
 }
 
 .btn-secondary:hover {
   background: #E2E8F0;
-  border-color: #CBD5E1;
 }
 
 .btn-danger {
@@ -109,7 +129,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-danger:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
 .btn:disabled {
@@ -119,7 +139,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: none !important;
 }
 
-/* Inputs */
+/* Inputs - Soft borders and organic roundness */
 .input-group {
   margin-bottom: 20px;
   width: 100%;
@@ -130,7 +150,7 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.8rem;
   font-weight: 700;
   margin-bottom: 8px;
-  color: var(--text-primary);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -139,8 +159,8 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   padding: 14px 16px;
   background: #F8F9FA;
-  border: 1px solid #E2E8F0;
-  border-radius: 12px;
+  border: 1px solid var(--border-glass);
+  border-radius: 12px; /* Smooth rounded corners */
   color: var(--text-primary);
   font-size: 0.95rem;
   font-family: var(--font-body);
@@ -148,9 +168,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .input-field:focus {
-  border-color: var(--accent-teal);
+  border-color: var(--isn-blue);
   background: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(0, 141, 218, 0.12);
+  box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.08);
 }
 
 /* Progress bar */
@@ -233,17 +253,16 @@ h1, h2, h3, h4, h5, h6 {
 .media-simulator {
   width: 100%;
   aspect-ratio: 16/9;
-  background: linear-gradient(135deg, #0F2C59, #008DDA);
-  border-radius: 12px;
+  background: linear-gradient(135deg, var(--isn-blue), var(--isn-blue-dark));
+  border-radius: 16px; /* Rounded corners */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border-glass);
   position: relative;
   overflow: hidden;
   margin-bottom: 24px;
-  box-shadow: 0 4px 15px rgba(15, 44, 89, 0.08);
+  box-shadow: 0 10px 25px rgba(15, 44, 89, 0.08);
 }
 
 .media-glowing-wave {
@@ -317,3 +336,100 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 0 30px rgba(78, 159, 61, 0.25);
   }
 }
+
+/* Editorial styling for course content (HTML and Markdown) */
+.course-content-markdown h3 {
+  font-size: 1.5rem;
+  color: var(--isn-blue);
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+  padding-bottom: 6px;
+}
+
+.course-content-markdown h4 {
+  font-size: 1.2rem;
+  color: var(--isn-blue-dark);
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-family: var(--font-title);
+  font-weight: 600;
+}
+
+.course-content-markdown p {
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.course-content-markdown ul, .course-content-markdown ol {
+  margin-left: 24px;
+  margin-bottom: 20px;
+}
+
+.course-content-markdown li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.course-content-markdown blockquote, .course-content-markdown .highlight-box {
+  background: rgba(15, 44, 89, 0.03);
+  border-left: 4px solid var(--isn-gold);
+  padding: 16px 20px;
+  border-radius: 0 12px 12px 0;
+  margin: 20px 0;
+  font-style: italic;
+  color: var(--isn-blue-dark);
+}
+
+.course-content-markdown .roadmap-container {
+  background: linear-gradient(135deg, rgba(15, 44, 89, 0.02) 0%, rgba(15, 44, 89, 0.05) 100%);
+  border: 1px dashed rgba(15, 44, 89, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+}
+
+.course-content-markdown .roadmap-title {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--isn-blue);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.course-content-markdown .roadmap-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.course-content-markdown .roadmap-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.course-content-markdown .roadmap-badge {
+  background: var(--isn-blue);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.course-content-markdown .pedagogical-tip {
+  background: rgba(16, 185, 129, 0.05);
+  border-left: 4px solid #10B981;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 16px 0;
+  font-size: 0.9rem;
+}
+

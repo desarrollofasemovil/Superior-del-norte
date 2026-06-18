@@ -1,5 +1,5 @@
 /**
- * emailService.js — AlimSafe LMS
+ * emailService.js — Instituto Superior del Norte LMS
  *
  * Capa de servicio para envío de emails transaccionales.
  *
@@ -17,7 +17,8 @@
 'use strict';
 
 const nodemailer = require('nodemailer');
-const PDFDocument = require('pdfkit');
+const { Writable } = require('stream');
+const pdfService = require('./pdfService');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
@@ -70,101 +71,27 @@ async function getTransporter() {
  */
 function generateCertificatePDFBuffer(data) {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({
-      size: 'letter',
-      layout: 'landscape',
-      margins: { top: 40, bottom: 40, left: 40, right: 40 }
+    const chunks = [];
+    const stream = new Writable({
+      write(chunk, encoding, callback) {
+        chunks.push(chunk);
+        callback();
+      }
     });
 
-    const chunks = [];
-    doc.on('data', (chunk) => chunks.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
-    doc.on('error', reject);
+    stream.on('finish', () => {
+      resolve(Buffer.concat(chunks));
+    });
 
-    // 1. Bordes exteriores
-    doc.rect(20, 20, doc.page.width - 40, doc.page.height - 40)
-       .lineWidth(4)
-       .stroke('#0F2C59');
+    stream.on('error', (err) => {
+      reject(err);
+    });
 
-    doc.rect(28, 28, doc.page.width - 56, doc.page.height - 56)
-       .lineWidth(1.5)
-       .stroke('#F0A500');
-
-    // 2. Esquinas decorativas
-    doc.rect(24, 24, 20, 20).lineWidth(1).stroke('#F0A500');
-    doc.rect(doc.page.width - 44, 24, 20, 20).lineWidth(1).stroke('#F0A500');
-    doc.rect(24, doc.page.height - 44, 20, 20).lineWidth(1).stroke('#F0A500');
-    doc.rect(doc.page.width - 44, doc.page.height - 44, 20, 20).lineWidth(1).stroke('#F0A500');
-
-    // 3. Logo oficial
-    const logoPath = path.join(__dirname, '..', 'logoNormal.jpeg');
-    if (fs.existsSync(logoPath)) {
-      doc.image(logoPath, doc.page.width / 2 - 50, 42, { width: 100 });
+    try {
+      pdfService.generateCertificatePDF(stream, data);
+    } catch (e) {
+      reject(e);
     }
-
-    // 4. Encabezado
-    doc.y = 150;
-    doc.fontSize(28).font('Times-Bold').fillColor('#0F2C59')
-       .text('CERTIFICADO DE APROBACIÓN', { align: 'center' });
-
-    doc.moveDown(0.1);
-    doc.fontSize(11).font('Helvetica-Bold').fillColor('#F0A500')
-       .text(`REGISTRO N°: ${data.numero_certificado}`, { align: 'center', characterSpacing: 1 });
-
-    doc.moveDown(0.1);
-    doc.fontSize(12).font('Helvetica-Bold').fillColor('#0F2C59')
-       .text((data.curso_titulo || 'CURSO DE MANIPULACIÓN HIGIÉNICA DE ALIMENTOS').toUpperCase(), { align: 'center', characterSpacing: 1.5 });
-
-    doc.moveDown(0.8);
-    doc.fontSize(13).font('Helvetica').fillColor('#475569')
-       .text('Se otorga el presente documento de certificación y participación a:', { align: 'center' });
-
-    // 5. Nombre del estudiante
-    doc.moveDown(0.6);
-    doc.fontSize(28).font('Helvetica-Bold').fillColor('#4E9F3D')
-       .text(data.nombre_completo.toUpperCase(), { align: 'center' });
-
-    // 6. Cédula
-    doc.moveDown(0.3);
-    doc.fontSize(13).font('Helvetica').fillColor('#1E293B')
-       .text(`Cédula de Identidad N°: ${data.cedula}`, { align: 'center' });
-
-    // 7. Descripción del curso
-    doc.moveDown(0.8);
-    doc.fontSize(11).font('Helvetica').fillColor('#475569')
-       .text('Por haber cumplido con todos los requisitos académicos del curso y aprobado satisfactoriamente', { align: 'center' });
-    doc.text('la evaluación de conocimientos sobre normas higiénico-sanitarias vigentes.', { align: 'center' });
-
-    doc.moveDown(0.5);
-    doc.fontSize(10).font('Helvetica-Oblique').fillColor('#64748B')
-       .text('Intensidad Horaria: 3 Horas Lectivas', { align: 'center' });
-
-    doc.fontSize(11).font('Helvetica-Bold').fillColor('#4E9F3D')
-       .text(`Calificación Obtenida: ${data.calificacion_obtenida}%`, { align: 'center' });
-
-    // 8. Firmas y metadatos
-    doc.moveDown(1.0);
-    const yStart = doc.y;
-
-    doc.fontSize(10).font('Helvetica-Bold').fillColor('#475569')
-       .text('Fecha de Emisión:', 100, yStart, { width: 250, align: 'center' });
-    doc.fontSize(10).font('Helvetica').fillColor('#1E293B')
-       .text(data.fecha_emision, 100, yStart + 18, { width: 250, align: 'center' });
-
-    const rightColX = doc.page.width - 350;
-    doc.moveTo(rightColX, yStart + 12).lineTo(rightColX + 250, yStart + 12).lineWidth(1).stroke('#94A3B8');
-    doc.fontSize(10).font('Helvetica-Bold').fillColor('#475569')
-       .text('Comité de Calidad y Sanidad', rightColX, yStart + 18, { width: 250, align: 'center' });
-    doc.fontSize(9).font('Helvetica-Oblique').fillColor('#64748B')
-       .text('AlimentosLMS Certificador', rightColX, yStart + 32, { width: 250, align: 'center' });
-
-    // 9. Footer con código de verificación
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-    doc.fontSize(9).font('Courier').fillColor('#64748B')
-       .text(`CÓDIGO DE VERIFICACIÓN: ${data.codigo_verificacion}`, 40, doc.page.height - 65, { align: 'center' });
-    doc.text(`Verifique en: ${frontendUrl}/#verify=${data.codigo_verificacion}`, 40, doc.page.height - 50, { align: 'center' });
-
-    doc.end();
   });
 }
 
@@ -182,13 +109,13 @@ function generateCertificatePDFBuffer(data) {
 async function sendWelcomeEmail(studentData) {
   try {
     const transporter = await getTransporter();
-    const fromAddress = process.env.SMTP_FROM || 'AlimSafe LMS <noreply@alimsafe.co>';
+    const fromAddress = process.env.SMTP_FROM || 'Instituto Superior del Norte LMS <noreply@institutosuperiordelnorte.co>';
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
     const mailOptions = {
       from: fromAddress,
-      to: `"${studentData.nombre_completo}" <${studentData.cedula}@alimsafe-student.co>`,
-      subject: '¡Bienvenido a AlimSafe LMS! Tus credenciales de acceso',
+      to: `"${studentData.nombre_completo}" <${studentData.cedula}@institutosuperiordelnorte-student.co>`,
+      subject: '¡Bienvenido a Instituto Superior del Norte LMS! Tus credenciales de acceso',
       html: `
         <!DOCTYPE html>
         <html lang="es">
@@ -200,7 +127,7 @@ async function sendWelcomeEmail(studentData) {
                 <!-- Header -->
                 <tr>
                   <td style="background:linear-gradient(135deg,#0F2C59 0%,#1a4a8a 100%);padding:40px 40px 30px;text-align:center;">
-                    <h1 style="color:#F0A500;margin:0;font-size:28px;font-weight:800;letter-spacing:1px;">AlimSafe LMS</h1>
+                    <h1 style="color:#D4AF37;margin:0;font-size:28px;font-weight:800;letter-spacing:1px;">Instituto Superior del Norte</h1>
                     <p style="color:#a8c4e0;margin:8px 0 0;font-size:14px;">Plataforma de Certificación en Manipulación de Alimentos</p>
                   </td>
                 </tr>
@@ -209,7 +136,7 @@ async function sendWelcomeEmail(studentData) {
                   <td style="padding:40px;">
                     <h2 style="color:#0F2C59;margin:0 0 16px;font-size:22px;">¡Bienvenido, ${studentData.nombre_completo}! 👋</h2>
                     <p style="color:#475569;line-height:1.7;margin:0 0 24px;">
-                      Tu cuenta de estudiante ha sido creada exitosamente en la plataforma <strong>AlimSafe LMS</strong>.
+                      Tu cuenta de estudiante ha sido creada exitosamente en la plataforma <strong>Instituto Superior del Norte LMS</strong>.
                       A continuación encontrarás tus credenciales de acceso. Guárdalas en un lugar seguro.
                     </p>
                     <!-- Credentials Box -->
@@ -242,7 +169,7 @@ async function sendWelcomeEmail(studentData) {
                 <tr>
                   <td style="background:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;text-align:center;">
                     <p style="color:#94a3b8;font-size:12px;margin:0;">
-                      Este email fue generado automáticamente por AlimSafe LMS.<br>
+                      Este email fue generado automáticamente por Instituto Superior del Norte LMS.<br>
                       Si no esperabas este mensaje, por favor ignóralo.
                     </p>
                   </td>
@@ -281,8 +208,10 @@ async function sendWelcomeEmail(studentData) {
  */
 async function sendCertificateEmail(studentData, certData, courseTitle) {
   try {
+    console.log(`[EMAIL SERVICE] Intentando enviar certificado para la cédula ${studentData.cedula} en el curso ${courseTitle}`);
+    
     const transporter = await getTransporter();
-    const fromAddress = process.env.SMTP_FROM || 'AlimSafe LMS <noreply@alimsafe.co>';
+    const fromAddress = process.env.SMTP_FROM || 'Instituto Superior del Norte LMS <noreply@institutosuperiordelnorte.co>';
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
     // Generar el PDF del certificado en memoria para adjuntarlo
@@ -290,7 +219,7 @@ async function sendCertificateEmail(studentData, certData, courseTitle) {
 
     const mailOptions = {
       from: fromAddress,
-      to: `"${studentData.nombre_completo}" <${studentData.cedula}@alimsafe-student.co>`,
+      to: `"${studentData.nombre_completo}" <${studentData.cedula}@institutosuperiordelnorte-student.co>`,
       subject: `🎓 ¡Felicitaciones! Tu certificado de "${courseTitle}" está listo`,
       html: `
         <!DOCTYPE html>
@@ -313,9 +242,9 @@ async function sendCertificateEmail(studentData, certData, courseTitle) {
                   <td style="padding:40px;">
                     <h2 style="color:#0F2C59;margin:0 0 16px;font-size:20px;">¡Felicitaciones, ${studentData.nombre_completo}!</h2>
                     <p style="color:#475569;line-height:1.7;margin:0 0 24px;">
-                      Has aprobado exitosamente la evaluación del curso 
-                      <strong style="color:#0F2C59;">"${courseTitle}"</strong> 
-                      con una calificación de <strong style="color:#4E9F3D;">${certData.calificacion_obtenida}%</strong>.
+                       Has aprobado exitosamente la evaluación del curso 
+                       <strong style="color:#0F2C59;">"${courseTitle}"</strong> 
+                       con una calificación de <strong style="color:#4E9F3D;">${certData.calificacion_obtenida}%</strong>.
                     </p>
                     <p style="color:#475569;line-height:1.7;margin:0 0 24px;">
                       Tu certificado oficial está adjunto en este correo en formato PDF. También puedes descargarlo
@@ -354,7 +283,7 @@ async function sendCertificateEmail(studentData, certData, courseTitle) {
                 <tr>
                   <td style="background:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;text-align:center;">
                     <p style="color:#94a3b8;font-size:12px;margin:0;">
-                      Certificado emitido por AlimSafe LMS | N° ${certData.numero_certificado}<br>
+                      Certificado emitido por Instituto Superior del Norte LMS | N° ${certData.numero_certificado}<br>
                       Fecha de emisión: ${certData.fecha_emision}
                     </p>
                   </td>
@@ -380,7 +309,7 @@ async function sendCertificateEmail(studentData, certData, courseTitle) {
     // En modo Ethereal, imprime el URL de previsualización
     const previewUrl = nodemailer.getTestMessageUrl(info);
     if (previewUrl) {
-      console.log(`[emailService] 📧 PREVIEW (Ethereal): ${previewUrl}`);
+      console.log(`[EMAIL SERVICE] URL de previsualización Ethereal generado: ${previewUrl}`);
     }
   } catch (err) {
     console.error(`[emailService] ❌ Error enviando email de certificado para ${studentData.cedula}:`, err.message);

@@ -24,20 +24,20 @@ function generateCertificatePDF(stream, data) {
 
   doc.rect(28, 28, doc.page.width - 56, doc.page.height - 56)
      .lineWidth(1.5)
-     .stroke('#F0A500'); // Yellow accent
+     .stroke('#D4AF37'); // Gold accent
 
   // 2. Add decorative corners
   // Top-Left
-  doc.rect(24, 24, 20, 20).lineWidth(1).stroke('#F0A500');
+  doc.rect(24, 24, 20, 20).lineWidth(1).stroke('#D4AF37');
   // Top-Right
-  doc.rect(doc.page.width - 44, 24, 20, 20).lineWidth(1).stroke('#F0A500');
+  doc.rect(doc.page.width - 44, 24, 20, 20).lineWidth(1).stroke('#D4AF37');
   // Bottom-Left
-  doc.rect(24, doc.page.height - 44, 20, 20).lineWidth(1).stroke('#F0A500');
+  doc.rect(24, doc.page.height - 44, 20, 20).lineWidth(1).stroke('#D4AF37');
   // Bottom-Right
-  doc.rect(doc.page.width - 44, doc.page.height - 44, 20, 20).lineWidth(1).stroke('#F0A500');
+  doc.rect(doc.page.width - 44, doc.page.height - 44, 20, 20).lineWidth(1).stroke('#D4AF37');
 
   // 3. Official Logo
-  const logoPath = path.join(__dirname, '..', 'logoNormal.jpeg');
+  const logoPath = path.join(__dirname, '..', 'assets', 'logo instituto superior del norte.png');
   if (fs.existsSync(logoPath)) {
     doc.image(logoPath, doc.page.width / 2 - 50, 42, { width: 100 });
   }
@@ -52,7 +52,7 @@ function generateCertificatePDF(stream, data) {
   doc.moveDown(0.1);
   doc.fontSize(11)
      .font('Helvetica-Bold')
-     .fillColor('#F0A500')
+     .fillColor('#D4AF37')
      .text(`REGISTRO N°: ${data.numero_certificado}`, { align: 'center', characterSpacing: 1 });
 
   doc.moveDown(0.1);
@@ -71,7 +71,7 @@ function generateCertificatePDF(stream, data) {
   doc.moveDown(0.6);
   doc.fontSize(28)
      .font('Helvetica-Bold')
-     .fillColor('#4E9F3D') // Success Green
+     .fillColor('#16A34A') // Success Green
      .text(data.nombre_completo.toUpperCase(), { align: 'center' });
 
   // 5. Student ID
@@ -98,7 +98,7 @@ function generateCertificatePDF(stream, data) {
   
   doc.fontSize(11)
      .font('Helvetica-Bold')
-     .fillColor('#4E9F3D')
+     .fillColor('#16A34A')
      .text(`Calificación Obtenida: ${data.calificacion_obtenida}%`, { align: 'center' });
 
   // 8. Signatures & Metadata layout
@@ -129,7 +129,7 @@ function generateCertificatePDF(stream, data) {
   doc.fontSize(9)
      .font('Helvetica-Oblique')
      .fillColor('#64748B')
-     .text('AlimentosLMS Certificador', rightColX, yStart + 32, { width: 250, align: 'center' });
+     .text('Instituto Superior del Norte', rightColX, yStart + 32, { width: 250, align: 'center' });
 
   // 9. Footer Verification Metadata
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
