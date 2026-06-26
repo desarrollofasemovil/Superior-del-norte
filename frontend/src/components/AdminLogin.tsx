@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
+import { AppContext, isAdmin } from '../context/AppContext';
 import logoNorte from '../assets/logo_instituto_norte.png';
 import { ShieldCheck, ShieldAlert, ArrowLeft } from 'lucide-react';
 
@@ -32,7 +32,9 @@ const AdminLogin = () => {
     }
 
     try {
-      await login(cedula, password);
+      const u = await login(cedula, password);
+      // Explicit post-login navigation.
+      navigate(isAdmin(u.rol) ? '/admin/dashboard' : '/dashboard', { replace: true });
     } catch (err) {
       // API error is handled by AppContext
     }
@@ -65,7 +67,7 @@ const AdminLogin = () => {
             <img 
               src={logoNorte} 
               alt="Instituto Superior del Norte" 
-              style={{ width: '180px', height: 'auto', marginBottom: '16px' }} 
+              style={{ width: '210px', height: 'auto', marginBottom: '16px' }} 
             />
             <p className="font-serif" style={{ color: 'var(--isn-blue-dark)', fontSize: '1.1rem', textAlign: 'center', fontWeight: 800 }}>
               Instituto Superior del Norte

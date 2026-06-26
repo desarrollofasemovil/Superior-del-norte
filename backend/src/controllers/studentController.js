@@ -2,6 +2,7 @@ const db = require('../repositories/dbRepository');
 const { generateCertificatePDF } = require('../services/pdfService');
 const { normalizeToUtf8 } = require('../middleware/auth');
 const { sendCertificateEmail } = require('../services/emailService');
+const { interpolateTemplate } = require('../services/certificateTemplateService');
 
 function generateVerificationCode() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -188,13 +189,18 @@ async function submitExam(req, res, next) {
       const courses = await db.getCourses();
       const course = courses.find(c => c.id === courseId);
       const courseTitle = course ? course.titulo : 'Manipulación de Alimentos';
+      const fullUser = await db.getUser(req.user.cedula);
+      const htmlTemplate = course && course.certificado_template
+        ? interpolateTemplate(course.certificado_template, fullUser, cert, course)
+        : null;
 
       // Fire-and-forget: enviar email con el certificado PDF adjunto.
       // No bloqueamos la respuesta HTTP aunque el email falle.
       sendCertificateEmail(
         {
           cedula: req.user.cedula,
-          nombre_completo: normalizeToUtf8(req.user.nombre_completo)
+          nombre_completo: normalizeToUtf8(req.user.nombre_completo),
+          email: fullUser?.email || null
         },
         {
           nombre_completo: normalizeToUtf8(req.user.nombre_completo),
@@ -202,8 +208,9 @@ async function submitExam(req, res, next) {
           fecha_emision: cert.fecha_emision,
           codigo_verificacion: cert.codigo_verificacion,
           calificacion_obtenida: cert.calificacion_obtenida || score,
-          numero_certificado: cert.numero_certificado || 'AS-2026-0001',
-          curso_titulo: courseTitle
+          numero_certificado: cert.numero_certificado,
+          curso_titulo: courseTitle,
+          certificado_template: htmlTemplate
         },
         courseTitle
       ).catch((emailErr) => {
@@ -222,18 +229,6 @@ async function submitExam(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
-
-function interpolateTemplate(template, user, cert) {
-  if (!template) return '';
-  return template
-    .replace(/\{\{NOMBRE\}\}/g, user.nombre_completo || '')
-    .replace(/\{\{CEDULA\}\}/g, user.cedula || '')
-    .replace(/\{\{FECHA_EXPEDICION\}\}/g, user.fecha_expedicion_cedula || '')
-    .replace(/\{\{MUNICIPIO_EXPEDICION\}\}/g, user.municipio_expedicion_cedula || '')
-    .replace(/\{\{ANIO_NACIMIENTO\}\}/g, user.anio_nacimiento !== undefined && user.anio_nacimiento !== null ? String(user.anio_nacimiento) : '')
-    .replace(/\{\{CODIGO_VERIFICACION\}\}/g, cert.codigo_verificacion || '')
-    .replace(/\{\{FECHA_EMISION\}\}/g, cert.fecha_emision || '');
 }
 
 async function getCertificateDetail(req, res, next) {
@@ -255,7 +250,9 @@ async function getCertificateDetail(req, res, next) {
 
     if (cert.certificado_template) {
       const fullUser = await db.getUser(req.user.cedula);
-      cert.certificado_template = interpolateTemplate(cert.certificado_template, fullUser, cert);
+      const courses = await db.getCourses();
+      const course = courses.find(c => c.id === courseId);
+      cert.certificado_template = interpolateTemplate(cert.certificado_template, fullUser, cert, course);
     }
 
     res.json(cert);
@@ -285,6 +282,11 @@ async function downloadCertificate(req, res, next) {
     const course = courses.find(c => c.id === courseId);
     const courseTitle = course ? course.titulo : 'Manipulación de Alimentos';
 
+    const fullUser = await db.getUser(req.user.cedula);
+    const htmlTemplate = course && course.certificado_template
+      ? interpolateTemplate(course.certificado_template, fullUser, cert, course)
+      : null;
+
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename=Certificado_${courseTitle.replace(/\s+/g, '_')}_${req.user.cedula}.pdf`);
 
@@ -293,12 +295,12 @@ async function downloadCertificate(req, res, next) {
       cedula: req.user.cedula,
       fecha_emision: cert.fecha_emision,
       codigo_verificacion: cert.codigo_verificacion,
-      calificacion_obtenida: cert.calificacion_obtenida || 100,
-      numero_certificado: cert.numero_certificado || 'AS-2026-0001',
+      calificacion_obtenida: cert.calificacion_obtenida,
+      numero_certificado: cert.numero_certificado,
       curso_titulo: courseTitle
     };
 
-    generateCertificatePDF(res, pdfData);
+    await generateCertificatePDF(res, pdfData, htmlTemplate);
   } catch (err) {
     next(err);
   }

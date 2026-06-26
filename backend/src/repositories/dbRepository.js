@@ -264,7 +264,9 @@ function setupSqliteDB() {
           municipio_expedicion_cedula TEXT,
           municipio_nacimiento TEXT,
           anio_nacimiento INTEGER,
-          pago_realizado INTEGER DEFAULT 0
+          pago_realizado INTEGER DEFAULT 0,
+          email TEXT,
+          vipass INTEGER DEFAULT 0
         )`, (err) => { if (err) return reject(err); });
 
       sqliteDB.run(`CREATE TABLE IF NOT EXISTS cursos (
@@ -550,6 +552,8 @@ function setupSqliteDB() {
         addColumnIfMissing('municipio_nacimiento', 'TEXT');
         addColumnIfMissing('anio_nacimiento', 'INTEGER');
         addColumnIfMissing('pago_realizado', 'INTEGER DEFAULT 0');
+        addColumnIfMissing('email', 'TEXT');
+        addColumnIfMissing('vipass', 'INTEGER DEFAULT 0');
 
         Promise.all(alterPromises).then(() => {
           sqliteDB.all(`PRAGMA table_info(cursos)`, (errC, columnsC) => {
@@ -861,24 +865,29 @@ function createUser(cedula, nombre_completo, password, rol = 'estudiante', fecha
       municipio_expedicion_cedula = null,
       municipio_nacimiento = null,
       anio_nacimiento = null,
-      pago_realizado = 0
+      pago_realizado = 0,
+      email = null,
+      vipass = 0
     } = metadata;
 
     if (dbType === 'sqlite') {
       sqliteDB.run(
         `INSERT INTO usuarios (
           cedula, nombre_completo, password_hash, rol, fecha_registro,
-          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado,
+          email, vipass
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           cedula, nombre_completo, password_hash, rol, date,
-          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
+          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado,
+          email, vipass ? 1 : 0
         ],
         function (err) {
           if (err) reject(err);
           else resolve(sanitize({ 
             cedula, nombre_completo, rol, fecha_registro: date,
-            fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
+            fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado,
+            email, vipass: vipass ? 1 : 0
           }));
         }
       );
@@ -889,13 +898,15 @@ function createUser(cedula, nombre_completo, password, rol = 'estudiante', fecha
       } else {
         const newUser = { 
           cedula, nombre_completo, password_hash, rol, fecha_registro: date,
-          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
+          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado,
+          email, vipass: vipass ? 1 : 0
         };
         jsonDb.users.push(newUser);
         saveJsonDb();
         resolve(sanitize({ 
           cedula, nombre_completo, rol, fecha_registro: date,
-          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado
+          fecha_expedicion_cedula, municipio_expedicion_cedula, municipio_nacimiento, anio_nacimiento, pago_realizado,
+          email, vipass: vipass ? 1 : 0
         }));
       }
     }
@@ -999,6 +1010,8 @@ function getAdminUsers(cedula = '') {
           u.municipio_nacimiento,
           u.anio_nacimiento,
           u.pago_realizado,
+          u.email,
+          u.vipass,
           (
             SELECT COUNT(*) 
             FROM progreso p 
@@ -1046,6 +1059,8 @@ function getAdminUsers(cedula = '') {
               municipio_nacimiento: r.municipio_nacimiento,
               anio_nacimiento: r.anio_nacimiento,
               pago_realizado: r.pago_realizado || 0,
+              email: r.email || null,
+              vipass: r.vipass || 0,
               progreso_porcentaje: progress_pct,
               enrolled_courses: r.enrolled_courses ? r.enrolled_courses.split(',').map(Number) : [],
               certified_courses: r.certified_courses ? r.certified_courses.split(',').map(Number) : []
@@ -1078,6 +1093,8 @@ function getAdminUsers(cedula = '') {
             municipio_nacimiento: u.municipio_nacimiento || null,
             anio_nacimiento: u.anio_nacimiento || null,
             pago_realizado: u.pago_realizado || 0,
+            email: u.email || null,
+            vipass: u.vipass || 0,
             progreso_porcentaje: progress_pct,
             enrolled_courses: courseIds,
             certified_courses: (jsonDb.certificates || []).filter(c => c.usuario_cedula === u.cedula).map(c => c.curso_id)
@@ -1727,7 +1744,8 @@ function generateVerificationCode() {
   return `ALIM-${r1}-${r2}`;
 }
 
-function bypassCertify(cedula, courseId) {
+function bypassCertify(cedula, courseId, opts = {}) {
+  const { inTransaction = false } = opts;
   return new Promise((resolve, reject) => {
     const score = 100;
     const approved = 1;
@@ -1735,12 +1753,17 @@ function bypassCertify(cedula, courseId) {
     const fecha = now.split('T')[0];
 
     if (dbType === 'sqlite') {
+      // Transaction helpers: no-op when already inside a parent transaction
+      const beginTxn  = inTransaction ? (cb) => cb(null) : (cb) => sqliteDB.run('BEGIN TRANSACTION', cb);
+      const commitTxn = inTransaction ? (cb) => cb(null) : (cb) => sqliteDB.run('COMMIT', cb);
+      const rollbackTxn = inTransaction ? (cb) => cb(null) : (cb) => sqliteDB.run('ROLLBACK', cb);
+
       sqliteDB.serialize(() => {
         // 1. Get all modules for this course
         sqliteDB.all(`SELECT id FROM modulos WHERE curso_id = ?`, [courseId], (err, modules) => {
           if (err) return reject(err);
 
-          sqliteDB.run('BEGIN TRANSACTION', (errBegin) => {
+          beginTxn((errBegin) => {
             if (errBegin) return reject(errBegin);
 
             // 2. Insert/replace progress for all modules
@@ -1751,7 +1774,7 @@ function bypassCertify(cedula, courseId) {
 
             stmtProg.finalize((errProg) => {
               if (errProg) {
-                return sqliteDB.run('ROLLBACK', () => reject(errProg));
+                return rollbackTxn(() => reject(errProg));
               }
 
               // 3. Insert/replace exam record
@@ -1761,13 +1784,13 @@ function bypassCertify(cedula, courseId) {
                 [cedula, courseId, 1, score, approved, now],
                 (errExam) => {
                   if (errExam) {
-                    return sqliteDB.run('ROLLBACK', () => reject(errExam));
+                    return rollbackTxn(() => reject(errExam));
                   }
 
                   // 4. Generate verification code & certificate number
                   sqliteDB.get(`SELECT COUNT(*) as count FROM certificados`, [], (errCount, rowCount) => {
                     if (errCount) {
-                      return sqliteDB.run('ROLLBACK', () => reject(errCount));
+                      return rollbackTxn(() => reject(errCount));
                     }
                     const nextNum = (rowCount ? rowCount.count : 0) + 1;
                     const numeroCert = `AS-2026-${String(nextNum).padStart(4, '0')}`;
@@ -1778,11 +1801,11 @@ function bypassCertify(cedula, courseId) {
                       [verificationCode, cedula, courseId, fecha, score, numeroCert],
                       (errCert) => {
                         if (errCert) {
-                          return sqliteDB.run('ROLLBACK', () => reject(errCert));
+                          return rollbackTxn(() => reject(errCert));
                         }
 
-                        sqliteDB.run('COMMIT', (errCommit) => {
-                          if (errCommit) return sqliteDB.run('ROLLBACK', () => reject(errCommit));
+                        commitTxn((errCommit) => {
+                          if (errCommit) return rollbackTxn(() => reject(errCommit));
                           resolve({
                             codigo_verificacion: verificationCode,
                             usuario_cedula: cedula,
@@ -2276,6 +2299,89 @@ function getFinancialMetrics() {
   });
 }
 
+// Atomic student creation: validates course existence, creates the user,
+// enrolls, and optionally bypass-certifies — all inside a single transaction.
+// Returns { user, certificates }.
+function createStudentWithEnrollment({ cedula, nombre_completo, password, metadata, cursos, certificar_inmediatamente }) {
+  const normalizedCourseIds = cursos.map(id => parseInt(id, 10));
+
+  if (dbType === 'sqlite') {
+    return new Promise((resolve, reject) => {
+      sqliteDB.serialize(async () => {
+        let txnOpen = false;
+        try {
+          // 1. Validate course existence before touching any table
+          if (normalizedCourseIds.length > 0) {
+            const placeholders = normalizedCourseIds.map(() => '?').join(',');
+            const validRows = await new Promise((res, rej) => {
+              sqliteDB.all(`SELECT id FROM cursos WHERE id IN (${placeholders})`, normalizedCourseIds, (e, r) => e ? rej(e) : res(r));
+            });
+            if (validRows.length !== normalizedCourseIds.length) {
+              return reject(new Error('Uno o más cursos seleccionados no existen.'));
+            }
+          }
+
+          await new Promise((res, rej) => sqliteDB.run('BEGIN TRANSACTION', e => e ? rej(e) : res()));
+          txnOpen = true;
+
+          // 2. Create user inside the txn (reuses createUser, which uses sqliteDB.serialize-safe ops)
+          const newUser = await createUser(cedula, nombre_completo, password, 'estudiante', null, metadata);
+
+          // 3. Enroll in every course
+          for (const courseId of normalizedCourseIds) {
+            await enrollUserInCourse(cedula, courseId);
+          }
+
+          // 4. Optional immediate certification
+          const certificates = [];
+          if (certificar_inmediatamente) {
+            for (const courseId of normalizedCourseIds) {
+              certificates.push(await bypassCertify(cedula, courseId, { inTransaction: true }));
+            }
+          }
+
+          await new Promise((res, rej) => sqliteDB.run('COMMIT', e => e ? rej(e) : res()));
+          txnOpen = false;
+          resolve({ user: newUser, certificates });
+        } catch (e) {
+          if (txnOpen) {
+            try { await new Promise((r) => sqliteDB.run('ROLLBACK', () => r())); } catch (_) {}
+          }
+          reject(e);
+        }
+      });
+    });
+  }
+
+  // JSON fallback — atomicity is best-effort but the sequence matches SQLite path
+  return new Promise(async (resolve, reject) => {
+    try {
+      const validIds = (jsonDb.courses || []).map(c => c.id);
+      const allExist = normalizedCourseIds.every(id => validIds.includes(id));
+      if (!allExist) {
+        return reject(new Error('Uno o más cursos seleccionados no existen.'));
+      }
+
+      const newUser = await createUser(cedula, nombre_completo, password, 'estudiante', null, metadata);
+      for (const courseId of normalizedCourseIds) {
+        await enrollUserInCourse(cedula, courseId);
+      }
+
+      const certificates = [];
+      if (certificar_inmediatamente) {
+        for (const courseId of normalizedCourseIds) {
+          certificates.push(await bypassCertify(cedula, courseId));
+        }
+      }
+
+      saveJsonDb();
+      resolve({ user: newUser, certificates });
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
 module.exports = {
   initDB,
   getUser,
@@ -2298,6 +2404,7 @@ module.exports = {
   getAdminUsers,
   getStudentCourses,
   createCourse,
+  createStudentWithEnrollment,
   updateUserCourses,
   bypassCertify,
   updateCourse,

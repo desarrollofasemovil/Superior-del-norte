@@ -2,7 +2,21 @@ import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import logoLogo from '../assets/logo_instituto_norte.png';
+import heroGraphic from '../assets/hero_graphic.png';
+import securityQR from '../assets/security_qr.png';
+import campusBuilding from '../assets/campus_building.png';
 import { Award, BookOpen, Clock, ShieldCheck, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
+
+// Course Card Images
+import alimentosHigiene from '../assets/alimentos_higiene.png';
+import haccpCalidad from '../assets/haccp_calidad.png';
+import bpmManufactura from '../assets/bpm_manufactura.png';
+import mecanicaBasica from '../assets/mecanica_basica.png';
+import primerosAuxilios from '../assets/primeros_auxilios.png';
+import manejoDefensivo from '../assets/manejo_defensivo.png';
+import manejo4x4 from '../assets/manejo_4x4.png';
+import atencionCliente from '../assets/atencion_cliente.png';
+import paqueteMedico from '../assets/paquete_medico.png';
 
 const coursesData = [
   {
@@ -11,7 +25,8 @@ const coursesData = [
     descripcion: "Certificación oficial obligatoria para personal del sector de alimentos. Normativas sanitarias de higiene, control de puntos críticos y prevención de contaminación.",
     horas: 3,
     nivel: "",
-    imagenText: "Manipulación e Higiene de Alimentos"
+    imagenText: "Manipulación e Higiene de Alimentos",
+    imagen: alimentosHigiene
   },
   {
     id: 2,
@@ -19,7 +34,8 @@ const coursesData = [
     descripcion: "Análisis de peligros y control de puntos críticos. Diseñado para supervisores y jefes de calidad en la industria alimentaria.",
     horas: 8,
     nivel: "",
-    imagenText: "Control de Calidad HACCP"
+    imagenText: "Control de Calidad HACCP",
+    imagen: haccpCalidad
   },
   {
     id: 3,
@@ -27,7 +43,8 @@ const coursesData = [
     descripcion: "Principios básicos y requisitos de higiene bajo regulaciones nacionales vigentes para establecimientos alimentarios.",
     horas: 6,
     nivel: "",
-    imagenText: "Principios de Manufactura BPM"
+    imagenText: "Principios de Manufactura BPM",
+    imagen: bpmManufactura
   },
   {
     id: 4,
@@ -35,7 +52,8 @@ const coursesData = [
     descripcion: "Capacitación práctica en diagnóstico preventivo, sistemas del vehículo, cambio de neumáticos y mantenimiento esencial para conductores.",
     horas: 24,
     nivel: "",
-    imagenText: "Mecánica Básica"
+    imagenText: "Mecánica Básica",
+    imagen: mecanicaBasica
   },
   {
     id: 5,
@@ -43,7 +61,8 @@ const coursesData = [
     descripcion: "Formación vital en atención prehospitalaria, reanimación cardiopulmonar (RCP), manejo de heridas y respuesta inmediata ante emergencias médicas.",
     horas: 18,
     nivel: "",
-    imagenText: "Primeros Auxilios"
+    imagenText: "Primeros Auxilios",
+    imagen: primerosAuxilios
   },
   {
     id: 6,
@@ -51,7 +70,8 @@ const coursesData = [
     descripcion: "Técnicas avanzadas de conducción segura, anticipación de riesgos en la vía, psicología del conductor y prevención de accidentes de tránsito.",
     horas: 20,
     nivel: "",
-    imagenText: "Manejo Defensivo"
+    imagenText: "Manejo Defensivo",
+    imagen: manejoDefensivo
   },
   {
     id: 7,
@@ -59,7 +79,8 @@ const coursesData = [
     descripcion: "Dominio técnico de vehículos de tracción integral, control en terrenos difíciles (barro, arena, pendientes pronunciadas) y uso correcto de implementos de rescate.",
     horas: 32,
     nivel: "",
-    imagenText: "Manejo 4x4"
+    imagenText: "Manejo 4x4",
+    imagen: manejo4x4
   },
   {
     id: 8,
@@ -67,7 +88,8 @@ const coursesData = [
     descripcion: "Desarrollo de habilidades blandas, comunicación asertiva, resolución de conflictos y excelencia en el servicio para la fidelización de usuarios.",
     horas: 18,
     nivel: "",
-    imagenText: "Atención al Cliente"
+    imagenText: "Atención al Cliente",
+    imagen: atencionCliente
   },
   {
     id: 9,
@@ -75,7 +97,8 @@ const coursesData = [
     descripcion: "Compendio especializado orientado al personal asistencial, cubriendo protocolos de bioseguridad, normatividad en salud y actualización en procedimientos clínicos básicos.",
     horas: 30,
     nivel: "",
-    imagenText: "Paquete Médico"
+    imagenText: "Paquete Médico",
+    imagen: paqueteMedico
   }
 ];
 
@@ -129,7 +152,7 @@ export default function HomePage() {
         backgroundColor: '#FFFFFF',
         borderBottom: '1px solid var(--border-glass)',
         boxShadow: '0 10px 30px -10px rgba(15, 44, 89, 0.04)',
-        height: '70px',
+        height: '80px',
         display: 'flex',
         alignItems: 'center',
         padding: '0 24px'
@@ -137,18 +160,20 @@ export default function HomePage() {
         <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {/* Logo & Brand */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => scrollToSection('home')}>
-            <img src={logoLogo} alt="Instituto Superior del Norte" style={{ height: '45px', width: 'auto' }} />
-            <h1 className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue)', margin: 0 }}>
+            <img src={logoLogo} alt="Instituto Superior del Norte" style={{ height: '55px', width: 'auto' }} />
+            <h1 className="font-serif nav-title-responsive" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--isn-blue)', margin: 0 }}>
               Instituto Superior del Norte
             </h1>
           </div>
 
-          {/* Nav Links */}
+          {/* Nav Links & CTA Button wrapper */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <button onClick={() => scrollToSection('home')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Inicio</button>
-            <button onClick={() => scrollToSection('courses')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Programas</button>
-            <button onClick={() => scrollToSection('verification')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Verificación</button>
-            <button onClick={() => scrollToSection('about')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Nosotros</button>
+            <div className="nav-links-responsive" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+              <button onClick={() => scrollToSection('home')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Inicio</button>
+              <button onClick={() => scrollToSection('courses')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Programas</button>
+              <button onClick={() => scrollToSection('verification')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Verificación</button>
+              <button onClick={() => scrollToSection('about')} style={{ background: 'none', border: 'none', color: 'var(--isn-charcoal)', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}>Nosotros</button>
+            </div>
 
             <button
               onClick={() => navigate('/login')}
@@ -158,7 +183,9 @@ export default function HomePage() {
                 padding: '10px 20px',
                 fontWeight: 700,
                 boxShadow: '0 4px 12px rgba(15, 44, 89, 0.12)',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                flexShrink: 0
               }}
             >
               Acceder al Campus Virtual
@@ -173,10 +200,10 @@ export default function HomePage() {
         <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'center', marginBottom: '64px' }}>
           <div>
             <h2 className="font-serif" style={{ fontSize: '3rem', color: 'var(--isn-blue)', lineHeight: 1.15, fontWeight: 900, marginBottom: '24px' }}>
-              Formación Técnica Superior para el Mundo Real
+              Formación superior para el mundo real
             </h2>
             <p style={{ fontSize: '1.15rem', color: 'var(--isn-charcoal)', lineHeight: '1.6', marginBottom: '36px' }}>
-              Capacítate bajo estándares oficiales del Instituto Superior del Norte. Desarrolla las competencias técnicas obligatorias y certifica tus conocimientos en manipulación higiénica de alimentos con validez curricular nacional.
+              Capacítate bajo estándares oficiales del Instituto Superior del Norte. Desarrolla las competencias obligatorias y certifica tus conocimientos en manipulación higiénica de alimentos con validez curricular nacional.
             </p>
             <div style={{ display: 'flex', gap: '16px' }}>
               <button
@@ -216,43 +243,21 @@ export default function HomePage() {
           {/* 3. Reserva de Espacios para Contenido Gráfico (Hero Side) */}
           <div className="glass-panel" style={{
             height: '400px',
-            backgroundColor: '#FFFFFF',
+            overflow: 'hidden',
+            borderRadius: '24px',
+            position: 'relative',
+            boxShadow: '0 20px 40px -15px rgba(15, 44, 89, 0.08)',
+            border: 'none',
             display: 'flex',
-            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: '32px',
-            textAlign: 'center',
-            borderRadius: '24px',
-            position: 'relative'
+            backgroundColor: '#FFFFFF'
           }}>
-            <div style={{
-              position: 'absolute',
-              top: '16px',
-              right: '16px',
-              backgroundColor: 'rgba(212, 175, 55, 0.15)',
-              color: 'var(--isn-blue)',
-              fontSize: '0.75rem',
-              fontWeight: 800,
-              padding: '4px 10px',
-              borderRadius: '9999px',
-              textTransform: 'uppercase'
-            }}>
-              Espacio de Reserva
-            </div>
-            <div style={{ width: '48px', height: '48px', border: '4px solid #E2E8F0', borderTop: '4px solid var(--isn-gold)', borderRadius: '50%', animation: 'spin 1.5s linear infinite', marginBottom: '16px' }} />
-            <style>{`
-              @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-              }
-            `}</style>
-            <h4 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--isn-blue)', fontWeight: 700, marginBottom: '8px' }}>
-              Infografía de Formación del Campus
-            </h4>
-            <p style={{ fontSize: '0.85rem', color: 'var(--isn-charcoal)', maxWidth: '280px' }}>
-              Este contenedor está reservado para el recurso gráfico de formación oficial.
-            </p>
+            <img 
+              src={heroGraphic} 
+              alt="Infografía de Formación del Campus" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            />
           </div>
         </section>
 
@@ -269,7 +274,7 @@ export default function HomePage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
             {coursesData.map((course) => (
-              <div key={course.id} className="glass-panel" style={{
+              <div key={course.id} className="glass-panel course-card" style={{
                 backgroundColor: '#FFFFFF',
                 borderRadius: '20px',
                 overflow: 'hidden',
@@ -285,25 +290,38 @@ export default function HomePage() {
                   flexDirection: 'column',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  padding: '20px',
                   color: '#FFFFFF',
-                  position: 'relative'
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}>
-                  <BookOpen size={36} color="var(--isn-gold)" style={{ marginBottom: '8px' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>{course.imagenText}</span>
-                  <div style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    backgroundColor: 'rgba(15, 44, 89, 0.65)',
-                    color: '#FFFFFF',
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
-                    padding: '2px 8px',
-                    borderRadius: '9999px'
-                  }}>
-                    {course.nivel}
-                  </div>
+                  {course.imagen ? (
+                    <img
+                      src={course.imagen}
+                      alt={course.titulo}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
+                      className="course-image-hover"
+                    />
+                  ) : (
+                    <>
+                      <BookOpen size={36} color="var(--isn-gold)" style={{ marginBottom: '8px' }} />
+                      <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>{course.imagenText}</span>
+                    </>
+                  )}
+                  {course.nivel && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      left: '12px',
+                      backgroundColor: 'rgba(15, 44, 89, 0.65)',
+                      color: '#FFFFFF',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      padding: '2px 8px',
+                      borderRadius: '9999px'
+                    }}>
+                      {course.nivel}
+                    </div>
+                  )}
                 </div>
 
                 <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -462,38 +480,29 @@ export default function HomePage() {
 
             {/* 3. Reserva de Espacios para Contenido Gráfico (Verification Side) */}
             <div className="glass-panel" style={{
-              backgroundColor: 'var(--isn-bg-light)',
+              backgroundColor: '#FFFFFF',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
               padding: '24px',
               textAlign: 'center',
-              borderRadius: '16px',
-              position: 'relative'
+              borderRadius: '24px',
+              position: 'relative',
+              boxShadow: '0 20px 40px -15px rgba(15, 44, 89, 0.08)',
+              border: 'none'
             }}>
-              <Award size={48} color="var(--isn-gold)" style={{ marginBottom: '12px' }} />
-              <h4 className="font-serif" style={{ fontSize: '1.1rem', color: 'var(--isn-blue)', fontWeight: 700, marginBottom: '6px' }}>
+              <h4 className="font-serif" style={{ fontSize: '1.1rem', color: 'var(--isn-blue)', fontWeight: 800, marginBottom: '6px' }}>
                 Sello de Seguridad Digital
               </h4>
-              <p style={{ fontSize: '0.8rem', color: 'var(--isn-charcoal)', maxWidth: '200px' }}>
-                Reserva gráfica para el sello de seguridad y código QR institucional.
+              <p style={{ fontSize: '0.8rem', color: 'var(--isn-charcoal)', maxWidth: '220px', lineHeight: '1.4' }}>
+                Acreditación oficial protegida mediante firma y registro criptográfico.
               </p>
-              <div style={{
-                width: '100px',
-                height: '100px',
-                border: '1px dashed var(--border-glass)',
-                borderRadius: '12px',
-                marginTop: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.7rem',
-                color: 'var(--text-muted)',
-                fontWeight: 700
-              }}>
-                CQR Placeholder
-              </div>
+              <img 
+                src={securityQR} 
+                alt="Código QR de Verificación" 
+                style={{ width: '100px', height: '100px', objectFit: 'contain', marginTop: '16px', borderRadius: '12px', border: '1px solid var(--border-glass)' }} 
+              />
             </div>
           </div>
         </section>
@@ -504,21 +513,19 @@ export default function HomePage() {
           <div className="glass-panel" style={{
             height: '350px',
             backgroundColor: '#FFFFFF',
+            overflow: 'hidden',
+            borderRadius: '24px',
+            boxShadow: '0 20px 40px -15px rgba(15, 44, 89, 0.08)',
+            border: 'none',
             display: 'flex',
-            flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'center',
-            padding: '24px',
-            borderRadius: '16px',
-            textAlign: 'center'
+            alignItems: 'center'
           }}>
-            <Loader2 className="animate-spin" size={32} color="var(--isn-gold)" style={{ marginBottom: '12px' }} />
-            <h4 className="font-serif" style={{ fontSize: '1.1rem', color: 'var(--isn-blue)', fontWeight: 700 }}>
-              Sede e Instalaciones
-            </h4>
-            <p style={{ fontSize: '0.8rem', color: 'var(--isn-charcoal)', maxWidth: '240px', marginTop: '4px' }}>
-              Este contenedor reservado mostrará fotografías de la infraestructura académica del Instituto.
-            </p>
+            <img 
+              src={campusBuilding} 
+              alt="Sede e Instalaciones del Instituto" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            />
           </div>
 
           <div>
@@ -527,7 +534,7 @@ export default function HomePage() {
               Comprometidos con la Calidad Académica
             </h3>
             <p style={{ fontSize: '0.95rem', color: 'var(--isn-charcoal)', lineHeight: '1.6', marginBottom: '16px' }}>
-              El Instituto Superior del Norte (ISN) es un centro de formación técnica superior enfocado en proveer cursos, diplomados y capacitaciones profesionales con certificación oficial para la inserción en el mercado productivo.
+              El Instituto Superior del Norte (ISN) es un centro de formación superior enfocado en proveer cursos, diplomados y capacitaciones profesionales con certificación oficial para la inserción en el mercado productivo.
             </p>
             <p style={{ fontSize: '0.95rem', color: 'var(--isn-charcoal)', lineHeight: '1.6' }}>
               NuestroCampus Virtual cuenta con ambientes dinámicos de aprendizaje, simuladores multimedia avanzados y sistemas automatizados de calificación y emisión de registros para garantizar un proceso educativo transparente, ágil y de excelencia.

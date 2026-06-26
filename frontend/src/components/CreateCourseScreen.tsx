@@ -4,7 +4,7 @@ import { AppContext } from '../context/AppContext';
 import { ArrowLeft, Plus, Trash2, ChevronUp, ChevronDown, BookOpen, AlertCircle, CheckCircle2, FileText, Film, Volume2, Image as ImageIcon } from 'lucide-react';
 
 const CreateCourseScreen = () => {
-  const { token, fetchCourses, fetchAdminMetrics, API_BASE_URL } = useContext(AppContext);
+  const { createCourse, fetchAdminMetrics } = useContext(AppContext);
   const navigate = useNavigate();
 
   // General course info state
@@ -136,30 +136,17 @@ const CreateCourseScreen = () => {
     };
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/courses`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Error al guardar el curso');
-      }
+      await createCourse(payload);
+      await fetchAdminMetrics();
 
       setSuccess('¡Curso creado exitosamente junto con todos sus módulos!');
-      
-      // Refresh admin data lists
-      await Promise.all([fetchCourses(), fetchAdminMetrics()]);
 
-      // Redirect back to Admin Dashboard after brief delay
+      // Navigate immediately so the form cannot be re-submitted during the
+      // success-flash delay. The dashboard will reflect the new course because
+      // createCourse already refreshed the courses list via AppContext.
       setTimeout(() => {
         navigate('/admin/dashboard');
-      }, 1500);
+      }, 1200);
 
     } catch (err) {
       setError(err.message || 'Error de red al crear el curso.');

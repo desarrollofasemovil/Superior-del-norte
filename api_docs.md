@@ -20,15 +20,18 @@ Almacena las cuentas de usuarios en el sistema (estudiantes y administradores) c
 - `municipio_nacimiento`: `TEXT`
 - `anio_nacimiento`: `INTEGER`
 - `pago_realizado`: `INTEGER DEFAULT 0` (Estado de pago: `1` para pagado, `0` para pendiente)
+- `email`: `TEXT` (Correo electrónico real del estudiante para entrega de certificados. Si es `NULL`, el sistema deriva `${cedula}@institutosuperiordelnorte-student.co`)
+- `vipass`: `INTEGER DEFAULT 0` (Flag de acceso VIP: `1` habilita la entrega automática de certificados al crear la cuenta vía admin. Implica certificación inmediata)
 
 ### Tabla `cursos`
 Almacena la información principal de cada curso formativo.
 - `id`: `INTEGER PRIMARY KEY AUTOINCREMENT`
-- `titulo`: `TEXT` (Título principal)
+- `titulo`: `TEXT` (Título principal, con restricción `UNIQUE` vía `idx_cursos_titulo`)
 - `descripcion`: `TEXT` (Resumen curricular)
 - `imagen_url`: `TEXT` (URL de imagen de portada)
 - `creado_en`: `TEXT` (Fecha de registro de curso, formato `YYYY-MM-DD`)
 - `precio`: `REAL NOT NULL` (Precio del curso, obligatorio, valor por defecto de 100000 en semilla de desarrollo)
+- `certificado_template`: `TEXT` (Plantilla HTML opcional del diploma. Soporta las etiquetas `{{NOMBRE}}`, `{{CEDULA}}`, `{{FECHA_EXPEDICION}}`, `{{MUNICIPIO_EXPEDICION}}`, `{{ANIO_NACIMIENTO}}`, `{{CODIGO_VERIFICACION}}`, `{{FECHA_EMISION}}`. Si es `NULL`, se usa la plantilla institucional por defecto.)
 
 ### Tabla `modulos`
 Almacena los módulos formativos asociados a un curso específico mediante una relación de clave foránea. **El número de módulos es dinámico por curso** — el progreso del 100% se calcula comparando registros completados contra el total de módulos del curso.
@@ -84,6 +87,7 @@ Crea de manera atómica un curso completo. Si la inserción del curso o de algú
   "descripcion": "Curso intensivo de inocuidad en el procesamiento y empaque de productos lácteos.",
   "imagen_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150",
   "precio": 120000,
+  "certificado_template": "<html><body>...</body></html>",
   "modulos": [
     {
       "titulo_modulo": "Introducción e Higiene Corporal",
@@ -145,6 +149,12 @@ Los siguientes endpoints ahora aceptan `courseId` como parámetro en el query o 
    - Evalúa y guarda el intento de examen para el curso solicitado. Si aprueba (>= 80%), genera el certificado en base de datos.
 5. **Descargar Certificado PDF:** `GET /api/certificate/download?courseId=X`
    - Genera dinámicamente el certificado en PDF inyectando el nombre del curso en lugar de estar quemado.
+6. **Detalle de Certificado:** `GET /api/certificate/detail?courseId=X`
+   - Retorna los metadatos del diploma más la plantilla HTML interpolada del curso (`certificado_template`) si existe. Tags soportados: `{{NOMBRE}}`, `{{CEDULA}}`, `{{FECHA_EXPEDICION}}`, `{{MUNICIPIO_EXPEDICION}}`, `{{ANIO_NACIMIENTO}}`, `{{CODIGO_VERIFICACION}}`, `{{FECHA_EMISION}}`.
+7. **Verificación Pública de Certificado:** `GET /api/certificate/verify/:codigo`
+   - Ruta pública (sin autenticación). Valida la autenticidad de un diploma por su código de verificación. Retorna `{ valido, usuario, cedula, fecha_emision, codigo_verificacion, calificacion_obtenida, curso_titulo, numero_certificado }`. HTTP 404 si el código no existe.
+8. **Listar Cursos (simplificado):** `GET /api/admin/courses/list`
+   - Retorna un arreglo simplificado `[{ id, titulo }]` de todos los cursos (requiere admin).
 
 ---
 

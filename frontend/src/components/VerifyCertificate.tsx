@@ -24,10 +24,11 @@ const VerifyCertificate = ({ initialCode }: { initialCode?: string }) => {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || 'Código de verificación no válido');
+        const errorMsg = data?.error?.message || data?.error || 'Código de verificación no válido';
+        throw new Error(errorMsg);
       }
 
-      setResult(data);
+      setResult(data.data || data);
     } catch (err) {
       setError(err.message);
     } finally {

@@ -2,6 +2,7 @@ const db = require('../repositories/dbRepository');
 const { normalizeToUtf8 } = require('../middleware/auth');
 const { sendWelcomeEmail, sendCertificateEmail } = require('../services/emailService');
 const { generateCertificatePDF } = require('../services/pdfService');
+const { interpolateTemplate } = require('../services/certificateTemplateService');
 
 async function getCourses(req, res, next) {
   try {
@@ -111,7 +112,9 @@ async function createStudent(req, res, next) {
     municipio_nacimiento,
     anio_nacimiento,
     pago_realizado,
-    certificar_inmediatamente
+    certificar_inmediatamente,
+    email,
+    vipass
   } = req.body;
 
   if (!cedula || !nombre_completo || !password) {
@@ -139,6 +142,17 @@ async function createStudent(req, res, next) {
     return res.status(400).json({ error: 'La fecha de expedición, el municipio de expedición, el municipio de nacimiento y el año de nacimiento son requeridos.' });
   }
 
+  const cleanEmail = email ? String(email).trim().toLowerCase() : null;
+  if (cleanEmail) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(cleanEmail)) {
+      return res.status(400).json({ error: 'El correo electrónico proporcionado no es válido.' });
+    }
+  }
+
+  const isVip = !!vipass;
+  const shouldCertifyImmediately = !!(certificar_inmediatamente || isVip);
+
   try {
     const existing = await db.getUser(cedula);
     if (existing) {
@@ -146,75 +160,84 @@ async function createStudent(req, res, next) {
     }
 
     const cleanNombre = normalizeToUtf8(nombre_completo);
-    const newUser = await db.createUser(
-      cedula, 
-      cleanNombre, 
-      password, 
-      'estudiante', 
-      null, 
-      {
+    const { user: newUser, certificates } = await db.createStudentWithEnrollment({
+      cedula,
+      nombre_completo: cleanNombre,
+      password,
+      metadata: {
         fecha_expedicion_cedula: normalizeToUtf8(fecha_expedicion_cedula),
         municipio_expedicion_cedula: normalizeToUtf8(municipio_expedicion_cedula),
         municipio_nacimiento: normalizeToUtf8(municipio_nacimiento),
         anio_nacimiento: parseInt(anio_nacimiento),
-        pago_realizado: pago_realizado ? 1 : 0
-      }
-    );
+        pago_realizado: pago_realizado ? 1 : 0,
+        email: cleanEmail,
+        vipass: isVip ? 1 : 0
+      },
+      cursos,
+      certificar_inmediatamente: shouldCertifyImmediately
+    });
 
-    for (const courseId of cursos) {
-      await db.enrollUserInCourse(cedula, parseInt(courseId));
-    }
-
-    if (certificar_inmediatamente) {
-      // Loop over course IDs and perform bypass certification
-      for (const courseId of cursos) {
-        const parsedCourseId = parseInt(courseId);
-        const cert = await db.bypassCertify(cedula, parsedCourseId);
-        
-        // Fetch course title
-        const dbCourses = await db.getCourses();
-        const course = dbCourses.find(c => c.id === parsedCourseId);
+    // Fire-and-forget certificate emails when bypass/VIP flow ran
+    if (shouldCertifyImmediately && certificates.length > 0) {
+      const dbCourses = await db.getCourses();
+      const fullUser = await db.getUser(cedula);
+      certificates.forEach((cert) => {
+        const course = dbCourses.find(c => c.id === cert.curso_id);
         const courseTitle = course ? course.titulo : 'Manipulación de Alimentos';
-        
-        // Fire-and-forget certificate email
+        const htmlTemplate = course && course.certificado_template
+          ? interpolateTemplate(course.certificado_template, fullUser, cert, course)
+          : null;
+
         sendCertificateEmail(
           {
             cedula,
-            nombre_completo: cleanNombre
+            nombre_completo: cleanNombre,
+            email: cleanEmail || fullUser?.email || null
           },
           {
             nombre_completo: cleanNombre,
-            cedula: cedula,
+            cedula,
             fecha_emision: cert.fecha_emision,
             codigo_verificacion: cert.codigo_verificacion,
-            calificacion_obtenida: 100,
+            calificacion_obtenida: cert.calificacion_obtenida,
             numero_certificado: cert.numero_certificado,
-            curso_titulo: courseTitle
+            curso_titulo: courseTitle,
+            certificado_template: htmlTemplate
           },
           courseTitle
         ).catch((emailErr) => {
-          console.error('[adminController] Error al enviar email de certificado de bypass:', emailErr.message);
+          console.error('[adminController] Error al enviar email de certificado de bypass/VIP:', emailErr.message);
         });
-      }
+      });
     }
 
-    // Always send welcome email with credentials as well
+    // Always send welcome email with credentials (fire-and-forget)
     sendWelcomeEmail({
       cedula,
       nombre_completo: cleanNombre,
       password, // Contraseña en texto plano antes de hashear (solo para el email)
-      cursos
+      cursos,
+      email: cleanEmail
     }).catch((emailErr) => {
       console.error('[adminController] Error al enviar email de bienvenida:', emailErr.message);
     });
 
     res.status(201).json({
-      message: 'Estudiante creado y matriculado con éxito.',
+      message: isVip
+        ? 'Estudiante VIP creado, matriculado y certificado con éxito.'
+        : 'Estudiante creado y matriculado con éxito.',
       user: {
         cedula: newUser.cedula,
         nombre_completo: newUser.nombre_completo,
         rol: newUser.rol,
-        fecha_registro: newUser.fecha_registro
+        fecha_registro: newUser.fecha_registro,
+        fecha_expedicion_cedula: newUser.fecha_expedicion_cedula,
+        municipio_expedicion_cedula: newUser.municipio_expedicion_cedula,
+        municipio_nacimiento: newUser.municipio_nacimiento,
+        anio_nacimiento: newUser.anio_nacimiento,
+        pago_realizado: newUser.pago_realizado,
+        email: newUser.email || null,
+        vipass: newUser.vipass || 0
       }
     });
   } catch (err) {
@@ -266,6 +289,10 @@ async function downloadStudentCertificate(req, res, next) {
     const course = courses.find(c => c.id === courseId);
     const courseTitle = course ? course.titulo : 'Manipulación de Alimentos';
 
+    const htmlTemplate = course && course.certificado_template
+      ? interpolateTemplate(course.certificado_template, student, cert, course)
+      : null;
+
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename=Certificado_${courseTitle.replace(/\s+/g, '_')}_${cedula}.pdf`);
 
@@ -274,12 +301,12 @@ async function downloadStudentCertificate(req, res, next) {
       cedula: cedula,
       fecha_emision: cert.fecha_emision,
       codigo_verificacion: cert.codigo_verificacion,
-      calificacion_obtenida: cert.calificacion_obtenida || 100,
-      numero_certificado: cert.numero_certificado || 'AS-2026-0001',
+      calificacion_obtenida: cert.calificacion_obtenida,
+      numero_certificado: cert.numero_certificado,
       curso_titulo: courseTitle
     };
 
-    generateCertificatePDF(res, pdfData);
+    await generateCertificatePDF(res, pdfData, htmlTemplate);
   } catch (err) {
     next(err);
   }

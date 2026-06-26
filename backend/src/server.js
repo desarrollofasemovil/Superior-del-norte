@@ -31,9 +31,9 @@ app.use((req, res, next) => {
 
 // --- Register Routers ---
 app.use('/api/auth', authRoutes);
+app.use('/api', publicRoutes);     // Public routes FIRST (no auth middleware)
 app.use('/api/admin', adminRoutes);
-app.use('/api', studentRoutes);
-app.use('/api', publicRoutes);
+app.use('/api', studentRoutes);    // Authenticated routes after public
 
 // Root Status check
 app.get('/health', (req, res) => {

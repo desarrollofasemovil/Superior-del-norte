@@ -4,6 +4,11 @@ export const AppContext = createContext<any>(null);
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Single source of truth for privileged roles. Mirrors backend ADMIN_ROLES.
+export const ADMIN_ROLES = ['administrador', 'ingeniero_software'] as const;
+export const isAdmin = (rol: string | undefined | null): boolean =>
+  !!rol && (ADMIN_ROLES as readonly string[]).includes(rol);
+
 const decodeJWTPayload = (token: string): any => {
   try {
     const base64Url = token.split('.')[1];
@@ -165,11 +170,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       localStorage.setItem('token', data.token);
       setToken(data.token);
       setUser(data.user);
-      if (data.user.rol === 'administrador') {
-        setCurrentView('admin_dashboard');
-      } else {
-        setCurrentView('dashboard');
-      }
+      // Keep legacy currentView in sync; navigation itself is handled by callers
+      // via useNavigate() (see Login.tsx / AdminLogin.tsx).
+      setCurrentView(isAdmin(data.user.rol) ? 'admin_dashboard' : 'dashboard');
+      return data.user;
     } catch (err: any) {
       setError(err.message);
       throw err;
@@ -280,7 +284,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   };
 
-  const fetchAdminMetrics = async () => {
+  const fetchAdminMetrics = useCallback(async () => {
+    if (!token) return;
     try {
       const response = await fetch(`${API_BASE_URL}/admin/metrics`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -292,7 +297,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } catch (err) {
       console.error('Error fetching admin metrics:', err);
     }
-  };
+  }, [token, API_BASE_URL]);
 
   const fetchFinancialMetrics = useCallback(async () => {
     if (!token) return;
@@ -311,7 +316,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   }, [token, API_BASE_URL]);
 
-  const fetchAdminUsers = async (cedula: string = '') => {
+  const fetchAdminUsers = useCallback(async (cedula: string = '') => {
+    if (!token) return;
     try {
       const url = cedula
         ? `${API_BASE_URL}/admin/users?cedula=${cedula}`
@@ -326,9 +332,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } catch (err) {
       console.error('Error fetching admin users:', err);
     }
-  };
+  }, [token, API_BASE_URL]);
 
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
+    if (!token) return;
     try {
       const response = await fetch(`${API_BASE_URL}/admin/courses`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -340,9 +347,36 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } catch (err) {
       console.error('Error fetching courses:', err);
     }
-  };
+  }, [token, API_BASE_URL]);
 
-  const createStudentUser = async (studentData: any) => {
+  const createCourse = useCallback(async (courseData: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/courses`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(courseData)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al crear el curso');
+      }
+      await fetchCourses();
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [token, API_BASE_URL, fetchCourses]);
+
+  const createStudentUser = useCallback(async (studentData: any) => {
+    if (!token) return;
     setLoading(true);
     setError(null);
     try {
@@ -367,9 +401,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, API_BASE_URL, fetchAdminMetrics, fetchAdminUsers]);
 
-  const fetchCoursesList = async () => {
+  const fetchCoursesList = useCallback(async () => {
+    if (!token) return;
     try {
       const response = await fetch(`${API_BASE_URL}/admin/courses/list`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -382,9 +417,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } catch (err) {
       console.error('Error fetching courses list:', err);
     }
-  };
+  }, [token, API_BASE_URL]);
 
-  const updateStudentCourses = async (cedula: string, courseIds: number[]) => {
+  const updateStudentCourses = useCallback(async (cedula: string, courseIds: number[]) => {
+    if (!token) return;
     setLoading(true);
     setError(null);
     try {
@@ -409,7 +445,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, API_BASE_URL, fetchAdminMetrics, fetchAdminUsers]);
 
   const updateCourse = useCallback(async (id: number, courseData: any) => {
     setLoading(true);
@@ -521,6 +557,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       fetchAdminMetrics,
       fetchAdminUsers,
       fetchCourses,
+      createCourse,
       fetchCoursesList,
       createStudentUser,
       updateStudentCourses,

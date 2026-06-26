@@ -177,7 +177,7 @@ const Certificate = () => {
             <div style={{ position: 'absolute', bottom: '16px', left: '16px', width: '48px', height: '48px', borderLeft: '2px solid var(--isn-gold)', borderBottom: '2px solid var(--isn-gold)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: '16px', right: '16px', width: '48px', height: '48px', borderRight: '2px solid var(--isn-gold)', borderBottom: '2px solid var(--isn-gold)', pointerEvents: 'none' }} />
 
-            <img src={logoNorte} alt="Instituto Superior del Norte" style={{ width: '160px', height: 'auto', margin: '0 auto 16px auto', display: 'block' }} />
+            <img src={logoNorte} alt="Instituto Superior del Norte" style={{ width: '190px', height: 'auto', margin: '0 auto 16px auto', display: 'block' }} />
             <h3 className="font-serif" style={{ fontSize: '1.8rem', color: 'var(--isn-blue)', fontWeight: 900, marginBottom: '4px' }}>
               CERTIFICADO DE APROBACIÓN
             </h3>

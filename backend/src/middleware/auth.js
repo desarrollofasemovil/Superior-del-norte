@@ -3,6 +3,9 @@ require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_123';
 
+// Single source of truth for privileged roles accepted by admin endpoints.
+const ADMIN_ROLES = Object.freeze(['administrador', 'ingeniero_software']);
+
 // Safely normalize string to UTF-8 using Latin1 to UTF-8 decoding to fix Mojibake
 function normalizeToUtf8(str) {
   if (!str || typeof str !== 'string') return str;
@@ -37,9 +40,9 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// Middleware to require admin or software engineer role
+// Middleware to require an admin-level role (administrador or ingeniero_software)
 function requireAdmin(req, res, next) {
-  if (!req.user || (req.user.rol !== 'administrador' && req.user.rol !== 'ingeniero_software')) {
+  if (!req.user || !ADMIN_ROLES.includes(req.user.rol)) {
     return res.status(403).json({ error: 'Acceso denegado. Se requiere rol de Administrador.' });
   }
   next();
@@ -49,5 +52,6 @@ module.exports = {
   authenticateToken,
   requireAdmin,
   normalizeToUtf8,
-  JWT_SECRET
+  JWT_SECRET,
+  ADMIN_ROLES
 };

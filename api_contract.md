@@ -197,6 +197,8 @@ Allows anyone to verify the authenticity of a certificate using its verification
     "usuario": "Juan Pérez",
     "cedula": "123456789",
     "fecha_emision": "2026-06-12",
+    "codigo_verificacion": "ALIM-ABCD-1234",
+    "calificacion_obtenida": 90.0,
     "curso_titulo": "Manipulación de Alimentos",
     "numero_certificado": "AS-2026-0001"
   }
@@ -205,7 +207,7 @@ Allows anyone to verify the authenticity of a certificate using its verification
   ```json
   {
     "valido": false,
-    "error": "Código de verificación no válido"
+    "error": "Código de verificación no válido o certificado inexistente"
   }
   ```
 
@@ -216,7 +218,7 @@ Allows anyone to verify the authenticity of a certificate using its verification
 All `/api/admin/*` endpoints require `Authorization: Bearer <token>` with `rol: administrador`.
 
 ### 10. Create Student
-Creates a student account, records their metadata, registers their payment status, assigns them to courses, and optionally issues immediate certification (bypass flow).
+Creates a student account, records their metadata, registers their payment status, assigns them to courses, and optionally issues immediate certification (bypass flow) or VIP auto-delivery.
 
 - **Endpoint:** `POST /api/admin/users/create`
 - **Request Body:**
@@ -225,15 +227,21 @@ Creates a student account, records their metadata, registers their payment statu
     "cedula": "987654321",
     "nombre_completo": "María García",
     "password": "pass123",
+    "email": "maria@correo.com",
     "cursos": [1],
     "fecha_expedicion_cedula": "2018-09-24",
     "municipio_expedicion_cedula": "Bucaramanga",
     "municipio_nacimiento": "Giron",
     "anio_nacimiento": 1996,
     "pago_realizado": 1,
-    "certificar_inmediatamente": true
+    "certificar_inmediatamente": true,
+    "vipass": false
   }
   ```
+- **Field Notes:**
+  - `email` (string, optional): Real corporate email for certificate delivery. If omitted, the system derives `${cedula}@institutosuperiordelnorte-student.co`.
+  - `vipass` (boolean, optional, default `false`): VIP access flag. When `true`, automatically triggers immediate certification (implies `certificar_inmediatamente = true`) and dispatches the certificate via the corporate email service. Only settable by administrators.
+  - `certificar_inmediatamente` (boolean, optional, default `false`): Bypass exam and progress. Automatically forced to `true` when `vipass` is `true`.
 - **Success Response (201 Created):**
   ```json
   {
@@ -247,11 +255,13 @@ Creates a student account, records their metadata, registers their payment statu
       "municipio_expedicion_cedula": "Bucaramanga",
       "municipio_nacimiento": "Giron",
       "anio_nacimiento": 1996,
-      "pago_realizado": 1
+      "pago_realizado": 1,
+      "email": "maria@correo.com",
+      "vipass": 0
     }
   }
   ```
-- **Bypass flow side effect:** If `certificar_inmediatamente` is `true`, it automatically creates progress at 100%, records an approved exam attempt, generates a certificate, and triggers a congratulations email with the PDF attachment without requiring the student to take the exam.
+- **Bypass/VIP flow side effect:** If `certificar_inmediatamente` or `vipass` is `true`, it automatically creates progress at 100%, records an approved exam attempt, generates a certificate, and triggers a congratulations email with the PDF attachment (using the course's custom HTML template if available) without requiring the student to take the exam.
 
 ### 11. Create Course formativo
 Creates a new course along with its modules. A course requires a mandatory price.
@@ -264,6 +274,7 @@ Creates a new course along with its modules. A course requires a mandatory price
     "descripcion": "Curso intensivo de inocuidad...",
     "imagen_url": "https://images.unsplash.com/photo-...",
     "precio": 120000,
+    "certificado_template": "<html>... plantilla HTML opcional con etiquetas {{NOMBRE}}, {{CEDULA}}, {{FECHA_EMISION}}, {{CODIGO_VERIFICACION}} ...</html>",
     "modulos": [
       {
         "titulo_modulo": "Introducción",
@@ -273,6 +284,10 @@ Creates a new course along with its modules. A course requires a mandatory price
     ]
   }
   ```
+- **Field Notes:**
+  - `precio` (number, required): Must be a non-negative number.
+  - `certificado_template` (string, optional): Raw HTML template for the course's printable certificate. Supports the interpolation tags `{{NOMBRE}}`, `{{CEDULA}}`, `{{FECHA_EXPEDICION}}`, `{{MUNICIPIO_EXPEDICION}}`, `{{ANIO_NACIMIENTO}}`, `{{CODIGO_VERIFICACION}}`, `{{FECHA_EMISION}}`. When omitted, the default institutional template is used.
+  - `modulos` (array, required, min length 1): Each module requires `titulo_modulo`, `tipo_contenido` (`Texto` | `Video` | `Audio` | `Imagen`), and `data_contenido` (HTML body for `Texto`, direct resource URL otherwise).
 - **Success Response (201 Created):**
   ```json
   {
@@ -283,6 +298,7 @@ Creates a new course along with its modules. A course requires a mandatory price
       "descripcion": "Curso intensivo de inocuidad...",
       "imagen_url": "https://images.unsplash.com/photo-...",
       "precio": 120000,
+      "certificado_template": "<html>...</html>",
       "creado_en": "2026-06-17"
     }
   }

@@ -433,3 +433,25 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.9rem;
 }
 
+/* Course Card Hover Image Zoom */
+.course-card:hover .course-image-hover {
+  transform: scale(1.06);
+}
+
+/* Responsive Navigation Elements */
+.nav-title-responsive {
+  display: block;
+}
+.nav-links-responsive {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .nav-title-responsive {
+    display: none !important;
+  }
+  .nav-links-responsive {
+    display: none !important;
+  }
+}
+

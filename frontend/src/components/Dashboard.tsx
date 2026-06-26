@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { BookOpen, ArrowRight } from 'lucide-react';
+import emptyState from '../assets/empty_state.png';
 
 const decodeMojibake = (str: string | undefined): string | undefined => {
   if (!str) return str;
@@ -32,10 +33,14 @@ const Dashboard = () => {
   // Loading state if no courses loaded yet
   if (!studentCourses || studentCourses.length === 0) {
     return (
-      <div style={{ maxWidth: '600px', margin: '80px auto', textAlign: 'center', padding: '32px' }} className="glass-panel">
-        <BookOpen size={48} color="var(--text-muted)" style={{ marginBottom: '16px' }} />
-        <h2 style={{ fontSize: '1.5rem', marginBottom: '8px' }}>Cargando tus cursos...</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>
+      <div style={{ maxWidth: '600px', margin: '80px auto', textAlign: 'center', padding: '40px 32px', backgroundColor: '#FFFFFF', borderRadius: '24px', boxShadow: 'var(--shadow-card)', border: 'none' }} className="glass-panel">
+        <img 
+          src={emptyState} 
+          alt="Aún no tienes cursos" 
+          style={{ width: '220px', height: 'auto', display: 'block', margin: '0 auto 24px auto' }} 
+        />
+        <h2 style={{ fontSize: '1.5rem', marginBottom: '8px', color: 'var(--isn-blue-dark)', fontWeight: 800 }}>Cargando tus cursos...</h2>
+        <p style={{ color: 'var(--isn-charcoal)', lineHeight: '1.5' }}>
           Si es la primera vez que ingresas, espera a que el administrador te matricule en un curso formativo.
         </p>
       </div>

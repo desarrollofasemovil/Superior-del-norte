@@ -21,7 +21,7 @@ Acceso (Login) → Dashboard (mis cursos) → CourseDetail (progreso y estado)
 1. **Matrícula Manual:** El admin crea la cuenta del estudiante y lo matricula en cursos desde el panel `/admin/dashboard`. Al crear la cuenta, el estudiante recibe un **email automático de bienvenida** con sus credenciales de acceso.
 2. **Consumo de Módulos:** El número de módulos es dinámico por curso (configurable desde el panel admin). El simulador multimedia del frontend avanza el progreso. El **100% de módulos completados** (calculado dinámicamente contra la tabla `modulos`) desbloquea el examen.
 3. **Examen Final:** Preguntas de opción múltiple almacenadas en la tabla `preguntas`. Mínimo 80% para aprobar. Calificación y validación son 100% en el backend. Cooldown de 10 minutos tras 3 intentos fallidos.
-4. **Certificado:** PDF generado por `pdfkit` con número correlativo (`AS-YYYY-####`), código único (`ALIM-XXXX-XXXX`) y URL de verificación pública (`/verify/:code`). Al aprobar, el sistema envía automáticamente un **email de felicitaciones** con el certificado PDF adjunto.
+4. **Certificado:** PDF generado por `pdfkit` con número correlativo (`AS-YYYY-####`), código único (`ALIM-XXXX-XXXX`) y URL de verificación pública (`/verify/:code`). Al aprobar, el sistema envía automáticamente un **email de felicitaciones** con el certificado PDF adjunto. Cada curso puede definir su propia plantilla HTML de diploma (`cursos.certificado_template`) interpolada con los datos del estudiante; si no se define, se usa la plantilla institucional por defecto.
 
 ### Sub-Flujo Alternativo: Certificación Inmediata (Bypass de Examen y Progreso)
 Para casos especiales o matriculas que ya cuenten con validaciones comerciales externas, el administrador puede otorgar la **Certificación Inmediata** al crear un estudiante:
@@ -41,7 +41,7 @@ Para casos especiales o matriculas que ya cuenten con validaciones comerciales e
 - **Stack:** Node.js + Express.
 - **Arquitectura:** Capas separadas — `routes/`, `controllers/`, `services/`, `repositories/`. El servidor `server.js` solo configura Express y registra los routers.
 - **Base de Datos:** SQLite3 (`database.sqlite`) con fallback JSON. Tablas: `usuarios`, `cursos`, `matriculas`, `modulos`, `progreso`, `examenes`, `certificados`, `preguntas`.
-- **Autenticación:** JWT firmado con `jsonwebtoken`. Dos roles: `estudiante` y `administrador`.
+- **Autenticación:** JWT firmado con `jsonwebtoken`. Tres roles soportados: `estudiante`, `administrador` y `ingeniero_software`. Los dos últimos son roles privilegiados (`ADMIN_ROLES`) aceptados por el middleware `requireAdmin`; `ingeniero_software` además es el único autorizado para `/api/admin/financial-metrics`. La lista canónica de roles privilegiados vive en `middleware/auth.js` (backend) y en `context/AppContext.tsx` (frontend, `ADMIN_ROLES`/`isAdmin`).
 - **Generación PDF:** `pdfkit` en `src/services/pdfService.js`. Orientación horizontal, logotipo, firma del Comité. URL de verificación configurable vía `FRONTEND_URL` en `.env`.
 - **Contenido:** El curso de Manipulación de Alimentos tiene **8 módulos** sembrados en DB con contenido HTML estructurado (migrado desde `Información curso de manipulación.txt`). Nuevos cursos pueden tener cualquier número de módulos.
 - **Examen:** Las preguntas están en la tabla `preguntas` en BD. El endpoint `GET /api/exam/questions?courseId=X` filtra `respuesta_correcta`. La calificación se hace consultando la BD con `getExamQuestionsWithAnswers()`.
@@ -117,7 +117,9 @@ Para casos especiales o matriculas que ya cuenten con validaciones comerciales e
 
 > [!WARNING]
 > **Brechas Conocidas:**
-> 1. **Matrícula Solo Manual:** No existe flujo de auto-registro comercial. Los estudiantes solo se crean desde el panel del admin.
+> 1. **Matrícula Solo Manual:** No existe flujo de auto-registro comercial. Los estudiantes solo se crean desde el panel del admin. El endpoint `POST /api/auth/register` existe pero sólo crea la cuenta sin matricular ni certificar.
 > 2. **Mojibake Residual:** Los correctores `decodeMojibake` en frontend y `normalizeToUtf8` en backend son parches. La causa raíz es la codificación de la conexión SQLite. Requiere configurar `pragma encoding = 'UTF-8'` y retirar los helpers progresivamente.
 > 3. **Cooldown de Examen:** Implementado (10 min / 3 fallos), pero sin feedback visual del tiempo restante en el frontend.
 > 4. **Email de estudiante hardcodeado:** `emailService.js` usa `${cedula}@institutosuperiordelnorte-student.co` como destinatario. Para producción se debe agregar campo `email` a la tabla `usuarios` y formulario de registro.
+> 5. **PDF no respeta plantillas HTML personalizadas:** `pdfService.js` siempre genera el layout institucional por defecto. Las plantillas HTML por curso (`certificado_template`) sólo se renderizan en pantalla (vía `Certificate.jsx`), no en el PDF descargable/empleado.
+> 6. **Validación de códigos de verificación débil:** El endpoint público `/api/certificate/verify/:codigo` usa valores fallback hardcodeados (`|| 100`, `|| 'AS-2026-0001'`) que pueden enmascarar problemas de integridad de datos. No hay validación de formato ni rate limiting en el endpoint público.

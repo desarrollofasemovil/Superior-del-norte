@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { Users, CheckCircle2, Clock, Plus, UserPlus, RefreshCw, X, ShieldAlert, Award, FileText, Edit, Download } from 'lucide-react';
@@ -212,6 +212,8 @@ const AdminDashboard = () => {
   const [anioNacimiento, setAnioNacimiento] = useState('');
   const [pagoRealizado, setPagoRealizado] = useState(false);
   const [certificarInmediatamente, setCertificarInmediatamente] = useState(false);
+  const [studentEmail, setStudentEmail] = useState('');
+  const [vipass, setVipass] = useState(false);
 
   // Search local state
   const [searchCedula, setSearchCedula] = useState('');
@@ -258,34 +260,14 @@ const AdminDashboard = () => {
   const [moduleSuccess, setModuleSuccess] = useState('');
   const [moduleSubmitting, setModuleSubmitting] = useState(false);
 
-  // Load dashboard data on mount
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // Sync selected courses once courses list loads
-  useEffect(() => {
-    if (courses && courses.length > 0 && selectedCourses.length === 0) {
-      // Default to checking the first course (Manipulación de Alimentos)
-      setSelectedCourses([courses[0].id.toString()]);
-    }
-  }, [courses]);
-
-  // Debounce search by cedula
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      fetchAdminUsers(searchCedula);
-    }, 300);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchCedula]);
-
-  const loadData = async () => {
+  // Aggregates all dashboard fetches. Declared with useCallback so its identity
+  // is stable and can safely be used as a useEffect dependency.
+  const loadData = useCallback(async () => {
     setRefreshing(true);
     try {
       await Promise.all([
         fetchAdminMetrics(),
-        fetchAdminUsers(searchCedula),
+        fetchAdminUsers(''),
         fetchCourses(),
         fetchCoursesList()
       ]);
@@ -294,7 +276,29 @@ const AdminDashboard = () => {
     } finally {
       setRefreshing(false);
     }
-  };
+  }, [fetchAdminMetrics, fetchAdminUsers, fetchCourses, fetchCoursesList]);
+
+  // Load dashboard data on mount
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Sync selected courses once courses list loads
+  useEffect(() => {
+    if (courses && courses.length > 0 && selectedCourses.length === 0) {
+      // Default to checking the first course (Manipulación de Alimentos)
+      setSelectedCourses([courses[0].id.toString()]);
+    }
+  }, [courses, selectedCourses]);
+
+  // Debounce search by cedula
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchAdminUsers(searchCedula);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchCedula, fetchAdminUsers]);
 
   const handleOpenEditModal = async (student) => {
     setSelectedStudent(student);
@@ -583,7 +587,9 @@ const AdminDashboard = () => {
         municipio_nacimiento: municipioNacimiento,
         anio_nacimiento: anioNacimiento ? parseInt(anioNacimiento) : null,
         pago_realizado: pagoRealizado ? 1 : 0,
-        certificar_inmediatamente: certificarInmediatamente
+        certificar_inmediatamente: certificarInmediatamente,
+        email: studentEmail.trim() || undefined,
+        vipass: vipass
       });
 
       // Clear form
@@ -596,6 +602,8 @@ const AdminDashboard = () => {
       setAnioNacimiento('');
       setPagoRealizado(false);
       setCertificarInmediatamente(false);
+      setStudentEmail('');
+      setVipass(false);
       
       if (courses && courses.length > 0) {
         setSelectedCourses([courses[0].id.toString()]);
@@ -1210,6 +1218,19 @@ const AdminDashboard = () => {
                     required
                   />
                 </div>
+
+                <div className="input-group">
+                  <label className="input-label" htmlFor="student-email">Correo Electrónico (opcional)</label>
+                  <input
+                    className="input-field"
+                    type="email"
+                    id="student-email"
+                    placeholder="ejemplo@correo.com"
+                    value={studentEmail}
+                    onChange={(e) => setStudentEmail(e.target.value)}
+                    disabled={submitting}
+                  />
+                </div>
               </div>
 
               {/* Cédula y Nacimiento Metadata */}
@@ -1329,6 +1350,39 @@ const AdminDashboard = () => {
                     <span style={{ color: 'var(--isn-blue)' }}>Otorgar Certificación Inmediata (Bypass Completo)</span>
                     <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 400, marginTop: '2px' }}>
                       Omite el examen y le genera progreso al 100% con certificado listo para descargar.
+                    </span>
+                  </div>
+                </label>
+
+                <label
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '0.95rem',
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    background: 'rgba(212, 175, 55, 0.08)',
+                    padding: '14px 16px',
+                    borderRadius: '16px',
+                    border: '1px solid var(--isn-gold)'
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    style={{ width: '20px', height: '20px', cursor: 'pointer', accentColor: 'var(--isn-gold)' }}
+                    checked={vipass}
+                    onChange={(e) => {
+                      setVipass(e.target.checked);
+                      if (e.target.checked) setCertificarInmediatamente(true);
+                    }}
+                    disabled={submitting}
+                  />
+                  <div>
+                    <span style={{ color: 'var(--isn-gold)' }}>Acceso VIP (Entrega Automática de Certificado)</span>
+                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 400, marginTop: '2px' }}>
+                      Genera y envía automáticamente el certificado por correo corporativo al crear la cuenta.
                     </span>
                   </div>
                 </label>

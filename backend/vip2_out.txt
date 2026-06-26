@@ -1,0 +1,17 @@
+Connected to- [x] Modify publicController.js to return a flat JSON structure with both 'usuario' and 'nombre_completo'
+- [ ] Create .env.example file in backendte": 1 registro(s)
+ - Curso "Manejo 4x4": 1 registro(s)
+ - Curso "Manejo Defensivo": 1 registro(s)
+ - Curso "Manipulación de Alimentos": 1 registro(s)
+ - Curso "Mecánica Básica": 1 registro(s)
+ - Curso "Primeros Auxilios": 1 registro(s)
+[DB VERIFICATION] Cantidad de duplicados: 0
+Backend server is running on port 5996
+[2026-06-23T15:45:02.747Z] POST /api/auth/login
+[2026-06-23T15:45:02.950Z] POST /api/admin/users/create
+[EMAIL SERVICE] Intentando enviar certificado para la cédula 777777777 en el curso Manipulación de Alimentos
+[emailService] SMTP_USER no configurado. Generando cuenta Ethereal para pruebas...
+[emailService] SMTP_USER no configurado. Generando cuenta Ethereal para pruebas...
+[2026-06-23T15:45:03.207Z] POST /api/auth/login
+[2026-06-23T15:45:03.312Z] GET /api/certificate/detail?courseId=1
+[2026-06-23T15:45:03.330Z] GET /api/certificate/verify/ALIM-B9VJ-NBPC

@@ -63,13 +63,19 @@ async function getTransporter() {
 }
 
 /**
- * Genera el PDF del certificado en un Buffer en memoria
- * (en lugar de streamearlo directamente a HTTP, como hace pdfService.js)
- * para poder adjuntarlo a un email.
- * @param {Object} data - Datos del certificado
+ * Generates the PDF of the certificate in a Buffer in memory
+ * for attachment to an email. When an interpolated HTML template is provided,
+ * uses the Puppeteer HTML→PDF path; otherwise falls back to pdfkit default.
+ *
+ * @param {Object} data              - Certificate data for the default pdfkit layout
+ * @param {string|null} htmlTemplate - Interpolated HTML template (optional)
  * @returns {Promise<Buffer>}
  */
-function generateCertificatePDFBuffer(data) {
+async function generateCertificatePDFBuffer(data, htmlTemplate = null) {
+  if (htmlTemplate) {
+    return pdfService.generateHTMLCertificatePDF(htmlTemplate);
+  }
+
   return new Promise((resolve, reject) => {
     const chunks = [];
     const stream = new Writable({
@@ -88,7 +94,7 @@ function generateCertificatePDFBuffer(data) {
     });
 
     try {
-      pdfService.generateCertificatePDF(stream, data);
+      pdfService.generateDefaultCertificatePDF(stream, data);
     } catch (e) {
       reject(e);
     }
@@ -111,10 +117,11 @@ async function sendWelcomeEmail(studentData) {
     const transporter = await getTransporter();
     const fromAddress = process.env.SMTP_FROM || 'Instituto Superior del Norte LMS <noreply@institutosuperiordelnorte.co>';
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const recipientEmail = studentData.email || `${studentData.cedula}@institutosuperiordelnorte-student.co`;
 
     const mailOptions = {
       from: fromAddress,
-      to: `"${studentData.nombre_completo}" <${studentData.cedula}@institutosuperiordelnorte-student.co>`,
+      to: `"${studentData.nombre_completo}" <${recipientEmail}>`,
       subject: '¡Bienvenido a Instituto Superior del Norte LMS! Tus credenciales de acceso',
       html: `
         <!DOCTYPE html>
@@ -213,13 +220,15 @@ async function sendCertificateEmail(studentData, certData, courseTitle) {
     const transporter = await getTransporter();
     const fromAddress = process.env.SMTP_FROM || 'Instituto Superior del Norte LMS <noreply@institutosuperiordelnorte.co>';
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const recipientEmail = studentData.email || `${studentData.cedula}@institutosuperiordelnorte-student.co`;
 
-    // Generar el PDF del certificado en memoria para adjuntarlo
-    const pdfBuffer = await generateCertificatePDFBuffer(certData);
+    // Generar el PDF del certificado en memoria para adjuntarlo.
+    // Usa la plantilla HTML del curso si está disponible; si no, el layout institucional.
+    const pdfBuffer = await generateCertificatePDFBuffer(certData, certData.certificado_template || null);
 
     const mailOptions = {
       from: fromAddress,
-      to: `"${studentData.nombre_completo}" <${studentData.cedula}@institutosuperiordelnorte-student.co>`,
+      to: `"${studentData.nombre_completo}" <${recipientEmail}>`,
       subject: `🎓 ¡Felicitaciones! Tu certificado de "${courseTitle}" está listo`,
       html: `
         <!DOCTYPE html>

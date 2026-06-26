@@ -19,7 +19,7 @@ INFRASTRUCTURE (Express, SQLite, Middlewares)
 
 | Capa | Archivo | Responsabilidad |
 |---|---|---|
-| Infrastructure | `server.js`, `middleware/auth.js`, `middleware/errorHandler.js` | Express, CORS, JWT, manejo global de errores |
+| Infrastructure | `server.js`, `middleware/auth.js`, `middleware/errorHandler.js` | Express, CORS, JWT, manejo global de errores, `ADMIN_ROLES` (fuente única de roles privilegiados) |
 | Routes | `routes/authRoutes.js`, `routes/adminRoutes.js`, `routes/studentRoutes.js`, `routes/publicRoutes.js` | Registro de endpoints y aplicación de middlewares |
 | Controllers | `controllers/authController.js`, `controllers/adminController.js`, `controllers/studentController.js`, `controllers/publicController.js` | Parseo de request, validación de payload, formato de response |
 | Services | `services/pdfService.js`, `services/emailService.js` | Generación de PDFs, envío de emails |
@@ -149,7 +149,7 @@ erDiagram
 | Tabla | Descripción |
 |---|---|
 | `usuarios` | `cedula`, `nombre_completo`, `password_hash`, `rol`, `fecha_registro`, `fecha_expedicion_cedula`, `municipio_expedicion_cedula`, `municipio_nacimiento`, `anio_nacimiento`, `pago_realizado` |
-| `cursos` | `titulo` (UNIQUE), `descripcion`, `imagen_url`, `creado_en`, `precio` |
+| `cursos` | `titulo` (UNIQUE), `descripcion`, `imagen_url`, `creado_en`, `precio`, `certificado_template` (HTML opcional) |
 | `matriculas` | Relación N:M entre `usuarios` y `cursos` |
 | `modulos` | `curso_id`, `titulo_modulo`, `tipo_contenido`, `data_contenido` (JSON `{url, text}`), `orden` |
 | `progreso` | `usuario_cedula`, `modulo_id`, `completado`, `fecha_completado` |
@@ -184,6 +184,16 @@ CREATE TABLE IF NOT EXISTS preguntas (
 );
 ```
 
+### Sistema de Plantillas de Certificado por Curso (Multi-Course Layouts)
+La columna `cursos.certificado_template` almacena una plantilla HTML cruda opcional que define el diseño visual del diploma de ese curso. Cuando está presente:
+
+1. **`studentController.getCertificateDetail()`** obtiene la plantilla vía JOIN (`certificados` → `cursos`) y la interpola con la función `interpolateTemplate()` antes de enviarla al cliente.
+2. **Tags de interpolación soportados:** `{{NOMBRE}}`, `{{CEDULA}}`, `{{FECHA_EXPEDICION}}`, `{{MUNICIPIO_EXPEDICION}}`, `{{ANIO_NACIMIENTO}}`, `{{CODIGO_VERIFICACION}}`, `{{FECHA_EMISION}}`.
+3. **Frontend (`Certificate.jsx`):** Si `certData.certificado_template` existe, lo renderiza vía `dangerouslySetInnerHTML` (con estilos `@media print` para impresión/PDF nativa del navegador). Si no existe, renderiza la plantilla institucional por defecto en React.
+4. **PDF (`pdfService.js`):** Actualmente siempre genera la plantilla institucional por defecto con `pdfkit` (bordes dorados, logo, firma). **Brecha:** el PDF no consume la plantilla HTML personalizada del curso.
+
+Cuando `certificado_template` es `NULL`, se usa la plantilla institucional por defecto en todos los flujos.
+
 ### Regla de Seeding
 - El seeding usa `INSERT OR IGNORE` en todas las tablas para ser **idempotente** — seguro de ejecutar en cada arranque sin borrar datos existentes.
 - **NUNCA** usar `DROP TABLE` + `CREATE TABLE` en `setupSqliteDB()`. Esto destruiría datos de producción en cada reinicio.
@@ -210,6 +220,7 @@ sendCertificateEmail(studentData, certData, courseTitle)
 **Modo producción (SMTP_USER + SMTP_PASS configurados en .env):**
 - Usa el transporte SMTP configurado (Gmail, SendGrid, Mailtrap).
 - Configura `FRONTEND_URL` para que el link del certificado apunte al dominio real.
+- **Destinatario derivado:** el email del estudiante se deduce como `${cedula}@institutosuperiordelnorte-student.co` (campo `email` aún no existe en `usuarios`).
 
 ---
 
@@ -219,12 +230,15 @@ sendCertificateEmail(studentData, certData, courseTitle)
 |---|---|
 | Sin auth | `/login`, `/admin/login`, `/verify`, `/verify/:code` |
 | `estudiante` | `/dashboard`, `/course/:id`, `/course/:id/exam`, `/certificate/:id` |
-| `administrador` | `/admin/dashboard`, `/admin/create-course` |
+| `administrador` | `/admin/dashboard`, `/admin/create-course` (además, acceso completo a `/api/admin/*` excepto `financial-metrics`) |
+| `ingeniero_software` | `/admin/dashboard`, `/admin/create-course` (además, acceso exclusivo a `/api/admin/financial-metrics`) |
 
-**Auth Guard en `App.jsx`:**
+> **Source of truth para roles privilegiados:** la constante `ADMIN_ROLES` en `backend/src/middleware/auth.js` y su espejo `ADMIN_ROLES`/`isAdmin` en `frontend/src/context/AppContext.tsx`. Cualquier adición o remoción de roles privilegiados debe hacerse en ambos puntos simultáneamente.
+
+**Auth Guard (doble capa):**
+- **A nivel de ruta (frontend):** `<ProtectedRoute allowRoles={[...]}>` (en `App.jsx`) envuelve cada ruta privada y redirige a un usuario autenticado con rol equivocado a su home correspondiente. Es la fuente de verdad para la autorización de vistas.
+- **A nivel de efecto (legacy):** El `useEffect` en `App.jsx` con dependencias primitivas (`user?.cedula`, `user?.rol`) sólo se encarga de redirigir desde `/login`, `/admin/login` o `/` al dashboard que corresponda tras autenticar. No reemplaza a `<ProtectedRoute>`.
 - Si no hay token → redirige a `/login` (excepto rutas públicas).
-- Si hay token y el usuario está en `/login` o `/` → redirige a su dashboard según rol.
-- Usa deps primitivas `user?.cedula`, `user?.rol` para evitar re-ejecuciones innecesarias.
 
 **`CourseRouteWrapper`:** Sincroniza `activeCourseId` desde el parámetro `:courseId` de la URL (único punto de URL→estado para course IDs). Permite deep linking directo a `/course/1`.
 
